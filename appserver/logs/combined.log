@@ -47,3 +47,43 @@
 {"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T02:36:37.511Z"}
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T02:36:37.511Z"}
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T02:36:56.738Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-14T03:27:39.962Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-14T03:27:39.995Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T03:27:39.997Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T03:27:39.998Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-14T03:28:14.015Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-14T03:28:14.047Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T03:28:14.048Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T03:28:14.049Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:28:57.577Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-14T03:29:47.355Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-14T03:29:47.391Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T03:29:47.391Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T03:29:47.392Z"}
+{"ip":"::1","level":"info","message":"GET /","service":"Server","timestamp":"2025-08-14T03:29:53.519Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-14T03:30:14.053Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:21.261Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:21.395Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:30.435Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:30.579Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:30.745Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:30.914Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:31.083Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:31.257Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:31.531Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:31.688Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:31.862Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:34.493Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:34.625Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:42.429Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:43.045Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:43.392Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:43.611Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:43.817Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:44.007Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:49.440Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:49.590Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:49.778Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:49.956Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:50.125Z"}
+{"level":"error","message":"Could not close connections in time, forcefully shutting down","service":"Server","timestamp":"2025-08-14T03:30:50.223Z"}

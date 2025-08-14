@@ -3,9 +3,9 @@
 echo "Starting Email Attendant server..."
 
 # Check if we're in the right directory
-if [ -d "server" ]; then
-    echo "Found server directory, changing to it..."
-    cd server
+if [ -d "appserver" ]; then
+    echo "Found appserver directory, changing to it..."
+    cd appserver
 fi
 
 # Check if dist directory exists

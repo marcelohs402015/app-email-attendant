@@ -3,8 +3,8 @@ services:
   - type: web
     name: email-attendant-server
     env: node
-    buildCommand: "cd server && npm install && npm run build"
-    startCommand: "cd server && npm start"
+    buildCommand: "cd appserver && npm install && npm run build"
+    startCommand: "cd appserver && npm start"
     plan: free
     envVars:
       - key: NODE_ENV
@@ -18,8 +18,8 @@ services:
   - type: web
     name: email-attendant-client
     env: static
-    buildCommand: cd client && npm install && npm run build
-    staticPublishPath: ./client/build
+    buildCommand: cd appclient && npm install && npm run build
+    staticPublishPath: ./appclient/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL
