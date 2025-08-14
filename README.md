@@ -100,21 +100,83 @@
 
 ### 🚀 Quick Start - Local Development
 
-```bash
+#### 🪟 **Windows (PowerShell/Command Prompt)**
+
+```powershell
 # Clone the repository
 git clone https://github.com/marcelohs402015/app-email-attendant.git
 cd app-email-attendant
 
-# Install all dependencies (root, client, server)
+# Option 1: Use the automated installer (Recommended)
+install-windows.bat
+
+# Option 2: Use npm command (handles dependency conflicts automatically)
 npm run install:all
 
 # Start development (Backend + Frontend)
 npm run dev
 ```
 
+#### 🍎 **macOS/Linux (Terminal)**
+
+```bash
+# Clone the repository
+git clone https://github.com/marcelohs402015/app-email-attendant.git
+cd app-email-attendant
+
+# Option 1: Use the automated installer (Recommended)
+./install.sh
+
+# Option 2: Use npm command
+npm run install:all
+
+# Start development (Backend + Frontend)
+npm run dev
+```
+
+#### 🔧 **Manual Installation (if automated scripts fail)**
+
+```bash
+# Step 1: Install root dependencies
+npm install
+
+# Step 2: Install client dependencies (with legacy peer deps for React conflicts)
+cd appclient
+npm install --legacy-peer-deps
+cd ..
+
+# Step 3: Install server dependencies
+cd appserver
+npm install
+cd ..
+
+# Step 4: Start the application
+npm run dev
+```
+
 **🌐 Access:**
 - **Frontend:** http://localhost:3000
 - **Backend API:** http://localhost:3001
+
+#### ❗ **Common Installation Issues**
+
+**Problem: ERESOLVE dependency conflict (Windows/Mac)**
+```bash
+# Solution: Use legacy peer deps flag
+cd appclient
+npm install --legacy-peer-deps
+```
+
+**Problem: Permission denied (macOS/Linux)**
+```bash
+# Make install script executable
+chmod +x install.sh
+./install.sh
+```
+
+**Problem: Command not found**
+- Make sure Node.js (v16+) is installed: https://nodejs.org/
+- Verify npm is available: `npm --version`
 
 #### ⚠️ **IMPORTANT: Make sure you're in the correct directory**
 
@@ -162,7 +224,11 @@ The application is **exclusively in English** and designed for professional hand
 ```bash
 # Development
 npm run dev              # Starts backend (3001) + frontend (3000)
-npm run install:all      # Install dependencies for all modules
+npm run install:all      # Install dependencies for all modules (with auto-fix for conflicts)
+
+# Platform-specific Installation
+npm run install:windows  # Windows automated installer
+npm run install:linux    # Linux/macOS automated installer
 
 # Build and Production
 npm run build           # Complete build (server + client)
@@ -171,6 +237,40 @@ npm run start          # Start production server
 # Code Quality
 npm run typecheck      # TypeScript verification (both client & server)
 npm run test          # Run tests
+```
+
+#### 🪟 Windows-Specific Commands
+```powershell
+# Automated installation
+install-windows.bat
+
+# Manual dependency installation
+npm install
+cd appclient
+npm install --legacy-peer-deps
+cd ..\appserver
+npm install
+cd ..
+
+# Clear cache and reinstall (if needed)
+npm cache clean --force
+rmdir /s node_modules appclient\node_modules appserver\node_modules
+npm run install:all
+```
+
+#### 🍎 macOS/Linux-Specific Commands  
+```bash
+# Automated installation
+chmod +x install.sh
+./install.sh
+
+# Manual dependency installation
+npm install && cd appclient && npm install --legacy-peer-deps && cd ../appserver && npm install && cd ..
+
+# Clear cache and reinstall (if needed)
+npm cache clean --force
+rm -rf node_modules appclient/node_modules appserver/node_modules
+npm run install:all
 ```
 
 #### Server Commands (from root)
@@ -374,22 +474,44 @@ The project includes automated deployment scripts:
 
 ### 🎯 Step-by-Step Local Setup
 
-1. **Clone and Navigate**
+#### 1. **Clone and Navigate**
 ```bash
-git clone [repository-url]
-cd project-email-attendant
+git clone https://github.com/marcelohs402015/app-email-attendant.git
+cd app-email-attendant
 ```
 
-2. **Install Dependencies**
-```bash
-# Option A: Install all at once (recommended)
+#### 2. **Install Dependencies**
+
+**🪟 Windows:**
+```powershell
+# Option A: Automated installer (Recommended)
+install-windows.bat
+
+# Option B: NPM command with automatic fixes
 npm run install:all
 
-# Option B: Install individually
-npm install                # Root dependencies
-cd client && npm install   # Frontend dependencies
-cd ../server && npm install # Backend dependencies
-cd ..                      # Back to root
+# Option C: Manual installation
+npm install
+cd appclient
+npm install --legacy-peer-deps
+cd ..\appserver
+npm install
+cd ..
+```
+
+**🍎 macOS/Linux:**
+```bash
+# Option A: Automated installer (Recommended)  
+chmod +x install.sh
+./install.sh
+
+# Option B: NPM command
+npm run install:all
+
+# Option C: Manual installation
+npm install
+cd appclient && npm install --legacy-peer-deps && cd ..
+cd appserver && npm install && cd ..
 ```
 
 3. **Environment Configuration**
@@ -477,25 +599,49 @@ cat package.json | grep "type"
 # Run type checking
 npm run typecheck
 
-# Clear and rebuild
-rm -rf node_modules client/node_modules server/node_modules
+# Clear and rebuild (Windows)
+rmdir /s node_modules appclient\node_modules appserver\node_modules
+npm run install:all
+npm run build
+
+# Clear and rebuild (macOS/Linux)
+rm -rf node_modules appclient/node_modules appserver/node_modules
 npm run install:all
 npm run build
 ```
 
+**ERESOLVE Dependency Conflicts:**
+```bash
+# Windows
+cd appclient
+npm install --legacy-peer-deps
+cd ..
+
+# macOS/Linux  
+cd appclient && npm install --legacy-peer-deps && cd ..
+```
+
 **Build Issues:**
 ```bash
-# Clean builds and dependencies
-rm -rf dist client/build server/dist
+# Clean builds and dependencies (Windows)
+rmdir /s dist appclient\build appserver\dist
+npm run build
+
+# Clean builds and dependencies (macOS/Linux)
+rm -rf dist appclient/build appserver/dist
 npm run build
 ```
 
 **Server Won't Start - Import Path Issues:**
 ```bash
-# If server fails with module resolution errors:
-cd server
-npm run build  # Rebuild TypeScript files
-npm start       # Try starting again
+# If server fails with module resolution errors (Windows):
+cd appserver
+npm run build
+npm start
+cd ..
+
+# If server fails with module resolution errors (macOS/Linux):
+cd appserver && npm run build && npm start && cd ..
 ```
 
 #### Common Deployment Issues:
