@@ -87,3 +87,12 @@
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:49.956Z"}
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T03:30:50.125Z"}
 {"level":"error","message":"Could not close connections in time, forcefully shutting down","service":"Server","timestamp":"2025-08-14T03:30:50.223Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-14T10:33:38.453Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-14T10:33:38.468Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T10:33:38.469Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T10:33:38.469Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-14T10:34:27.671Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-14T10:38:09.871Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-14T10:38:09.893Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-14T10:38:09.894Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-14T10:38:09.894Z"}
