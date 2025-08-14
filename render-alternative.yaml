@@ -1,0 +1,40 @@
+services:
+  # Backend service - Alternative configuration
+  - type: web
+    name: email-attendant-server
+    env: node
+    buildCommand: |
+      echo "Building server..."
+      cd server
+      npm install
+      npm run build
+      ls -la dist/
+    startCommand: |
+      echo "Starting server..."
+      cd server
+      ls -la
+      node dist/server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://email-attendant-client.onrender.com
+    
+  # Frontend service (static site)
+  - type: web
+    name: email-attendant-client
+    env: static
+    buildCommand: |
+      echo "Building client..."
+      cd client
+      npm install
+      npm run build
+      ls -la build/
+    staticPublishPath: ./client/build
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://email-attendant-server.onrender.com
