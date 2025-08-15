@@ -1,6 +1,6 @@
-import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment } from '../types/api';
+import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics } from '../types/api';
 import { mockEmails } from '../data/mockEmails';
-import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments } from '../data/mockData';
+import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics } from '../data/mockData';
 
 // Mock API service that simulates real API calls
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -843,6 +843,344 @@ export const emailAPI = {
     return {
       success: true,
       message: 'Appointment deleted successfully'
+    };
+  },
+
+  // === AUTOMATION API ===
+  
+  // Get automation rules
+  getAutomationRules: async (): Promise<ApiResponse<AutomationRule[]>> => {
+    await delay(400);
+    
+    return {
+      success: true,
+      data: [...mockAutomationRules]
+    };
+  },
+
+  // Get automation rule by ID
+  getAutomationRuleById: async (ruleId: string): Promise<ApiResponse<AutomationRule>> => {
+    await delay(300);
+    
+    const rule = mockAutomationRules.find(r => r.id === ruleId);
+    if (!rule) {
+      return {
+        success: false,
+        error: 'Automation rule not found'
+      };
+    }
+    
+    return {
+      success: true,
+      data: rule
+    };
+  },
+
+  // Create automation rule
+  createAutomationRule: async (rule: Omit<AutomationRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<AutomationRule>> => {
+    await delay(600);
+    
+    const newRule: AutomationRule = {
+      ...rule,
+      id: `rule_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    mockAutomationRules.push(newRule);
+    
+    return {
+      success: true,
+      data: newRule,
+      message: 'Automation rule created successfully'
+    };
+  },
+
+  // Update automation rule
+  updateAutomationRule: async (ruleId: string, updates: Partial<Omit<AutomationRule, 'id' | 'createdAt'>>): Promise<ApiResponse<AutomationRule>> => {
+    await delay(500);
+    
+    const ruleIndex = mockAutomationRules.findIndex(r => r.id === ruleId);
+    if (ruleIndex === -1) {
+      return {
+        success: false,
+        error: 'Automation rule not found'
+      };
+    }
+    
+    const updatedRule = {
+      ...mockAutomationRules[ruleIndex],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    
+    mockAutomationRules[ruleIndex] = updatedRule;
+    
+    return {
+      success: true,
+      data: updatedRule,
+      message: 'Automation rule updated successfully'
+    };
+  },
+
+  // Delete automation rule
+  deleteAutomationRule: async (ruleId: string): Promise<ApiResponse<void>> => {
+    await delay(500);
+    
+    const ruleIndex = mockAutomationRules.findIndex(r => r.id === ruleId);
+    if (ruleIndex === -1) {
+      return {
+        success: false,
+        error: 'Automation rule not found'
+      };
+    }
+    
+    mockAutomationRules.splice(ruleIndex, 1);
+    
+    return {
+      success: true,
+      message: 'Automation rule deleted successfully'
+    };
+  },
+
+  // Get pending quotes
+  getPendingQuotes: async (status?: string): Promise<ApiResponse<PendingQuote[]>> => {
+    await delay(400);
+    
+    let pendingQuotes = [...mockPendingQuotes];
+    if (status) {
+      pendingQuotes = pendingQuotes.filter(q => q.status === status);
+    }
+    
+    return {
+      success: true,
+      data: pendingQuotes
+    };
+  },
+
+  // Get pending quote by ID
+  getPendingQuoteById: async (quoteId: string): Promise<ApiResponse<PendingQuote>> => {
+    await delay(300);
+    
+    const quote = mockPendingQuotes.find(q => q.id === quoteId);
+    if (!quote) {
+      return {
+        success: false,
+        error: 'Pending quote not found'
+      };
+    }
+    
+    return {
+      success: true,
+      data: quote
+    };
+  },
+
+  // Approve pending quote
+  approvePendingQuote: async (quoteId: string, managerNotes?: string): Promise<ApiResponse<void>> => {
+    await delay(1500);
+    
+    const quoteIndex = mockPendingQuotes.findIndex(q => q.id === quoteId);
+    if (quoteIndex === -1) {
+      return {
+        success: false,
+        error: 'Pending quote not found'
+      };
+    }
+    
+    // Update quote status
+    mockPendingQuotes[quoteIndex] = {
+      ...mockPendingQuotes[quoteIndex],
+      status: 'approved',
+      managerNotes: managerNotes || mockPendingQuotes[quoteIndex].managerNotes,
+      approvedAt: new Date().toISOString(),
+      sentAt: new Date().toISOString()
+    };
+
+    // Update the generated quotation status
+    const quotation = mockQuotations.find(q => q.id === mockPendingQuotes[quoteIndex].generatedQuote.id);
+    if (quotation) {
+      quotation.status = 'sent';
+      quotation.updatedAt = new Date().toISOString();
+    }
+
+    // Mark corresponding email as responded
+    const email = mockEmails.find(e => e.id === mockPendingQuotes[quoteIndex].emailId);
+    if (email) {
+      email.responded = true;
+      email.updatedAt = new Date().toISOString();
+    }
+    
+    return {
+      success: true,
+      message: 'Quote approved and sent successfully'
+    };
+  },
+
+  // Reject pending quote
+  rejectPendingQuote: async (quoteId: string, managerNotes?: string): Promise<ApiResponse<void>> => {
+    await delay(800);
+    
+    const quoteIndex = mockPendingQuotes.findIndex(q => q.id === quoteId);
+    if (quoteIndex === -1) {
+      return {
+        success: false,
+        error: 'Pending quote not found'
+      };
+    }
+    
+    // Update quote status
+    mockPendingQuotes[quoteIndex] = {
+      ...mockPendingQuotes[quoteIndex],
+      status: 'rejected',
+      managerNotes: managerNotes || mockPendingQuotes[quoteIndex].managerNotes
+    };
+    
+    // Update the generated quotation status
+    const quotation = mockQuotations.find(q => q.id === mockPendingQuotes[quoteIndex].generatedQuote.id);
+    if (quotation) {
+      quotation.status = 'rejected';
+      quotation.updatedAt = new Date().toISOString();
+    }
+    
+    return {
+      success: true,
+      message: 'Quote rejected successfully'
+    };
+  },
+
+  // Bulk approve pending quotes
+  bulkApprovePendingQuotes: async (quoteIds: string[], managerNotes?: string): Promise<ApiResponse<void>> => {
+    await delay(2000);
+    
+    let approvedCount = 0;
+    
+    for (const quoteId of quoteIds) {
+      const result = await emailAPI.approvePendingQuote(quoteId, managerNotes);
+      if (result.success) {
+        approvedCount++;
+      }
+    }
+    
+    return {
+      success: true,
+      message: `${approvedCount} quotes approved and sent successfully`
+    };
+  },
+
+  // Bulk reject pending quotes
+  bulkRejectPendingQuotes: async (quoteIds: string[], managerNotes?: string): Promise<ApiResponse<void>> => {
+    await delay(1500);
+    
+    let rejectedCount = 0;
+    
+    for (const quoteId of quoteIds) {
+      const result = await emailAPI.rejectPendingQuote(quoteId, managerNotes);
+      if (result.success) {
+        rejectedCount++;
+      }
+    }
+    
+    return {
+      success: true,
+      message: `${rejectedCount} quotes rejected successfully`
+    };
+  },
+
+  // Get automation metrics
+  getAutomationMetrics: async (): Promise<ApiResponse<AutomationMetrics>> => {
+    await delay(500);
+    
+    // Calculate real-time metrics from current data
+    const activeRules = mockAutomationRules.filter(r => r.isActive).length;
+    const pendingCount = mockPendingQuotes.filter(q => q.status === 'pending').length;
+    const approvedCount = mockPendingQuotes.filter(q => q.status === 'approved').length;
+    const totalGenerated = mockPendingQuotes.length;
+    const conversionRate = totalGenerated > 0 ? (approvedCount / totalGenerated) * 100 : 0;
+    
+    const updatedMetrics = {
+      ...mockAutomationMetrics,
+      activeRules,
+      conversionRate,
+      // Update current period with real data
+      periodStats: mockAutomationMetrics.periodStats.map((period, index) => {
+        if (index === 0) { // Current period
+          return {
+            ...period,
+            generated: totalGenerated,
+            approved: approvedCount,
+            sent: mockPendingQuotes.filter(q => q.status === 'sent').length
+          };
+        }
+        return period;
+      })
+    };
+    
+    return {
+      success: true,
+      data: updatedMetrics
+    };
+  },
+
+  // Process emails with automation rules (simulate AI processing)
+  processEmailsWithAutomation: async (): Promise<ApiResponse<{ processed: number; quotesGenerated: number }>> => {
+    await delay(3000); // Simulate AI processing time
+    
+    // Mock processing logic - in real implementation, this would:
+    // 1. Get unprocessed emails
+    // 2. Run them through active automation rules
+    // 3. Generate quotes for matching emails
+    // 4. Add to pending queue
+    
+    const processed = Math.floor(Math.random() * 5) + 1;
+    const quotesGenerated = Math.floor(Math.random() * 3);
+    
+    return {
+      success: true,
+      data: {
+        processed,
+        quotesGenerated
+      },
+      message: `Processed ${processed} emails, generated ${quotesGenerated} new quotes`
+    };
+  },
+
+  // Test automation rule against sample email
+  testAutomationRule: async (rule: Partial<AutomationRule>, emailContent: string): Promise<ApiResponse<{
+    matches: boolean;
+    confidence: number;
+    detectedKeywords: string[];
+    matchedServices: any[];
+  }>> => {
+    await delay(800);
+    
+    // Mock AI analysis
+    const keywords = rule.keywords || [];
+    const detectedKeywords = keywords.filter(keyword => 
+      emailContent.toLowerCase().includes(keyword.toLowerCase())
+    );
+    
+    const matches = detectedKeywords.length > 0;
+    const confidence = matches ? (detectedKeywords.length / keywords.length) * 100 : 0;
+    
+    // Mock service matching
+    const matchedServices = matches ? rule.serviceIds?.map(serviceId => {
+      const service = mockServices.find(s => s.id === serviceId);
+      return {
+        serviceId,
+        serviceName: service?.name || 'Unknown Service',
+        relevanceScore: Math.random() * 0.5 + 0.5 // 0.5 to 1.0
+      };
+    }) || [] : [];
+    
+    return {
+      success: true,
+      data: {
+        matches,
+        confidence: Math.round(confidence),
+        detectedKeywords,
+        matchedServices
+      }
     };
   },
 };

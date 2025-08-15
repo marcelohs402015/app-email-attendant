@@ -9,7 +9,7 @@ export class CategorizerService {
   constructor() {
     this.logger = createLogger('CategorizerService');
     this.categories = {
-      reclamacao: {
+      complaint: {
         keywords: ['reclamação', 'reclamar', 'problema', 'defeito', 'erro', 'falha', 'insatisfação', 'ruim', 'péssimo', 'horrível'],
         patterns: [
           /\b(problema|defeito|erro|falha)\b/i,
@@ -20,7 +20,7 @@ export class CategorizerService {
         ],
         domains: []
       },
-      orcamento: {
+      quote: {
         keywords: ['orçamento', 'cotação', 'preço', 'valor', 'custo', 'proposta', 'estimativa', 'quanto custa'],
         patterns: [
           /\b(orçamento|cotação|preço|valor)\b/i,
@@ -31,7 +31,7 @@ export class CategorizerService {
         ],
         domains: []
       },
-      informacoes_produto: {
+      product_info: {
         keywords: ['informações', 'detalhes', 'especificação', 'características', 'manual', 'como usar', 'funciona', 'dúvida'],
         patterns: [
           /\b(informações|detalhes|especificação)\b/i,
@@ -42,7 +42,7 @@ export class CategorizerService {
         ],
         domains: []
       },
-      suporte: {
+      support: {
         keywords: ['suporte', 'ajuda', 'assistência', 'tutorial', 'guia', 'documentação', 'como fazer'],
         patterns: [
           /\b(suporte|ajuda|assistência)\b/i,
@@ -53,7 +53,7 @@ export class CategorizerService {
         ],
         domains: []
       },
-      vendas: {
+      sales: {
         keywords: ['comprar', 'venda', 'pedido', 'encomenda', 'interesse', 'adquirir', 'disponibilidade'],
         patterns: [
           /\b(comprar|venda|pedido|encomenda)\b/i,

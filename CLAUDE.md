@@ -19,6 +19,7 @@ The project uses Node.js with TypeScript on the backend, React with Tailwind on 
 #### Email System
 - Email reading simulation (mock data)
 - Intelligent categorization by keywords (complaint, quote, product information, support, sales)
+- **🤖 AI Automation System** - Intelligent automation rules with manager approval workflow
 - Response system with personalized templates
 - **Response template management** - Complete CRUD implemented with mock data
 
@@ -50,6 +51,13 @@ The project uses Node.js with TypeScript on the backend, React with Tailwind on 
 - Integration with clients and quotes
 - Appointment status (scheduled, confirmed, in progress, completed, cancelled)
 - Intuitive date navigation
+
+#### AI Automation System
+- **Smart automation rules** - Keyword-based email detection and quote generation
+- **Manager approval workflow** - Review and approve AI-generated quotes
+- **Performance analytics** - Conversion rates, response times, and trends
+- **Bulk operations** - Approve/reject multiple quotes at once
+- **Mock AI simulation** - Realistic automation scenarios for development
 
 #### Dashboard and Statistics
 - **Complete dashboard** with statistics for "handyman" businesses
@@ -159,9 +167,15 @@ project-email-attendant/
 - **pages/Clients.tsx** - **Client management**
 - **pages/Calendar.tsx** - **Calendar schedule**
 - **pages/Stats.tsx** - **Dedicated statistics page**
+- **pages/Automation.tsx** - **AI Automation dashboard with rules management**
 - **pages/Settings.tsx** - Settings and templates
 - **services/api.ts** - **Complete mock API** with all functionalities
 - **config/api.ts** - API configuration for different environments
+
+#### AI Automation Components
+- **components/AutomationRuleModal.tsx** - Create/edit automation rules with keyword management
+- **components/PendingQuoteCard.tsx** - AI-generated quote approval cards
+- **components/AutomationMetrics.tsx** - Performance analytics and trends visualization
 
 #### Email-Quote Integration Components
 - **components/QuotationSelector.tsx** - Quote selection modal
@@ -176,7 +190,8 @@ project-email-attendant/
 ### Mock Data (/client/src/data & /server/shared/data)
 - **mockData.ts** - Complete in-memory database with English content
 - **mockEmails.ts** - English email data for handyman services
-- Emails, templates, services, clients, appointments, quotes
+- **mockAutomationData.ts** - AI automation rules, pending quotes, and metrics
+- Emails, templates, services, clients, appointments, quotes, automation data
 - Realistic data for demonstration in English
 - **Shared between client and server** for consistency
 
@@ -232,6 +247,14 @@ Categories: complaint, quote, product information, support, sales
 - GET/POST/PUT/DELETE /api/services - Complete service CRUD
 - GET/POST/PUT/DELETE /api/clients - Complete client CRUD
 - GET/POST/PUT/DELETE /api/appointments - Complete appointment CRUD
+- **GET /api/automation/rules** - List automation rules
+- **POST /api/automation/rules** - Create automation rule
+- **PUT /api/automation/rules/:id** - Update automation rule
+- **DELETE /api/automation/rules/:id** - Delete automation rule
+- **GET /api/automation/pending-quotes** - List AI-generated pending quotes
+- **POST /api/automation/pending-quotes/:id/approve** - Approve pending quote
+- **POST /api/automation/pending-quotes/:id/reject** - Reject pending quote
+- **GET /api/automation/metrics** - Automation performance metrics
 
 ## Configuration
 

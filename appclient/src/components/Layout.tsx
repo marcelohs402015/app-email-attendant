@@ -10,6 +10,7 @@ import {
   DocumentTextIcon,
   UsersIcon,
   CalendarDaysIcon,
+  CpuChipIcon,
 } from '@heroicons/react/24/outline';
 
 const getNavigation = (t: any) => [
@@ -19,6 +20,7 @@ const getNavigation = (t: any) => [
   { name: t('navigation.quotations'), href: '/quotations', icon: DocumentTextIcon },
   { name: t('navigation.clients'), href: '/clients', icon: UsersIcon },
   { name: t('navigation.calendar'), href: '/calendar', icon: CalendarDaysIcon },
+  { name: t('navigation.automation'), href: '/automation', icon: CpuChipIcon },
   { name: t('navigation.statistics'), href: '/stats', icon: ChartBarIcon },
   { name: t('navigation.settings'), href: '/settings', icon: Cog6ToothIcon },
 ];

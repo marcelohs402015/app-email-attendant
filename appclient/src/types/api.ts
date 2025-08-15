@@ -172,3 +172,75 @@ export interface Appointment {
   createdAt: string;
   updatedAt: string;
 }
+
+// AI Automation Types
+export interface AutomationRule {
+  id: string;
+  name: string;
+  description?: string;
+  keywords: string[];
+  serviceIds: string[];
+  isActive: boolean;
+  conditions: {
+    minConfidence: number;
+    emailCategories: string[];
+    senderDomain: string;
+    requireAllKeywords: boolean;
+  };
+  actions: {
+    generateQuote: boolean;
+    autoSend: boolean;
+    notifyManager: boolean;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PendingQuote {
+  id: string;
+  emailId: number;
+  email: EmailData;
+  ruleId: string;
+  rule: AutomationRule;
+  generatedQuote: Quotation;
+  aiAnalysis: {
+    detectedKeywords: string[];
+    confidence: number;
+    extractedInfo: {
+      clientName?: string;
+      urgency?: 'low' | 'medium' | 'high';
+      estimatedBudget?: number;
+      preferredDate?: string;
+      description?: string;
+    };
+    matchedServices: Array<{
+      serviceId: string;
+      serviceName: string;
+      relevanceScore: number;
+    }>;
+  };
+  status: 'pending' | 'approved' | 'rejected' | 'sent';
+  managerNotes?: string;
+  processedAt: string;
+  approvedAt?: string;
+  sentAt?: string;
+}
+
+export interface AutomationMetrics {
+  totalRules: number;
+  activeRules: number;
+  emailsProcessed: number;
+  quotesGenerated: number;
+  quotesApproved: number;
+  quotesSent: number;
+  averageConfidence: number;
+  conversionRate: number; // approved/generated
+  responseTime: number; // average time from email to quote
+  periodStats: {
+    period: string;
+    processed: number;
+    generated: number;
+    approved: number;
+    sent: number;
+  }[];
+}

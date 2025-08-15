@@ -25,6 +25,7 @@
 
 ### 📨 Smart Email System
 - **Automatic categorization** by keywords (complaint, quote, information, support, sales)
+- **🤖 AI Automation System** - Intelligent quote generation with manager approval workflow
 - **Personalized templates** response with complete CRUD system
 - **Modern web interface** for viewing and responding
 - **Advanced filters** by category, sender and status
@@ -343,7 +344,14 @@ npm run typecheck     # TypeScript verification
 - Analysis by service categories
 - Interactive charts
 
-### 8. ⚙️ **Settings** (`/settings`)
+### 8. 🤖 **AI Automation** (`/automation`)
+- **Smart automation rules** with keyword detection
+- **AI-powered quote generation** from emails
+- **Manager approval workflow** for generated quotes
+- **Performance analytics** and conversion metrics
+- **Bulk approval system** for pending quotes
+
+### 9. ⚙️ **Settings** (`/settings`)
 - Template management
 - Complete CRUD with validations
 - Real-time preview
@@ -716,6 +724,16 @@ project-email-attendant/
 - `POST /api/emails/sync` - Gmail synchronization
 - `POST /api/emails/:id/reply` - Response (with quote attachment)
 - `PATCH /api/emails/:id/status` - Update status
+
+### 🤖 **AI Automation**
+- `GET /api/automation/rules` - List automation rules
+- `POST /api/automation/rules` - Create automation rule
+- `PUT /api/automation/rules/:id` - Update automation rule
+- `DELETE /api/automation/rules/:id` - Delete automation rule
+- `GET /api/automation/pending-quotes` - List pending AI-generated quotes
+- `POST /api/automation/pending-quotes/:id/approve` - Approve pending quote
+- `POST /api/automation/pending-quotes/:id/reject` - Reject pending quote
+- `GET /api/automation/metrics` - Automation performance metrics
 
 ### 📝 **Templates**
 - `GET /api/templates` - List templates

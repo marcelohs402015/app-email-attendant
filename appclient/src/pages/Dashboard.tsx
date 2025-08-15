@@ -57,11 +57,11 @@ export default function Dashboard() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      reclamacao: 'bg-red-100 text-red-800',
-      orcamento: 'bg-blue-100 text-blue-800',
-      informacoes_produto: 'bg-green-100 text-green-800',
-      suporte: 'bg-yellow-100 text-yellow-800',
-      vendas: 'bg-purple-100 text-purple-800',
+      complaint: 'bg-red-100 text-red-800',
+      quote: 'bg-blue-100 text-blue-800',
+      product_info: 'bg-green-100 text-green-800',
+      support: 'bg-yellow-100 text-yellow-800',
+      sales: 'bg-purple-100 text-purple-800',
       sem_categoria: 'bg-gray-100 text-gray-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';

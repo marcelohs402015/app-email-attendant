@@ -124,11 +124,11 @@ export default function EmailDetail() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      reclamacao: 'bg-red-100 text-red-800 border-red-200',
-      orcamento: 'bg-blue-100 text-blue-800 border-blue-200',
-      informacoes_produto: 'bg-green-100 text-green-800 border-green-200',
-      suporte: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      vendas: 'bg-purple-100 text-purple-800 border-purple-200',
+      complaint: 'bg-red-100 text-red-800 border-red-200',
+      quote: 'bg-blue-100 text-blue-800 border-blue-200',
+      product_info: 'bg-green-100 text-green-800 border-green-200',
+      support: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      sales: 'bg-purple-100 text-purple-800 border-purple-200',
       sem_categoria: 'bg-gray-100 text-gray-800 border-gray-200'
     };
     return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';

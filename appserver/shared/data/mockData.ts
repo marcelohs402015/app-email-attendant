@@ -13,7 +13,7 @@ We are analyzing your complaint (Protocol: ${Math.random().toString(36).substr(2
 
 Best regards,
 Customer Service Team`,
-    category: 'reclamacao',
+    category: 'complaint',
     variables: ['subject', 'protocol'],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
@@ -32,7 +32,7 @@ For any clarification, we are at your disposal.
 
 Best regards,
 Sales Team`,
-    category: 'orcamento',
+    category: 'quote',
     variables: ['subject'],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
@@ -51,7 +51,7 @@ We are available to clarify any questions.
 
 Best regards,
 Technical Team`,
-    category: 'informacoes_produto',
+    category: 'product_info',
     variables: ['subject'],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
@@ -70,7 +70,7 @@ We will return with a solution within 48 hours.
 
 Best regards,
 Support Team`,
-    category: 'suporte',
+    category: 'support',
     variables: ['subject', 'protocol'],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
@@ -87,7 +87,7 @@ Our sales team will contact you to schedule a meeting and discuss opportunities.
 
 Best regards,
 Sales Team`,
-    category: 'vendas',
+    category: 'sales',
     variables: ['subject'],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
@@ -96,27 +96,27 @@ Sales Team`,
 
 export const mockCategoryStats: CategoryStats[] = [
   {
-    category: 'reclamacao',
+    category: 'complaint',
     count: 12,
     responded_count: 8
   },
   {
-    category: 'orcamento',
+    category: 'quote',
     count: 8,
     responded_count: 7
   },
   {
-    category: 'informacoes_produto',
+    category: 'product_info',
     count: 15,
     responded_count: 10
   },
   {
-    category: 'suporte',
+    category: 'support',
     count: 20,
     responded_count: 18
   },
   {
-    category: 'vendas',
+    category: 'sales',
     count: 5,
     responded_count: 3
   }
