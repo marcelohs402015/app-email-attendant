@@ -5,7 +5,7 @@ services:
   - type: web
     name: app-email-attendant
     env: static
-    buildCommand: "cd appclient && npm install --legacy-peer-deps && npm run build"
+    buildCommand: "rm -f .npmrc && cd appclient && npm install --legacy-peer-deps && npm run build"
     staticPublishPath: ./appclient/build
     plan: free
     envVars:
