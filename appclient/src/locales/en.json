@@ -374,6 +374,10 @@
       "noMatchingServices": "No matching services found for the selected keywords"
     }
   },
+  "sidebar": {
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar"
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",
