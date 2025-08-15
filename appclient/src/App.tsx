@@ -1,6 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import EmailList from './pages/EmailList';
@@ -25,9 +26,9 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Dashboard />} />
@@ -42,9 +43,9 @@ function App() {
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
-        </div>
-      </Router>
-    </QueryClientProvider>
+        </Router>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

@@ -76,6 +76,16 @@ The project uses Node.js with TypeScript on the backend, React with Tailwind on 
 - **Modal components** for email composition and selection
 - **Email-quote integration** with two sending methods
 - **🌐 Internationalization (i18n)** - English-only system using react-i18next
+- **🎨 Dynamic Theme System** - Light and Dark themes with CSS custom properties
+- **Contact Information System** - Modal with support contacts accessible via footer
+- **Professional Footer** - Copyright information and contact access
+
+### Recent UI/UX Enhancements
+- **🎨 Theme System** - Light and Dark themes with real-time switching
+- **📞 Contact Information** - Modal with Marcelo Hernandes and Sarah Ribeiro contacts
+- **📄 Professional Footer** - Copyright information with contact access icon
+- **🎯 Clean Interface** - Streamlined header without unnecessary buttons
+- **💾 Theme Persistence** - User theme preference saved in localStorage
 
 ### Statistics Specific for Handyman
 - **Business dashboard** - Complete view of statistics
@@ -86,6 +96,18 @@ The project uses Node.js with TypeScript on the backend, React with Tailwind on 
 - Business metrics (volume, estimated revenue, profitability per service)
 - **Revenue evolution** - Monthly history with trends
 - **Performance by category** - Analysis of most demanded services
+
+## Key Components
+
+### Theme System
+- **ThemeContext.tsx** - Global theme management with React Context
+- **ThemeSelector.tsx** - Theme switching component with visual previews
+- **ContactModal.tsx** - Contact information modal with professional design
+
+### Layout Updates
+- **Layout.tsx** - Updated with theme integration and contact functionality
+- **Footer** - Professional copyright with contact access
+- **Header** - Clean interface without unnecessary buttons
 
 ## Development Commands
 

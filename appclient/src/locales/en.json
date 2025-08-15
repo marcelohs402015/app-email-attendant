@@ -2,7 +2,9 @@
   "app": {
     "name": "Handyman Manager",
     "version": "v1.0",
-    "description": "Created by Marcelo Hernandes - marcelohs40@gmail.com"
+    "description": "Created by Marcelo Hernandes - All rights reserved",
+    "copyright": "© 2024 Marcelo Hernandes",
+    "rights": "All rights reserved."
   },
   "navigation": {
     "dashboard": "Dashboard",

@@ -76,6 +76,13 @@
 
 ## 🎨 Interface and Experience
 
+### 🎨 Theme System
+- **Dynamic theme switching** - Light and Dark themes
+- **Real-time theme application** with CSS custom properties
+- **Persistent theme selection** saved in localStorage
+- **Smooth transitions** between themes
+- **Consistent theming** across all components
+
 ### 📱 Responsive Design
 - **Modern layout** with side navigation
 - **Visual cards** for all functionalities
@@ -91,6 +98,8 @@
 - **Intuitive navigation** between modules
 - **🌐 English interface** - Professional terminology and communication
 - **Consistent messaging** - All texts in English
+- **Contact information modal** - Easy access to support contacts via footer icon
+- **Professional footer** with copyright and contact information
 
 ## 🛠️ Installation and Usage
 

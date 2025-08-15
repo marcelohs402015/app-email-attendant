@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 import { emailAPI } from '../services/api';
 import BusinessStats from '../components/BusinessStats';
 import { 
   EnvelopeIcon,
   CheckCircleIcon,
   ClockIcon,
-  ExclamationTriangleIcon,
   ArrowPathIcon,
   ChartBarIcon,
-  InboxIcon
+  InboxIcon,
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
   const [activeView, setActiveView] = useState<'emails' | 'business'>('emails');
   const { t } = useTranslation();
+  const { currentTheme } = useTheme();
 
-  const { data: statsData, isLoading: statsLoading, error: statsError } = useQuery({
+  const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['categoryStats'],
     queryFn: emailAPI.getCategoryStats,
   });
@@ -41,7 +43,8 @@ export default function Dashboard() {
   if (statsLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" 
+          style={{ borderColor: currentTheme.colors.primary[600] }}></div>
       </div>
     );
   }
@@ -57,219 +60,360 @@ export default function Dashboard() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      complaint: 'bg-red-100 text-red-800',
-      quote: 'bg-blue-100 text-blue-800',
-      product_info: 'bg-green-100 text-green-800',
-      support: 'bg-yellow-100 text-yellow-800',
-      sales: 'bg-purple-100 text-purple-800',
-      sem_categoria: 'bg-gray-100 text-gray-800'
+      complaint: 'bg-red-500/20 text-red-400',
+      quote: 'bg-blue-500/20 text-blue-400',
+      product_info: 'bg-green-500/20 text-green-400',
+      support: 'bg-yellow-500/20 text-yellow-400',
+      sales: 'bg-purple-500/20 text-purple-400',
+      sem_categoria: 'bg-gray-500/20 text-gray-400'
     };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    return colors[category] || 'bg-gray-500/20 text-gray-400';
   };
 
   return (
     <div className="space-y-6">
-      {/* Header with View Toggle */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+      {/* Welcome Message */}
+      <div className="mb-8">
+        <h1 
+          className="text-3xl font-bold mb-2 transition-colors duration-300"
+          style={{ color: currentTheme.colors.text.primary }}
+        >
+          Welcome back, Marcelo Hernandes!
+        </h1>
+        <p 
+          className="text-lg transition-colors duration-300"
+          style={{ color: currentTheme.colors.text.muted }}
+        >
+          Track your sales activity, leads and deals here.
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
           {/* View Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div 
+            className="flex rounded-lg p-1 transition-all duration-300"
+            style={{ backgroundColor: currentTheme.colors.background.card }}
+          >
             <button
               onClick={() => setActiveView('emails')}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 activeView === 'emails'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'shadow-sm'
+                  : 'hover:bg-white/5'
               }`}
+              style={{
+                backgroundColor: activeView === 'emails' ? currentTheme.colors.primary[500] : 'transparent',
+                color: activeView === 'emails' ? 'white' : currentTheme.colors.text.secondary
+              }}
             >
               <InboxIcon className="h-4 w-4" />
               <span>{t('dashboard.emailsView')}</span>
             </button>
             <button
               onClick={() => setActiveView('business')}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 activeView === 'business'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'shadow-sm'
+                  : 'hover:bg-white/5'
               }`}
+              style={{
+                backgroundColor: activeView === 'business' ? currentTheme.colors.primary[500] : 'transparent',
+                color: activeView === 'business' ? 'white' : currentTheme.colors.text.secondary
+              }}
             >
               <ChartBarIcon className="h-4 w-4" />
               <span>{t('dashboard.businessView')}</span>
             </button>
           </div>
+        </div>
 
-          {/* Sync Button - only show in emails view */}
-          {activeView === 'emails' && (
-            <button
-              onClick={handleSyncEmails}
-              className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
-            >
-              <ArrowPathIcon className="h-4 w-4" />
-              <span>{t('dashboard.syncEmails')}</span>
-            </button>
-          )}
+        <div className="flex items-center space-x-3">
+          <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/10"
+            style={{ 
+              backgroundColor: currentTheme.colors.background.card,
+              color: currentTheme.colors.text.primary,
+              borderColor: currentTheme.colors.border.primary
+            }}>
+            Filters
+          </button>
+          <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/10"
+            style={{ 
+              backgroundColor: currentTheme.colors.background.card,
+              color: currentTheme.colors.text.primary,
+              borderColor: currentTheme.colors.border.primary
+            }}>
+            Export
+          </button>
         </div>
       </div>
 
-      {/* Conditional Content Based on Active View */}
       {activeView === 'emails' ? (
-        <>
-          {/* Email Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <EnvelopeIcon className="h-8 w-8 text-blue-600" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Email Statistics Cards */}
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Total Emails */}
+            <div 
+              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p 
+                    className="text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    Total Emails
+                  </p>
+                  <p 
+                    className="text-2xl font-bold mt-1 transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
+                    {totalEmails.toLocaleString()}
+                  </p>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">{t('dashboard.totalEmails')}</p>
-                  <p className="text-2xl font-semibold text-gray-900">{totalEmails}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <CheckCircleIcon className="h-8 w-8 text-green-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">{t('dashboard.responded')}</p>
-                  <p className="text-2xl font-semibold text-gray-900">{totalResponded}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <ClockIcon className="h-8 w-8 text-yellow-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">{t('dashboard.pending')}</p>
-                  <p className="text-2xl font-semibold text-gray-900">{pendingResponse}</p>
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ backgroundColor: currentTheme.colors.primary[500] + '20' }}
+                >
+                  <EnvelopeIcon className="w-6 h-6" style={{ color: currentTheme.colors.primary[500] }} />
                 </div>
               </div>
+                             <div className="mt-4 flex items-center text-sm">
+                 <ArrowTrendingUpIcon className="w-4 h-4 mr-1" style={{ color: currentTheme.colors.primary[500] }} />
+                 <span style={{ color: currentTheme.colors.primary[500] }}>+40% this month</span>
+               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <ExclamationTriangleIcon className="h-8 w-8 text-red-600" />
+            {/* Responded Emails */}
+            <div 
+              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p 
+                    className="text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    Responded
+                  </p>
+                  <p 
+                    className="text-2xl font-bold mt-1 transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
+                    {totalResponded.toLocaleString()}
+                  </p>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">{t('dashboard.responseRate')}</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ backgroundColor: '#22c55e20' }}
+                >
+                  <CheckCircleIcon className="w-6 h-6" style={{ color: '#22c55e' }} />
+                </div>
+              </div>
+                             <div className="mt-4 flex items-center text-sm">
+                 <ArrowTrendingUpIcon className="w-4 h-4 mr-1" style={{ color: '#22c55e' }} />
+                 <span style={{ color: '#22c55e' }}>+25% this month</span>
+               </div>
+            </div>
+
+            {/* Pending Response */}
+            <div 
+              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p 
+                    className="text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    Pending
+                  </p>
+                  <p 
+                    className="text-2xl font-bold mt-1 transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
+                    {pendingResponse.toLocaleString()}
+                  </p>
+                </div>
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ backgroundColor: '#f59e0b20' }}
+                >
+                  <ClockIcon className="w-6 h-6" style={{ color: '#f59e0b' }} />
+                </div>
+              </div>
+                             <div className="mt-4 flex items-center text-sm">
+                 <ArrowTrendingUpIcon className="w-4 h-4 mr-1" style={{ color: '#f59e0b' }} />
+                 <span style={{ color: '#f59e0b' }}>+12% this month</span>
+               </div>
+            </div>
+
+            {/* Response Rate */}
+            <div 
+              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p 
+                    className="text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    Response Rate
+                  </p>
+                  <p 
+                    className="text-2xl font-bold mt-1 transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {totalEmails > 0 ? Math.round((totalResponded / totalEmails) * 100) : 0}%
                   </p>
                 </div>
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ backgroundColor: '#8b5cf620' }}
+                >
+                  <ChartBarIcon className="w-6 h-6" style={{ color: '#8b5cf6' }} />
+                </div>
               </div>
+                             <div className="mt-4 flex items-center text-sm">
+                 <ArrowTrendingUpIcon className="w-4 h-4 mr-1" style={{ color: '#8b5cf6' }} />
+                 <span style={{ color: '#8b5cf6' }}>+8% this month</span>
+               </div>
             </div>
           </div>
 
-          {/* Email Category Statistics */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.emailsByCategory')}</h2>
+          {/* Target Progress Card */}
+          <div 
+            className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+            style={{ backgroundColor: currentTheme.colors.primary[600] }}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">Your target is incomplete</h3>
+            <div className="text-center">
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="rgba(255,255,255,0.2)"
+                    strokeWidth="8"
+                    fill="none"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="white"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 40}`}
+                    strokeDashoffset={`${2 * Math.PI * 40 * (1 - 0.48)}`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-white">48%</span>
+                </div>
               </div>
-              <div className="p-6">
-                {stats.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">{t('dashboard.noEmailsFound')}</p>
-                    <p className="text-sm text-gray-400 mt-2">
-                      {t('dashboard.syncHint')}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {stats.map((stat) => (
-                      <div key={stat.category} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(stat.category)}`}>
-                            {getCategoryLabel(stat.category)}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
-                          <span>{stat.count} {t('dashboard.total')}</span>
-                          <span>{stat.responded_count} {t('dashboard.responded_count')}</span>
-                          <div className="w-16 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-primary-600 h-2 rounded-full"
-                              style={{
-                                width: `${stat.count > 0 ? (stat.responded_count / stat.count) * 100 : 0}%`
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Recent Emails */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.recentEmails')}</h2>
-              </div>
-              <div className="p-6">
-                {emailsLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
-                  </div>
-                ) : recentEmails?.data?.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">{t('dashboard.noRecentEmails')}</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {recentEmails?.data?.slice(0, 5).map((email) => (
-                      <div key={email.id} className="flex items-start space-x-3 p-3 rounded-md hover:bg-gray-50">
-                        <div className="flex-shrink-0">
-                          <div className={`w-3 h-3 rounded-full ${email.responded ? 'bg-green-400' : 'bg-yellow-400'}`}></div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {email.subject}
-                          </p>
-                          <p className="text-xs text-gray-500 truncate">
-                            {email.from}
-                          </p>
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(email.category)}`}>
-                            {getCategoryLabel(email.category)}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        /* Business Statistics View */
-        <BusinessStats />
-      )}
-
-      {statsError && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <div className="flex">
-            <ExclamationTriangleIcon className="h-5 w-5 text-red-400" />
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                {t('dashboard.loadingStats')}
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <p>{t('dashboard.serverError')}</p>
-              </div>
+              <p className="text-white/80 text-sm">
+                You have completed 48% of the given target, you can also check your status. Click here
+              </p>
             </div>
           </div>
         </div>
+      ) : (
+        <BusinessStats />
       )}
+
+      {/* Recent Emails Section */}
+      <div 
+        className="p-6 rounded-xl transition-all duration-300"
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 
+            className="text-xl font-semibold transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
+            Recent Emails
+          </h2>
+          <button
+            onClick={handleSyncEmails}
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/10"
+            style={{ 
+              backgroundColor: currentTheme.colors.primary[500],
+              color: 'white'
+            }}
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+            <span>{t('dashboard.syncEmails')}</span>
+          </button>
+        </div>
+
+        {emailsLoading ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2" 
+              style={{ borderColor: currentTheme.colors.primary[600] }}></div>
+          </div>
+        ) : recentEmails?.data && recentEmails.data.length > 0 ? (
+          <div className="space-y-4">
+            {recentEmails.data.map((email: any) => (
+              <div 
+                key={email.id}
+                className="flex items-center justify-between p-4 rounded-lg transition-all duration-200 hover:bg-white/5"
+                style={{ borderColor: currentTheme.colors.border.secondary }}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(email.category)}`}>
+                    {getCategoryLabel(email.category)}
+                  </div>
+                  <div>
+                    <p 
+                      className="font-medium transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
+                      {email.subject}
+                    </p>
+                    <p 
+                      className="text-sm transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
+                      {email.from}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p 
+                    className="text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    {new Date(email.date).toLocaleDateString()}
+                  </p>
+                  <p 
+                    className="text-xs transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
+                    {email.responded ? 'Responded' : 'Pending'}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p 
+              className="transition-colors duration-300"
+              style={{ color: currentTheme.colors.text.muted }}
+            >
+              {t('dashboard.noRecentEmails')}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
