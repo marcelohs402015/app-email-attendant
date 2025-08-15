@@ -1,10 +1,10 @@
-# 📧 Email Attendant - Complete System for Service Professionals
+# 🔧 Handyman Manager - Complete Business Management System
 
-> **Intelligent system for email categorization and automatic response with complete quote integration, developed especially for "handyman" professionals**
+> **Intelligent system for email categorization, automatic quotes, and business management, developed especially for handyman professionals**
 
 ## 🎯 Overview
 
-**Email Attendant** is a modern and complete web application that automates email, quote, client and appointment management for home service providers. With an intuitive interface and robust functionalities, the application uses mock data to demonstrate a complete business management system.
+**Handyman Manager** is a modern and complete web application that automates email, quote, client and appointment management for home service providers. With an intuitive interface and robust functionalities, the application uses mock data to demonstrate a complete business management system.
 
 ### 🏗️ Target Audience
 **"Handyman"** professionals - contractors who perform:

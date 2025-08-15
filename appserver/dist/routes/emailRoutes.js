@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { createLogger } from '../shared/logger.js';
 import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockClients, mockAppointments } from '../shared/data/mockData.js';
+import { mockAutomationRules, mockPendingQuotes, mockAutomationMetrics } from '../shared/data/mockAutomationData.js';
 import { mockEmails } from '../shared/data/mockEmails.js';
 const logger = createLogger('EmailRoutes');
 // Mock data storage (in-memory)
@@ -10,6 +11,8 @@ let services = [...mockServices];
 let quotations = [...mockQuotations];
 let clients = [...mockClients];
 let appointments = [...mockAppointments];
+let automationRules = [...mockAutomationRules];
+let pendingQuotes = [...mockPendingQuotes];
 // Helper function to simulate delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 export function createEmailRoutes() {
@@ -950,6 +953,351 @@ export function createEmailRoutes() {
             return res.status(500).json({
                 success: false,
                 error: 'Failed to send quotation'
+            });
+        }
+    });
+    // === AUTOMATION ROUTES ===
+    // Get automation rules
+    router.get('/automation/rules', async (req, res) => {
+        try {
+            await delay(400);
+            return res.json({
+                success: true,
+                data: [...automationRules]
+            });
+        }
+        catch (error) {
+            logger.error('Failed to get automation rules:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to retrieve automation rules'
+            });
+        }
+    });
+    // Get automation rule by ID
+    router.get('/automation/rules/:id', async (req, res) => {
+        try {
+            await delay(300);
+            const ruleId = req.params.id;
+            const rule = automationRules.find(r => r.id === ruleId);
+            if (!rule) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Automation rule not found'
+                });
+            }
+            return res.json({
+                success: true,
+                data: rule
+            });
+        }
+        catch (error) {
+            logger.error('Failed to get automation rule by ID:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to retrieve automation rule'
+            });
+        }
+    });
+    // Create automation rule
+    router.post('/automation/rules', async (req, res) => {
+        try {
+            await delay(600);
+            const { name, description, keywords, serviceIds, isActive, conditions, actions } = req.body;
+            if (!name || !keywords || !serviceIds || keywords.length === 0 || serviceIds.length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Name, keywords, and serviceIds are required'
+                });
+            }
+            const newRule = {
+                id: `rule_${Date.now()}`,
+                name,
+                description: description || '',
+                keywords,
+                serviceIds,
+                isActive: isActive !== undefined ? isActive : true,
+                conditions: {
+                    minConfidence: conditions?.minConfidence || 70,
+                    emailCategories: conditions?.emailCategories || [],
+                    senderDomain: conditions?.senderDomain || '',
+                    requireAllKeywords: conditions?.requireAllKeywords || false,
+                },
+                actions: {
+                    generateQuote: actions?.generateQuote !== undefined ? actions.generateQuote : true,
+                    autoSend: actions?.autoSend !== undefined ? actions.autoSend : false,
+                    notifyManager: actions?.notifyManager !== undefined ? actions.notifyManager : true,
+                },
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            automationRules.push(newRule);
+            return res.status(201).json({
+                success: true,
+                data: newRule,
+                message: 'Automation rule created successfully'
+            });
+        }
+        catch (error) {
+            logger.error('Failed to create automation rule:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to create automation rule'
+            });
+        }
+    });
+    // Update automation rule
+    router.put('/automation/rules/:id', async (req, res) => {
+        try {
+            await delay(500);
+            const ruleId = req.params.id;
+            const { name, description, keywords, serviceIds, isActive, conditions, actions } = req.body;
+            const ruleIndex = automationRules.findIndex(r => r.id === ruleId);
+            if (ruleIndex === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Automation rule not found'
+                });
+            }
+            const updatedRule = {
+                ...automationRules[ruleIndex],
+                name: name || automationRules[ruleIndex].name,
+                description: description !== undefined ? description : automationRules[ruleIndex].description,
+                keywords: keywords || automationRules[ruleIndex].keywords,
+                serviceIds: serviceIds || automationRules[ruleIndex].serviceIds,
+                isActive: isActive !== undefined ? isActive : automationRules[ruleIndex].isActive,
+                conditions: {
+                    ...automationRules[ruleIndex].conditions,
+                    ...conditions
+                },
+                actions: {
+                    ...automationRules[ruleIndex].actions,
+                    ...actions
+                },
+                updatedAt: new Date().toISOString()
+            };
+            automationRules[ruleIndex] = updatedRule;
+            return res.json({
+                success: true,
+                data: updatedRule,
+                message: 'Automation rule updated successfully'
+            });
+        }
+        catch (error) {
+            logger.error('Failed to update automation rule:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to update automation rule'
+            });
+        }
+    });
+    // Delete automation rule
+    router.delete('/automation/rules/:id', async (req, res) => {
+        try {
+            await delay(500);
+            const ruleId = req.params.id;
+            const ruleIndex = automationRules.findIndex(r => r.id === ruleId);
+            if (ruleIndex === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Automation rule not found'
+                });
+            }
+            automationRules.splice(ruleIndex, 1);
+            return res.json({
+                success: true,
+                message: 'Automation rule deleted successfully'
+            });
+        }
+        catch (error) {
+            logger.error('Failed to delete automation rule:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to delete automation rule'
+            });
+        }
+    });
+    // Get pending quotes
+    router.get('/automation/pending-quotes', async (req, res) => {
+        try {
+            await delay(400);
+            let filteredQuotes = [...pendingQuotes];
+            if (req.query.status) {
+                filteredQuotes = filteredQuotes.filter(q => q.status === req.query.status);
+            }
+            return res.json({
+                success: true,
+                data: filteredQuotes
+            });
+        }
+        catch (error) {
+            logger.error('Failed to get pending quotes:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to retrieve pending quotes'
+            });
+        }
+    });
+    // Approve pending quote
+    router.post('/automation/pending-quotes/:id/approve', async (req, res) => {
+        try {
+            await delay(1500);
+            const quoteId = req.params.id;
+            const { managerNotes } = req.body;
+            const quoteIndex = pendingQuotes.findIndex(q => q.id === quoteId);
+            if (quoteIndex === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Pending quote not found'
+                });
+            }
+            // Update quote status
+            const existingQuote = pendingQuotes[quoteIndex];
+            existingQuote.status = 'approved';
+            existingQuote.managerNotes = managerNotes || existingQuote.managerNotes;
+            existingQuote.approvedAt = new Date().toISOString();
+            existingQuote.sentAt = new Date().toISOString();
+            // Update the generated quotation status
+            const quotationIndex = quotations.findIndex(q => q.id === pendingQuotes[quoteIndex].generatedQuote.id);
+            if (quotationIndex !== -1) {
+                quotations[quotationIndex] = {
+                    ...quotations[quotationIndex],
+                    status: 'sent',
+                    updatedAt: new Date().toISOString()
+                };
+            }
+            // Mark corresponding email as responded
+            const emailIndex = emails.findIndex(e => e.id === pendingQuotes[quoteIndex].emailId);
+            if (emailIndex !== -1) {
+                emails[emailIndex] = {
+                    ...emails[emailIndex],
+                    responded: true,
+                    updatedAt: new Date().toISOString()
+                };
+            }
+            logger.info(`Pending quote ${quoteId} approved and sent`);
+            return res.json({
+                success: true,
+                message: 'Quote approved and sent successfully'
+            });
+        }
+        catch (error) {
+            logger.error('Failed to approve pending quote:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to approve pending quote'
+            });
+        }
+    });
+    // Reject pending quote
+    router.delete('/automation/pending-quotes/:id/reject', async (req, res) => {
+        try {
+            await delay(800);
+            const quoteId = req.params.id;
+            const { managerNotes } = req.body;
+            const quoteIndex = pendingQuotes.findIndex(q => q.id === quoteId);
+            if (quoteIndex === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Pending quote not found'
+                });
+            }
+            // Update quote status
+            pendingQuotes[quoteIndex] = {
+                ...pendingQuotes[quoteIndex],
+                status: 'rejected',
+                managerNotes: managerNotes || pendingQuotes[quoteIndex].managerNotes
+            };
+            // Update the generated quotation status
+            const quotationIndex = quotations.findIndex(q => q.id === pendingQuotes[quoteIndex].generatedQuote.id);
+            if (quotationIndex !== -1) {
+                quotations[quotationIndex] = {
+                    ...quotations[quotationIndex],
+                    status: 'rejected',
+                    updatedAt: new Date().toISOString()
+                };
+            }
+            logger.info(`Pending quote ${quoteId} rejected`);
+            return res.json({
+                success: true,
+                message: 'Quote rejected successfully'
+            });
+        }
+        catch (error) {
+            logger.error('Failed to reject pending quote:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to reject pending quote'
+            });
+        }
+    });
+    // Get automation metrics
+    router.get('/automation/metrics', async (req, res) => {
+        try {
+            await delay(500);
+            // Calculate real-time metrics from current data
+            const activeRules = automationRules.filter(r => r.isActive).length;
+            const pendingCount = pendingQuotes.filter(q => q.status === 'pending').length;
+            const approvedCount = pendingQuotes.filter(q => q.status === 'approved').length;
+            const totalGenerated = pendingQuotes.length;
+            const conversionRate = totalGenerated > 0 ? (approvedCount / totalGenerated) * 100 : 0;
+            const updatedMetrics = {
+                ...mockAutomationMetrics,
+                totalRules: automationRules.length,
+                activeRules,
+                conversionRate,
+                // Update current period with real data
+                periodStats: mockAutomationMetrics.periodStats.map((period, index) => {
+                    if (index === 0) { // Current period
+                        return {
+                            ...period,
+                            generated: totalGenerated,
+                            approved: approvedCount,
+                            sent: pendingQuotes.filter(q => q.status === 'sent').length
+                        };
+                    }
+                    return period;
+                })
+            };
+            return res.json({
+                success: true,
+                data: updatedMetrics
+            });
+        }
+        catch (error) {
+            logger.error('Failed to get automation metrics:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to retrieve automation metrics'
+            });
+        }
+    });
+    // Process emails with automation rules (simulate AI processing)
+    router.post('/automation/process-emails', async (req, res) => {
+        try {
+            await delay(3000); // Simulate AI processing time
+            // Mock processing logic - in real implementation, this would:
+            // 1. Get unprocessed emails
+            // 2. Run them through active automation rules
+            // 3. Generate quotes for matching emails
+            // 4. Add to pending queue
+            const processed = Math.floor(Math.random() * 5) + 1;
+            const quotesGenerated = Math.floor(Math.random() * 3);
+            logger.info(`Automation processing: ${processed} emails processed, ${quotesGenerated} quotes generated`);
+            return res.json({
+                success: true,
+                data: {
+                    processed,
+                    quotesGenerated
+                },
+                message: `Processed ${processed} emails, generated ${quotesGenerated} new quotes`
+            });
+        }
+        catch (error) {
+            logger.error('Failed to process emails with automation:', error.message);
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to process emails with automation'
             });
         }
     });

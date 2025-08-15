@@ -1,22 +1,23 @@
 # Deployment Guide for Render.com
 
-This guide explains how to deploy the Email Attendant application on Render.com.
+This guide explains how to deploy the Handyman Manager application on Render.com.
 
-## ⚠️ IMPORTANT: Frontend-Only Deployment
+## ⚠️ DEPLOYMENT: Complete Full-Stack Application
 
-**This project is configured for FRONTEND-ONLY deployment as a Static Site.**
-- Uses **mock data only** (no backend required)
-- Perfect for **product demonstration**
-- All functionality works with simulated data
+**This project is configured for COMPLETE DEPLOYMENT with both frontend and backend.**
+- **Backend API** - Node.js server with mock data endpoints
+- **Frontend App** - React application with full functionality
+- **Complete integration** - Frontend connects to backend API
+- Perfect for **full product demonstration**
 
 ## Project Structure
 
 ```
-project-email-attendant/
-├── appclient/              # React frontend (MAIN)
-├── appserver/              # Node.js backend (not deployed)
-├── render.yaml            # Static site configuration
-└── package.json           # Root package.json
+handyman-manager/
+├── appclient/              # React frontend 
+├── appserver/              # Node.js backend API
+├── render.yaml            # Complete stack configuration
+└── package.json           # Root package.json with unified scripts
 ```
 
 ## Deployment Steps
@@ -33,12 +34,14 @@ project-email-attendant/
 
 #### 🎯 STATIC SITE DEPLOYMENT (Frontend Only)
 
-**Option A: Using render.yaml (Blueprint)**
+**Option A: Using render.yaml (Blueprint) - RECOMMENDED**
 1. Go to [Render.com](https://render.com) and sign in
 2. Click **"New"** → **"Blueprint"**
 3. Connect your Git repository
 4. Render will automatically detect the `render.yaml` file
-5. Deploy static site service
+5. Deploy both services automatically:
+   - **Backend**: `handyman-manager-backend`
+   - **Frontend**: `handyman-manager-frontend`
 
 **Option B: Manual Static Site Setup (Recommended)**
 1. Click **"New"** → **"Static Site"** (NOT Web Service)
@@ -46,12 +49,17 @@ project-email-attendant/
 3. Configure:
    - **Name**: `app-email-attendant`
    - **Branch**: `master` (or your main branch)
-   - **Build Command**: `cd appclient && npm install --legacy-peer-deps && npm run build`
+   - **Build Command**: `rm -f .npmrc && cd appclient && npm install --legacy-peer-deps && npm run build`
    - **Publish Directory**: `appclient/build`
    - **Plan**: Free
 4. Add Environment Variables:
    - `REACT_APP_API_URL`: `mock`
 5. **Deploy**
+
+#### 📁 **Publish Directory Explained:**
+- `appclient/` = React project directory
+- `build/` = Folder created by React build process
+- **Complete path**: `appclient/build`
 
 #### ⚠️ IMPORTANT: Do NOT create Web Service
 - **Static Site**: ✅ Correct (serves React files)

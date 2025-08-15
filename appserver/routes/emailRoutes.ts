@@ -3,7 +3,7 @@ import { createLogger } from '../shared/logger.js';
 import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockClients, mockAppointments, mockCalendarAvailability } from '../shared/data/mockData.js';
 import { mockAutomationRules, mockPendingQuotes, mockAutomationMetrics } from '../shared/data/mockAutomationData.js';
 import { mockEmails } from '../shared/data/mockEmails.js';
-import { EmailTemplate } from '../shared/types.js';
+import { EmailTemplate, PendingQuote, AutomationRule, AutomationMetrics } from '../shared/types.js';
 
 const logger = createLogger('EmailRoutes');
 
@@ -1311,13 +1311,11 @@ export function createEmailRoutes(): Router {
       }
 
       // Update quote status
-      pendingQuotes[quoteIndex] = {
-        ...pendingQuotes[quoteIndex],
-        status: 'approved',
-        managerNotes: managerNotes || pendingQuotes[quoteIndex].managerNotes,
-        approvedAt: new Date().toISOString(),
-        sentAt: new Date().toISOString()
-      };
+      const existingQuote = pendingQuotes[quoteIndex];
+      existingQuote.status = 'approved' as any;
+      existingQuote.managerNotes = managerNotes || existingQuote.managerNotes;
+      (existingQuote as any).approvedAt = new Date().toISOString();
+      (existingQuote as any).sentAt = new Date().toISOString();
 
       // Update the generated quotation status
       const quotationIndex = quotations.findIndex(q => q.id === pendingQuotes[quoteIndex].generatedQuote.id);

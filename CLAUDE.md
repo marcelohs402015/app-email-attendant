@@ -4,7 +4,7 @@ This file provides guidance for Claude Code (claude.ai/code) when working with t
 
 ## Project Overview
 
-Email Attendant is a complete system for automatic categorization and response of Gmail emails using **MOCK DATA ONLY**. **The project is now restructured for production deployment on Render.com with separated client and server architecture.**
+Handyman Manager is a complete system for automatic categorization and response of Gmail emails using **MOCK DATA ONLY**. **The project is now restructured for production deployment on Render.com with separated client and server architecture.**
 
 **Target Audience:** This application was developed especially for professionals who offer "handyman" services — contractors who perform home repairs, maintenance and small repair services. The solution helps these professionals efficiently manage service requests, quotes, complaints, product inquiries, support and sales communications received via email.
 
@@ -316,7 +316,7 @@ PostgreSQL database with tables created automatically during setup.
 ## 🚀 Deployment Notes - RENDER.COM READY
 
 ### Production Deployment (Render.com)
-The project is **READY FOR DEPLOYMENT** on Render.com with complete automation:
+The project is **READY FOR DEPLOYMENT** on Render.com with complete full-stack automation:
 
 1. **Push to Git Repository**
    ```bash
@@ -326,13 +326,16 @@ The project is **READY FOR DEPLOYMENT** on Render.com with complete automation:
    ```
 
 2. **Deploy on Render.com**
-   - Use Blueprint deployment (automatic detection of `render.yaml`)
-   - Or deploy services manually using build/start scripts
-   - Environment variables are configured automatically
+   - **Blueprint deployment** (automatic detection of `render.yaml`)
+   - **Deploys 2 services**: Backend API + Frontend App
+   - **Complete integration** with cross-service communication
 
-3. **Environment Variables** (Set on Render.com)
-   - **Backend**: `NODE_ENV=production`, `PORT=10000`, `CLIENT_URL=https://frontend-url`
-   - **Frontend**: `REACT_APP_API_URL=https://backend-url`
+3. **Service Configuration** (Automated via render.yaml)
+   - **Backend**: `handyman-manager-backend` (Node.js API)
+     - `NODE_ENV=production`, `PORT=10000`
+     - `CLIENT_URL=https://handyman-manager-frontend.onrender.com`
+   - **Frontend**: `handyman-manager-frontend` (Static Site)
+     - `REACT_APP_API_URL=https://handyman-manager-backend.onrender.com`
 
 ### Local Development Setup
 ```bash

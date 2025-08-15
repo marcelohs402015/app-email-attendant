@@ -1,7 +1,7 @@
 services:
   # Backend service - Alternative configuration
   - type: web
-    name: email-attendant-server
+    name: handyman-manager-backend
     env: node
     buildCommand: |
       echo "Building server..."
@@ -21,11 +21,11 @@ services:
       - key: PORT
         value: 10000
       - key: CLIENT_URL
-        value: https://email-attendant-client.onrender.com
+        value: https://handyman-manager-frontend.onrender.com
     
   # Frontend service (static site)
   - type: web
-    name: email-attendant-client
+    name: handyman-manager-frontend
     env: static
     buildCommand: |
       echo "Building client..."
@@ -37,4 +37,4 @@ services:
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://email-attendant-server.onrender.com
+        value: https://handyman-manager-backend.onrender.com

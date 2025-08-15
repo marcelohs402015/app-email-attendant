@@ -1,13 +1,26 @@
 services:
-  # FRONTEND-ONLY DEPLOYMENT - Static Site with Mock Data
-  # This configuration deploys ONLY the React frontend
-  # All data is simulated - perfect for product demonstration
+  # Backend service - Node.js API with mock data
   - type: web
-    name: app-email-attendant
+    name: handyman-manager-backend
+    env: node
+    buildCommand: "rm -f .npmrc && cd appserver && npm install && npm run build"
+    startCommand: "cd appserver && npm start"
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://handyman-manager-frontend.onrender.com
+    
+  # Frontend service - React app with full API connection
+  - type: web
+    name: handyman-manager-frontend
     env: static
     buildCommand: "rm -f .npmrc && cd appclient && npm install --legacy-peer-deps && npm run build"
     staticPublishPath: ./appclient/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: mock
+        value: https://handyman-manager-backend.onrender.com
