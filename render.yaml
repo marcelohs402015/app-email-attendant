@@ -1,26 +1,11 @@
 services:
-  # Backend service
+  # Frontend service (static site) - DEMO ONLY
   - type: web
-    name: email-attendant-server
-    env: node
-    buildCommand: "cd appserver && npm install && npm run build"
-    startCommand: "cd appserver && npm start"
-    plan: free
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 10000
-      - key: CLIENT_URL
-        value: https://email-attendant-client.onrender.com
-    
-  # Frontend service (static site)
-  - type: web
-    name: email-attendant-client
+    name: app-email-attendant
     env: static
-    buildCommand: "cd appclient && npm install && npm run build"
+    buildCommand: "cd appclient && npm install --legacy-peer-deps && npm run build"
     staticPublishPath: ./appclient/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://email-attendant-server.onrender.com
+        value: mock
