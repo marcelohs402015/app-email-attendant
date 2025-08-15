@@ -119,3 +119,18 @@
 {"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-15T14:01:02.560Z"}
 {"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-15T14:01:02.560Z"}
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-15T14:01:02.560Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-15T14:23:35.975Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-15T14:23:36.008Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-15T14:23:36.009Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-15T14:23:36.010Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-15T15:01:35.190Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-15T15:05:47.399Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-15T15:05:47.416Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-15T15:05:47.416Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-15T15:05:47.417Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-15T15:06:08.281Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-15T15:06:31.671Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-15T15:06:31.693Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-15T15:06:31.694Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-15T15:06:31.694Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-15T15:06:47.011Z"}
