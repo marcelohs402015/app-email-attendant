@@ -1,8 +1,8 @@
 {
   "app": {
-    "name": "Email Attendant",
+    "name": "Handyman Manager",
     "version": "v1.0",
-    "description": "Smart email management"
+    "description": "Complete handyman services management"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -245,7 +245,7 @@
     "clientName": "Client Name",
     "selectClient": "Select a client",
     "appointmentTitle": "Appointment Title",
-    "description": "Description",
+    "appointmentDescription": "Description",
     "date": "Date",
     "startTime": "Start Time",
     "endTime": "End Time",

@@ -1,61 +1,48 @@
-# 🚀 RENDER.COM DEPLOYMENT - STEP BY STEP
+# 🚀 RENDER.COM DEPLOYMENT - FRONTEND ONLY (STATIC SITE)
 
-## ⚠️ IMPORTANT: Fix for "Cannot find module" Error
+## ⚠️ IMPORTANT: Frontend-Only Deployment
 
-The error occurs because Render needs specific build and start commands for our separated architecture.
+**This project deploys ONLY the React frontend as a Static Site with mock data.**
+- ✅ **No backend required**
+- ✅ **All data is simulated**  
+- ✅ **Perfect for product demonstration**
+- ❌ **Do NOT create Web Service** (use Static Site only)
 
-## 🔧 SOLUTION: Use Manual Service Creation (Recommended)
+## 🔧 SOLUTION: Create Static Site Service
 
-### 1. Create Backend Service
+### 1. Create Static Site Service (Frontend Only)
 
 1. Go to [Render.com Dashboard](https://dashboard.render.com)
-2. Click "New" → "Web Service"
+2. Click **"New"** → **"Static Site"** (NOT Web Service!)
 3. Connect your GitHub repository
-4. Configure Backend Service:
+4. Configure Static Site Service:
 
 **Service Details:**
-- **Name**: `email-attendant-server`
-- **Environment**: `Node`
-- **Region**: Choose your preferred region
-- **Branch**: `main` (or your main branch)
+- **Name**: `app-email-attendant` (or your preferred name)
+- **Environment**: Automatically set to Static Site
+- **Region**: Choose your preferred region  
+- **Branch**: `master` (or your main branch)
 
 **Build & Deploy:**
 - **Build Command**: 
   ```bash
-  cd server && npm install && npm run build
-  ```
-- **Start Command**: 
-  ```bash
-  cd server && npm start
-  ```
-
-**Environment Variables:**
-- `NODE_ENV` = `production`
-- `PORT` = `10000`
-- `CLIENT_URL` = `https://your-frontend-service-name.onrender.com`
-
-### 2. Create Frontend Service
-
-1. Click "New" → "Static Site"
-2. Connect your GitHub repository
-3. Configure Frontend Service:
-
-**Service Details:**
-- **Name**: `email-attendant-client`
-- **Branch**: `main`
-
-**Build & Deploy:**
-- **Build Command**: 
-  ```bash
-  cd client && npm install && npm run build
+  cd appclient && npm install --legacy-peer-deps && npm run build
   ```
 - **Publish Directory**: 
   ```
-  client/build
+  appclient/build
   ```
+- **Start Command**: *(Leave empty - not needed for static sites)*
 
 **Environment Variables:**
-- `REACT_APP_API_URL` = `https://your-backend-service-name.onrender.com`
+- `REACT_APP_API_URL` = `mock`
+
+### 2. Deploy and Verify
+
+1. Click **"Create Static Site"**
+2. Wait for build to complete
+3. Visit your URL: `https://your-service-name.onrender.com`
+4. Verify React app loads with mock data
 
 ### 3. Update Environment Variables
 

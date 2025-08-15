@@ -1,5 +1,7 @@
 services:
-  # Frontend service (static site) - DEMO ONLY
+  # FRONTEND-ONLY DEPLOYMENT - Static Site with Mock Data
+  # This configuration deploys ONLY the React frontend
+  # All data is simulated - perfect for product demonstration
   - type: web
     name: app-email-attendant
     env: static

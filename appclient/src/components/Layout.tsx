@@ -40,7 +40,21 @@ export default function Layout() {
       <div className="flex flex-col w-64 bg-white shadow-lg">
         {/* Logo */}
         <div className="flex items-center justify-center h-16 px-4 bg-primary-600">
-          <h1 className="text-xl font-bold text-white">{t('app.name')}</h1>
+          <div className="flex items-center space-x-3">
+            {/* Handyman Icon */}
+            <div className="flex-shrink-0">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                {/* Hammer */}
+                <path d="M16.5 3.5c.8 0 1.5.7 1.5 1.5v.5l3 3v2l-3-3H17v13c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V7h-1l-3 3V8l3-3V4.5c0-.8.7-1.5 1.5-1.5z"/>
+                {/* Screwdriver */}
+                <path d="M2 17l4-4 1.5 1.5L3 19l4 1-1-4 4.5-4.5L12 13l3-3-1.5-1.5L16 6l2 2-2.5 2.5L14 12l-1.5-1.5L8 15l4 1-1 4-4-1 4.5-4.5z"/>
+              </svg>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-lg font-bold text-white leading-tight">Handyman</h1>
+              <h2 className="text-sm text-blue-100 leading-tight">Manager</h2>
+            </div>
+          </div>
         </div>
 
         {/* Navigation */}

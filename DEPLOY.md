@@ -2,15 +2,20 @@
 
 This guide explains how to deploy the Email Attendant application on Render.com.
 
+## ⚠️ IMPORTANT: Frontend-Only Deployment
+
+**This project is configured for FRONTEND-ONLY deployment as a Static Site.**
+- Uses **mock data only** (no backend required)
+- Perfect for **product demonstration**
+- All functionality works with simulated data
+
 ## Project Structure
 
 ```
 project-email-attendant/
-├── client/                 # React frontend
-├── server/                 # Node.js backend  
-├── build.sh               # Build script for Render
-├── start.sh               # Start script for Render
-├── render.yaml            # Render configuration
+├── appclient/              # React frontend (MAIN)
+├── appserver/              # Node.js backend (not deployed)
+├── render.yaml            # Static site configuration
 └── package.json           # Root package.json
 ```
 
@@ -26,38 +31,31 @@ project-email-attendant/
 
 ### 2. Deploy on Render.com
 
-#### Option A: Using render.yaml (Recommended)
+#### 🎯 STATIC SITE DEPLOYMENT (Frontend Only)
 
+**Option A: Using render.yaml (Blueprint)**
 1. Go to [Render.com](https://render.com) and sign in
-2. Click "New" > "Blueprint"
+2. Click **"New"** → **"Blueprint"**
 3. Connect your Git repository
 4. Render will automatically detect the `render.yaml` file
-5. Review and deploy both services
+5. Deploy static site service
 
-#### Option B: Manual Setup
-
-**Backend Service:**
-1. Click "New" > "Web Service"
+**Option B: Manual Static Site Setup (Recommended)**
+1. Click **"New"** → **"Static Site"** (NOT Web Service)
 2. Connect your repository
 3. Configure:
-   - **Name**: `email-attendant-server`
-   - **Environment**: `Node`
-   - **Build Command**: `./build.sh`
-   - **Start Command**: `./start.sh`
+   - **Name**: `app-email-attendant`
+   - **Branch**: `master` (or your main branch)
+   - **Build Command**: `cd appclient && npm install --legacy-peer-deps && npm run build`
+   - **Publish Directory**: `appclient/build`
    - **Plan**: Free
 4. Add Environment Variables:
-   - `NODE_ENV`: `production`
-   - `PORT`: `10000`
-   - `CLIENT_URL`: `https://your-frontend-url.onrender.com`
+   - `REACT_APP_API_URL`: `mock`
+5. **Deploy**
 
-**Frontend Service:**
-1. Click "New" > "Static Site"
-2. Connect your repository
-3. Configure:
-   - **Name**: `email-attendant-client`
-   - **Build Command**: `cd client && npm install && npm run build`
-   - **Publish Directory**: `client/build`
-4. Add Environment Variables:
+#### ⚠️ IMPORTANT: Do NOT create Web Service
+- **Static Site**: ✅ Correct (serves React files)
+- **Web Service**: ❌ Wrong (tries to run Node.js server)
    - `REACT_APP_API_URL`: `https://your-backend-url.onrender.com`
 
 ### 3. Environment Variables
