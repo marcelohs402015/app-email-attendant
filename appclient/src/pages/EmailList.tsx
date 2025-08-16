@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 import { Link } from 'react-router-dom';
 import { emailAPI } from '../services/api';
 import { FilterOptions, PaginationOptions } from '../types/api';
@@ -16,6 +17,7 @@ import { enUS } from 'date-fns/locale';
 
 export default function EmailList() {
   const { t } = useTranslation();
+  const { currentTheme } = useTheme();
   const [filters, setFilters] = useState<FilterOptions>({});
   const [pagination, setPagination] = useState<PaginationOptions>({
     page: 1,
@@ -99,12 +101,27 @@ export default function EmailList() {
   return (
     <div className="space-y-6">
       {/* Search and Filter Header */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div 
+        className={`rounded-lg shadow p-6 transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">{t('emails.title')}</h2>
+          <h2 
+            className="text-lg font-semibold transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
+            {t('emails.title')}
+          </h2>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900"
+            className={`flex items-center space-x-2 px-3 py-2 transition-colors duration-200 ${
+              currentTheme.type === 'purple' ? 'darkone-hover-white' : 'hover:text-gray-900'
+            }`}
+            style={{ 
+              color: currentTheme.colors.text.secondary
+            }}
           >
             <FunnelIcon className="h-5 w-5" />
             <span>{t('emails.filters')}</span>
@@ -114,18 +131,27 @@ export default function EmailList() {
         {/* Search Form */}
         <form onSubmit={handleSearch} className="flex space-x-4 mb-4">
           <div className="flex-1 relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <MagnifyingGlassIcon 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300"
+              style={{ color: currentTheme.colors.text.muted }}
+            />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={t('emails.searchPlaceholder')}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+              className="w-full pl-10 pr-4 py-2 border rounded-md transition-all duration-300"
+              style={{
+                backgroundColor: currentTheme.colors.background.primary,
+                color: currentTheme.colors.text.primary,
+                borderColor: currentTheme.colors.border.primary
+              }}
             />
           </div>
           <button
             type="submit"
-            className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+            className="px-6 py-2 text-white rounded-md transition-colors duration-200"
+            style={{ backgroundColor: currentTheme.colors.primary[600] }}
           >
             {t('emails.search')}
           </button>
@@ -133,13 +159,26 @@ export default function EmailList() {
 
         {/* Filters */}
         {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-md">
+          <div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-md transition-all duration-300"
+            style={{ backgroundColor: currentTheme.colors.background.primary }}
+          >
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('emails.headers.category')}</label>
+              <label 
+                className="block text-sm font-medium mb-1 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                {t('emails.headers.category')}
+              </label>
               <select
                 value={filters.category || ''}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border rounded-md transition-all duration-300"
+                style={{
+                  backgroundColor: currentTheme.colors.background.primary,
+                  color: currentTheme.colors.text.primary,
+                  borderColor: currentTheme.colors.border.primary
+                }}
               >
                 <option value="">{t('emails.allCategories')}</option>
                 {Object.keys({complaint: '', quote: '', product_info: '', support: '', sales: '', uncategorized: ''}).map((key) => (
@@ -149,11 +188,21 @@ export default function EmailList() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('emails.headers.status')}</label>
+              <label 
+                className="block text-sm font-medium mb-1 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                {t('emails.headers.status')}
+              </label>
               <select
                 value={filters.responded === true ? 'true' : filters.responded === false ? 'false' : ''}
                 onChange={(e) => handleFilterChange('responded', e.target.value === 'true' ? true : e.target.value === 'false' ? false : undefined)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 transition-all duration-300"
+                style={{
+                  backgroundColor: currentTheme.colors.background.primary,
+                  color: currentTheme.colors.text.primary,
+                  borderColor: currentTheme.colors.border.primary
+                }}
               >
                 <option value="">{t('emails.allStatuses')}</option>
                 <option value="false">{t('emails.pending')}</option>
@@ -162,12 +211,22 @@ export default function EmailList() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('emails.headers.date')}</label>
+              <label 
+                className="block text-sm font-medium mb-1 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                {t('emails.headers.date')}
+              </label>
               <input
                 type="date"
                 value={filters.dateFrom || ''}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 transition-all duration-300"
+                style={{
+                  backgroundColor: currentTheme.colors.background.primary,
+                  color: currentTheme.colors.text.primary,
+                  borderColor: currentTheme.colors.border.primary
+                }}
               />
             </div>
           </div>
@@ -175,11 +234,24 @@ export default function EmailList() {
       </div>
 
       {/* Email List */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div 
+        className={`rounded-lg shadow overflow-hidden transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         {emails.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">{t('emails.noEmailsFound')}</p>
-            <p className="text-gray-400 text-sm mt-2">
+            <p 
+              className="text-lg transition-colors duration-300"
+              style={{ color: currentTheme.colors.text.secondary }}
+            >
+              {t('emails.noEmailsFound')}
+            </p>
+            <p 
+              className="text-sm mt-2 transition-colors duration-300"
+              style={{ color: currentTheme.colors.text.muted }}
+            >
               {t('emails.adjustFilters')}
             </p>
           </div>
@@ -187,31 +259,63 @@ export default function EmailList() {
           <>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead 
+                  className="transition-all duration-300"
+                  style={{ backgroundColor: currentTheme.colors.background.primary }}
+                >
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.status')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.subject')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.sender')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.category')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.date')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('emails.headers.actions')}
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody 
+                  className="divide-y transition-all duration-300"
+                  style={{ 
+                    backgroundColor: currentTheme.colors.background.card,
+                    borderColor: currentTheme.colors.border.primary
+                  }}
+                >
                   {emails.map((email) => (
-                    <tr key={email.id} className="hover:bg-gray-50">
+                    <tr 
+                      key={email.id} 
+                      className={`transition-all duration-200 ${
+                        currentTheme.type === 'purple' ? 'hover:bg-opacity-10 hover:bg-white' : 'hover:bg-gray-50'
+                      }`}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           {email.responded ? (
@@ -222,15 +326,24 @@ export default function EmailList() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
+                        <div 
+                          className="text-sm font-medium truncate max-w-xs transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {email.subject}
                         </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
+                        <div 
+                          className="text-sm truncate max-w-xs transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        >
                           {email.snippet}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 truncate max-w-xs">
+                        <div 
+                          className="text-sm truncate max-w-xs transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {email.from}
                         </div>
                       </td>
@@ -239,13 +352,19 @@ export default function EmailList() {
                           {getCategoryLabel(email.category)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td 
+                        className="px-6 py-4 whitespace-nowrap text-sm transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.muted }}
+                      >
                         {format(parseISO(email.date), 'dd/MM/yyyy HH:mm', { locale: enUS })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Link
                           to={`/emails/${email.id}`}
-                          className="text-primary-600 hover:text-primary-900 flex items-center space-x-1"
+                          className={`flex items-center space-x-1 transition-colors duration-200 ${
+                            currentTheme.type === 'purple' ? 'darkone-hover-primary' : 'hover:text-primary-900'
+                          }`}
+                          style={{ color: currentTheme.colors.primary[600] }}
                         >
                           <EyeIcon className="h-4 w-4" />
                           <span>{t('emails.view')}</span>
@@ -259,44 +378,79 @@ export default function EmailList() {
 
             {/* Pagination */}
             {paginationInfo && paginationInfo.pages > 1 && (
-              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                <div className="flex-1 flex justify-between sm:hidden">
-                  <button
-                    onClick={() => handlePageChange(pagination.page - 1)}
-                    disabled={pagination.page <= 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {t('emails.previous')}
-                  </button>
-                  <button
-                    onClick={() => handlePageChange(pagination.page + 1)}
-                    disabled={pagination.page >= paginationInfo.pages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {t('emails.next')}
-                  </button>
-                </div>
-                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      {t('emails.showing')}{' '}
-                      <span className="font-medium">
-                        {((pagination.page - 1) * pagination.limit) + 1}
-                      </span>{' '}
-                      {t('emails.to')}{' '}
-                      <span className="font-medium">
-                        {Math.min(pagination.page * pagination.limit, paginationInfo.total)}
-                      </span>{' '}
-                      {t('emails.of')}{' '}
-                      <span className="font-medium">{paginationInfo.total}</span> {t('emails.results')}
-                    </p>
+              <div 
+                className="px-4 py-3 flex items-center justify-between border-t sm:px-6 transition-all duration-300"
+                style={{ 
+                  backgroundColor: currentTheme.colors.background.card,
+                  borderColor: currentTheme.colors.border.primary
+                }}
+              >
+                                  <div className="flex-1 flex justify-between sm:hidden">
+                    <button
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                      disabled={pagination.page <= 1}
+                      className="relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
+                    >
+                      {t('emails.previous')}
+                    </button>
+                    <button
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                      disabled={pagination.page >= paginationInfo.pages}
+                      className="ml-3 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
+                    >
+                      {t('emails.next')}
+                    </button>
                   </div>
+                                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                      <p 
+                        className="text-sm transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.secondary }}
+                      >
+                        {t('emails.showing')}{' '}
+                        <span 
+                          className="font-medium transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
+                          {((pagination.page - 1) * pagination.limit) + 1}
+                        </span>{' '}
+                        {t('emails.to')}{' '}
+                        <span 
+                          className="font-medium transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
+                          {Math.min(pagination.page * pagination.limit, paginationInfo.total)}
+                        </span>{' '}
+                        {t('emails.of')}{' '}
+                        <span 
+                          className="font-medium transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
+                          {paginationInfo.total}
+                        </span> {t('emails.results')}
+                      </p>
+                    </div>
                   <div>
                     <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                       <button
                         onClick={() => handlePageChange(pagination.page - 1)}
                         disabled={pagination.page <= 1}
-                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.muted,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       >
                         {t('emails.previous')}
                       </button>
@@ -311,11 +465,22 @@ export default function EmailList() {
                           <button
                             key={pageNum}
                             onClick={() => handlePageChange(pageNum)}
-                            className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                            className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-all duration-200 ${
                               pageNum === pagination.page
-                                ? 'z-10 bg-primary-50 border-primary-500 text-primary-600'
-                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                                ? 'z-10'
+                                : ''
                             }`}
+                            style={{
+                              backgroundColor: pageNum === pagination.page 
+                                ? currentTheme.colors.primary[600] 
+                                : currentTheme.colors.background.primary,
+                              color: pageNum === pagination.page 
+                                ? '#ffffff' 
+                                : currentTheme.colors.text.muted,
+                              borderColor: pageNum === pagination.page 
+                                ? currentTheme.colors.primary[600] 
+                                : currentTheme.colors.border.primary
+                            }}
                           >
                             {pageNum}
                           </button>
@@ -325,7 +490,12 @@ export default function EmailList() {
                       <button
                         onClick={() => handlePageChange(pagination.page + 1)}
                         disabled={pagination.page >= paginationInfo.pages}
-                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.muted,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       >
                         {t('emails.next')}
                       </button>

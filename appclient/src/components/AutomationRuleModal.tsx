@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useTheme } from '../contexts/ThemeContext';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { emailAPI } from '../services/api';
 import { AutomationRule } from '../types/api';
@@ -13,6 +14,7 @@ interface AutomationRuleModalProps {
 
 export default function AutomationRuleModal({ rule, isOpen, onClose }: AutomationRuleModalProps) {
   const { t } = useTranslation();
+  const { currentTheme } = useTheme();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -189,14 +191,28 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
-          <div className="flex items-center justify-between pb-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
+        <div 
+          className={`inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6 ${
+            currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+          }`}
+          style={{ backgroundColor: currentTheme.colors.background.card }}
+        >
+          <div 
+            className="flex items-center justify-between pb-4 border-b transition-all duration-300"
+            style={{ borderColor: currentTheme.colors.border.primary }}
+          >
+            <h3 
+              className="text-lg font-medium transition-colors duration-300"
+              style={{ color: currentTheme.colors.text.primary }}
+            >
               {rule ? t('automation.rules.editRule') : t('automation.rules.createRule')}
             </h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className={`transition-colors duration-200 ${
+                currentTheme.type === 'purple' ? 'darkone-hover-white' : 'hover:text-gray-600'
+              }`}
+              style={{ color: currentTheme.colors.text.muted }}
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -206,10 +222,18 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Basic Information */}
               <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-900">Basic Information</h4>
+                <h4 
+                  className="text-sm font-medium transition-colors duration-300"
+                  style={{ color: currentTheme.colors.text.primary }}
+                >
+                  Basic Information
+                </h4>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label 
+                    className="block text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.ruleName')} *
                   </label>
                   <input
@@ -217,9 +241,14 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     placeholder={t('automation.rules.ruleNamePlaceholder')}
-                    className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
+                    className={`mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all duration-300 ${
                       errors.name ? 'border-red-300' : ''
                     }`}
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: errors.name ? '#ef4444' : currentTheme.colors.border.primary
+                    }}
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -227,7 +256,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label 
+                    className="block text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.description')}
                   </label>
                   <textarea
@@ -235,12 +267,20 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     placeholder={t('automation.rules.descriptionPlaceholder')}
                     rows={3}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label 
+                    className="block text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.keywords')} *
                   </label>
                   <input
@@ -249,9 +289,17 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     onChange={(e) => setKeywordInput(e.target.value)}
                     onKeyDown={handleKeywordAdd}
                     placeholder={t('automation.rules.keywordsPlaceholder')}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
                   />
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p 
+                    className="mt-1 text-xs transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.muted }}
+                  >
                     {t('automation.rules.keywordsHint')}
                   </p>
                   {formData.keywords.length > 0 && (
@@ -259,13 +307,18 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                       {formData.keywords.map((keyword, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800"
+                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.primary[600],
+                            color: '#ffffff'
+                          }}
                         >
                           {keyword}
                           <button
                             type="button"
                             onClick={() => handleKeywordRemove(keyword)}
-                            className="ml-1 text-blue-600 hover:text-blue-800"
+                            className="ml-1 transition-colors duration-200"
+                            style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                           >
                             ×
                           </button>
@@ -286,7 +339,11 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                  <label 
+                    htmlFor="isActive" 
+                    className="ml-2 block text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.isActive')}
                   </label>
                 </div>
@@ -294,11 +351,20 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
 
               {/* Services */}
               <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-900">
+                <h4 
+                  className="text-sm font-medium transition-colors duration-300"
+                  style={{ color: currentTheme.colors.text.primary }}
+                >
                   {t('automation.rules.services')} *
                 </h4>
                 
-                <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3 space-y-2">
+                <div 
+                  className="max-h-48 overflow-y-auto border rounded-md p-3 space-y-2 transition-all duration-300"
+                  style={{
+                    backgroundColor: currentTheme.colors.background.primary,
+                    borderColor: currentTheme.colors.border.primary
+                  }}
+                >
                   {services.map((service) => (
                     <label key={service.id} className="flex items-center">
                       <input
@@ -307,7 +373,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                         onChange={() => handleServiceToggle(service.id)}
                         className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                       />
-                      <span className="ml-2 text-sm text-gray-900">
+                      <span 
+                        className="ml-2 text-sm transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {service.name} - ${service.defaultPrice}
                       </span>
                     </label>
@@ -321,13 +390,19 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
 
             {/* Conditions */}
             <div className="space-y-4">
-              <h4 className="text-sm font-medium text-gray-900">
+              <h4 
+                className="text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
                 {t('automation.rules.conditions')}
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label 
+                    className="block text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.minConfidence')} (%)
                   </label>
                   <input
@@ -339,7 +414,12 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                       ...prev,
                       conditions: { ...prev.conditions, minConfidence: parseInt(e.target.value) }
                     }))}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
                   />
                   {errors.confidence && (
                     <p className="mt-1 text-sm text-red-600">{errors.confidence}</p>
@@ -347,7 +427,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label 
+                    className="block text-sm font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.senderDomain')}
                   </label>
                   <input
@@ -358,7 +441,12 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                       conditions: { ...prev.conditions, senderDomain: e.target.value }
                     }))}
                     placeholder="@gmail.com"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all duration-300"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
                   />
                 </div>
 
@@ -373,7 +461,11 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     }))}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="requireAllKeywords" className="ml-2 block text-sm text-gray-900">
+                  <label 
+                    htmlFor="requireAllKeywords" 
+                    className="ml-2 block text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.requireAllKeywords')}
                   </label>
                 </div>
@@ -381,7 +473,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
 
               {/* Email Categories */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label 
+                  className="block text-sm font-medium mb-2 transition-colors duration-300"
+                  style={{ color: currentTheme.colors.text.primary }}
+                >
                   {t('automation.rules.emailCategories')}
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -393,7 +488,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                         onChange={() => handleCategoryToggle(category)}
                         className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                       />
-                      <span className="ml-1 text-sm text-gray-900 capitalize">
+                      <span 
+                        className="ml-1 text-sm capitalize transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {category.replace('_', ' ')}
                       </span>
                     </label>
@@ -404,7 +502,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
 
             {/* Actions */}
             <div className="space-y-4">
-              <h4 className="text-sm font-medium text-gray-900">
+              <h4 
+                className="text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
                 {t('automation.rules.actions')}
               </h4>
               
@@ -419,7 +520,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     }))}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-900">
+                  <span 
+                    className="ml-2 text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.generateQuote')}
                   </span>
                 </label>
@@ -434,7 +538,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     }))}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-900">
+                  <span 
+                    className="ml-2 text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.autoSend')}
                   </span>
                 </label>
@@ -449,7 +556,10 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
                     }))}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-900">
+                  <span 
+                    className="ml-2 text-sm transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {t('automation.rules.notifyManager')}
                   </span>
                 </label>
@@ -457,18 +567,27 @@ export default function AutomationRuleModal({ rule, isOpen, onClose }: Automatio
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+            <div 
+              className="flex justify-end space-x-3 pt-6 border-t transition-all duration-300"
+              style={{ borderColor: currentTheme.colors.border.primary }}
+            >
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="px-4 py-2 border rounded-md shadow-sm text-sm font-medium transition-all duration-200"
+                style={{
+                  backgroundColor: currentTheme.colors.background.primary,
+                  color: currentTheme.colors.text.primary,
+                  borderColor: currentTheme.colors.border.primary
+                }}
               >
                 {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50"
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-all duration-200 disabled:opacity-50"
+                style={{ backgroundColor: currentTheme.colors.primary[600] }}
               >
                 {createMutation.isPending || updateMutation.isPending ? (
                   <div className="flex items-center">

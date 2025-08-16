@@ -155,7 +155,9 @@ export default function Dashboard() {
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Emails */}
             <div 
-              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              className={`p-6 rounded-xl transition-all duration-300 hover:shadow-lg ${
+                currentTheme.type === 'purple' ? 'darkone-card' : ''
+              }`}
               style={{ backgroundColor: currentTheme.colors.background.card }}
             >
               <div className="flex items-center justify-between">
@@ -221,7 +223,9 @@ export default function Dashboard() {
 
             {/* Pending Response */}
             <div 
-              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              className={`p-6 rounded-xl transition-all duration-300 hover:shadow-lg ${
+                currentTheme.type === 'purple' ? 'darkone-card' : ''
+              }`}
               style={{ backgroundColor: currentTheme.colors.background.card }}
             >
               <div className="flex items-center justify-between">
@@ -254,7 +258,9 @@ export default function Dashboard() {
 
             {/* Response Rate */}
             <div 
-              className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+              className={`p-6 rounded-xl transition-all duration-300 hover:shadow-lg ${
+                currentTheme.type === 'purple' ? 'darkone-card' : ''
+              }`}
               style={{ backgroundColor: currentTheme.colors.background.card }}
             >
               <div className="flex items-center justify-between">
@@ -288,7 +294,9 @@ export default function Dashboard() {
 
           {/* Target Progress Card */}
           <div 
-            className="p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+            className={`p-6 rounded-xl transition-all duration-300 hover:shadow-lg ${
+              currentTheme.type === 'purple' ? 'darkone-shadow' : ''
+            }`}
             style={{ backgroundColor: currentTheme.colors.primary[600] }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Your target is incomplete</h3>

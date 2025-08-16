@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   PlusIcon,
   PencilIcon,
@@ -31,6 +32,7 @@ interface QuotationFormData {
 
 const Quotations: React.FC = () => {
   const { t } = useTranslation();
+  const { currentTheme } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -271,14 +273,23 @@ const Quotations: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('quotations.title')}</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 
+            className="text-2xl font-bold transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
+            {t('quotations.title')}
+          </h1>
+          <p 
+            className="mt-1 text-sm transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.muted }}
+          >
             {t('quotations.manageDescription')}
           </p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md transition-colors"
+          style={{ backgroundColor: currentTheme.colors.primary[600] }}
         >
           <PlusIcon className="h-4 w-4 mr-2" />
           {t('quotations.newQuotation')}
@@ -286,7 +297,12 @@ const Quotations: React.FC = () => {
       </div>
 
       {/* Quotations List */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div 
+        className={`shadow-sm rounded-lg overflow-hidden transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="px-4 py-5 sm:p-6">
           <div className="space-y-4">
             {quotations.map((quotation) => {
@@ -294,13 +310,25 @@ const Quotations: React.FC = () => {
               return (
                 <div
                   key={quotation.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${
+                    currentTheme.type === 'purple' ? 'darkone-glass' : ''
+                  }`}
+                  style={{
+                    backgroundColor: currentTheme.colors.background.primary,
+                    borderColor: currentTheme.colors.border.primary
+                  }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
-                        <DocumentTextIcon className="h-5 w-5 text-gray-400" />
-                        <h3 className="text-lg font-medium text-gray-900">
+                        <DocumentTextIcon 
+                          className="h-5 w-5 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        />
+                        <h3 
+                          className="text-lg font-medium transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {quotation.clientName}
                         </h3>
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${statusInfo.color}`}>
@@ -308,7 +336,10 @@ const Quotations: React.FC = () => {
                         </span>
                       </div>
                       
-                      <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                      <div 
+                        className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.secondary }}
+                      >
                         <div>
                           <strong>{t('quotations.email')}:</strong> {quotation.clientEmail}
                         </div>
@@ -321,7 +352,10 @@ const Quotations: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="mt-2 text-sm text-gray-500">
+                      <div 
+                        className="mt-2 text-sm transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.muted }}
+                      >
                         {quotation.items.length} {quotation.items.length === 1 ? t('quotations.item') : t('quotations.items')}
                       </div>
                     </div>
@@ -329,14 +363,20 @@ const Quotations: React.FC = () => {
                     <div className="flex items-center space-x-2 ml-4">
                       <button
                         onClick={() => handlePreview(quotation)}
-                        className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                        className={`p-2 transition-colors duration-200 ${
+                          currentTheme.type === 'purple' ? 'darkone-hover-primary' : 'hover:text-blue-600'
+                        }`}
+                        style={{ color: currentTheme.colors.text.muted }}
                         title={t('buttons.view')}
                       >
                         <EyeIcon className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleOpenModal(quotation)}
-                        className="p-2 text-gray-400 hover:text-primary-600 transition-colors"
+                        className={`p-2 transition-colors duration-200 ${
+                          currentTheme.type === 'purple' ? 'darkone-hover-primary' : 'hover:text-primary-600'
+                        }`}
+                        style={{ color: currentTheme.colors.text.muted }}
                         title={t('buttons.edit')}
                       >
                         <PencilIcon className="h-4 w-4" />
@@ -345,7 +385,8 @@ const Quotations: React.FC = () => {
                         <button
                           onClick={() => handleSend(quotation)}
                           disabled={sendMutation.isPending}
-                          className="p-2 text-gray-400 hover:text-green-600 transition-colors disabled:opacity-50"
+                          className="p-2 transition-colors duration-200 hover:text-green-600 disabled:opacity-50"
+                          style={{ color: currentTheme.colors.text.muted }}
                           title={t('buttons.sendByEmail')}
                         >
                           <PaperAirplaneIcon className="h-4 w-4" />
@@ -353,7 +394,10 @@ const Quotations: React.FC = () => {
                       )}
                       <button
                         onClick={() => handleDelete(quotation.id)}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className={`p-2 transition-colors duration-200 ${
+                          currentTheme.type === 'purple' ? 'darkone-hover-red' : 'hover:text-red-600'
+                        }`}
+                        style={{ color: currentTheme.colors.text.muted }}
                         title={t('buttons.delete')}
                       >
                         <TrashIcon className="h-4 w-4" />
@@ -367,15 +411,27 @@ const Quotations: React.FC = () => {
 
           {quotations.length === 0 && (
             <div className="text-center py-12">
-              <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">{t('quotations.noQuotationsCreated')}</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <DocumentTextIcon 
+                className="mx-auto h-12 w-12 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              />
+              <h3 
+                className="mt-2 text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                {t('quotations.noQuotationsCreated')}
+              </h3>
+              <p 
+                className="mt-1 text-sm transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              >
                 {t('quotations.createFirstQuotation')}
               </p>
               <div className="mt-6">
                 <button
                   onClick={() => handleOpenModal()}
-                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700"
+                  className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200"
+                  style={{ backgroundColor: currentTheme.colors.primary[600] }}
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   {t('quotations.createQuotation')}
@@ -394,16 +450,27 @@ const Quotations: React.FC = () => {
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+            <div 
+              className={`inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6 ${
+                currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+              }`}
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
               <form onSubmit={handleSubmit}>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 
+                    className="text-lg font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {editingQuotation ? t('quotations.editQuotation') : t('quotations.newQuotation')}
                   </h3>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="text-gray-400 hover:text-gray-600"
+                    className={`transition-colors duration-200 ${
+                      currentTheme.type === 'purple' ? 'darkone-hover-white' : 'hover:text-gray-600'
+                    }`}
+                    style={{ color: currentTheme.colors.text.muted }}
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -411,11 +478,27 @@ const Quotations: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-6">
                   {/* Cliente Info */}
-                  <div className="border rounded-lg p-4">
-                    <h4 className="text-md font-medium text-gray-900 mb-4">{t('quotations.clientInfo')}</h4>
+                  <div 
+                    className={`border rounded-lg p-4 transition-all duration-300 ${
+                      currentTheme.type === 'purple' ? 'darkone-glass' : ''
+                    }`}
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
+                  >
+                    <h4 
+                      className="text-md font-medium mb-4 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
+                      {t('quotations.clientInfo')}
+                    </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.clientName')}
                         </label>
                         <input
@@ -423,11 +506,19 @@ const Quotations: React.FC = () => {
                           required
                           value={formData.clientName}
                           onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.email')}
                         </label>
                         <input
@@ -435,22 +526,38 @@ const Quotations: React.FC = () => {
                           required
                           value={formData.clientEmail}
                           onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.phone')}
                         </label>
                         <input
                           type="tel"
                           value={formData.clientPhone}
                           onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.validUntil')}
                         </label>
                         <input
@@ -458,36 +565,70 @@ const Quotations: React.FC = () => {
                           required
                           value={formData.validUntil}
                           onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                     </div>
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                        className="block text-sm font-medium mb-1 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {t('quotations.address')}
                       </label>
                       <textarea
                         rows={2}
                         value={formData.clientAddress}
                         onChange={(e) => setFormData({ ...formData, clientAddress: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                         placeholder={t('quotations.addressPlaceholder')}
                       />
                     </div>
                   </div>
 
                   {/* Add Items */}
-                  <div className="border rounded-lg p-4">
-                    <h4 className="text-md font-medium text-gray-900 mb-4">{t('services.addServices')}</h4>
+                  <div 
+                    className={`border rounded-lg p-4 transition-all duration-300 ${
+                      currentTheme.type === 'purple' ? 'darkone-glass' : ''
+                    }`}
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      borderColor: currentTheme.colors.border.primary
+                    }}
+                  >
+                    <h4 
+                      className="text-md font-medium mb-4 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
+                      {t('services.addServices')}
+                    </h4>
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.service')}
                         </label>
                         <select
                           value={selectedService}
                           onChange={(e) => handleServiceSelect(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         >
                           <option value="">{t('quotations.selectService')}</option>
                           {services.filter(s => s.isActive).map((service) => (
@@ -498,7 +639,10 @@ const Quotations: React.FC = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.quantity')}
                         </label>
                         <input
@@ -507,11 +651,19 @@ const Quotations: React.FC = () => {
                           step="1"
                           value={quantity}
                           onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label 
+                          className="block text-sm font-medium mb-1 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.primary }}
+                        >
                           {t('quotations.unitPrice')} (R$)
                         </label>
                         <input
@@ -520,7 +672,12 @@ const Quotations: React.FC = () => {
                           step="0.01"
                           value={unitPrice}
                           onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          style={{
+                            backgroundColor: currentTheme.colors.background.primary,
+                            color: currentTheme.colors.text.primary,
+                            borderColor: currentTheme.colors.border.primary
+                          }}
                         />
                       </div>
                       <div>
@@ -528,7 +685,8 @@ const Quotations: React.FC = () => {
                           type="button"
                           onClick={handleAddItem}
                           disabled={!selectedService || quantity <= 0 || unitPrice <= 0}
-                          className="w-full px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full px-4 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                          style={{ backgroundColor: currentTheme.colors.primary[600] }}
                         >
                           {t('buttons.add')}
                         </button>
@@ -539,7 +697,12 @@ const Quotations: React.FC = () => {
                         type="text"
                         value={itemNotes}
                         onChange={(e) => setItemNotes(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                         placeholder="Notes about this item (optional)"
                       />
                     </div>
@@ -547,20 +710,49 @@ const Quotations: React.FC = () => {
 
                   {/* Items List */}
                   {formData.items.length > 0 && (
-                    <div className="border rounded-lg p-4">
-                      <h4 className="text-md font-medium text-gray-900 mb-4">Quotation Items</h4>
-                      <div className="space-y-2">
-                        {formData.items.map((item, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
-                            <div className="flex-1">
-                              <div className="text-sm font-medium text-gray-900">
-                                {getServiceName(item.serviceId)}
+                    <div 
+                      className={`border rounded-lg p-4 transition-all duration-300 ${
+                        currentTheme.type === 'purple' ? 'darkone-glass' : ''
+                      }`}
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
+                    >
+                      <h4 
+                        className="text-md font-medium mb-4 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
+                        Quotation Items
+                      </h4>
+                                              <div className="space-y-2">
+                          {formData.items.map((item, index) => (
+                            <div 
+                              key={index} 
+                              className={`flex items-center justify-between p-3 rounded-md transition-all duration-300 ${
+                                currentTheme.type === 'purple' ? 'darkone-glass' : 'bg-gray-50'
+                              }`}
+                              style={{
+                                backgroundColor: currentTheme.type === 'purple' 
+                                  ? 'rgba(255, 255, 255, 0.05)' 
+                                  : undefined
+                              }}
+                            >
+                              <div className="flex-1">
+                                <div 
+                                  className="text-sm font-medium transition-colors duration-300"
+                                  style={{ color: currentTheme.colors.text.primary }}
+                                >
+                                  {getServiceName(item.serviceId)}
+                                </div>
+                                <div 
+                                  className="text-xs transition-colors duration-300"
+                                  style={{ color: currentTheme.colors.text.muted }}
+                                >
+                                  {item.quantity} x {formatPrice(item.unitPrice)} = {formatPrice(item.subtotal)}
+                                  {item.notes && <span className="block mt-1">{item.notes}</span>}
+                                </div>
                               </div>
-                              <div className="text-xs text-gray-500">
-                                {item.quantity} x {formatPrice(item.unitPrice)} = {formatPrice(item.subtotal)}
-                                {item.notes && <span className="block mt-1">{item.notes}</span>}
-                              </div>
-                            </div>
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(index)}
@@ -598,31 +790,49 @@ const Quotations: React.FC = () => {
 
                   {/* Notes */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Notes
                     </label>
                     <textarea
                       rows={3}
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="General notes about the quotation..."
                     />
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                <div 
+                  className="flex justify-end space-x-3 mt-6 pt-4 border-t transition-all duration-300"
+                  style={{ borderColor: currentTheme.colors.border.primary }}
+                >
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary,
+                      border: '1px solid'
+                    }}
                   >
                     {t('buttons.cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 disabled:opacity-50"
+                    className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 transition-all duration-200"
+                    style={{ backgroundColor: currentTheme.colors.primary[600] }}
                   >
                     {(createMutation.isPending || updateMutation.isPending) ? (
                       <>

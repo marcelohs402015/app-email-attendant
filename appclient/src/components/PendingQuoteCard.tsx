@@ -10,7 +10,6 @@ import {
   DocumentTextIcon,
   CurrencyDollarIcon,
   ChartBarIcon,
-  ExclamationTriangleIcon,
   ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 import { emailAPI } from '../services/api';

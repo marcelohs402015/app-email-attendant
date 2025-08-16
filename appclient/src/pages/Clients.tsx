@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   PlusIcon,
   PencilIcon,
@@ -23,6 +24,7 @@ interface ClientFormData {
 }
 
 const Clients: React.FC = () => {
+  const { currentTheme } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -135,14 +137,23 @@ const Clients: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 
+            className="text-2xl font-bold transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
+            Customers
+          </h1>
+          <p 
+            className="mt-1 text-sm transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.muted }}
+          >
             Manage your customers
           </p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200"
+          style={{ backgroundColor: currentTheme.colors.primary[600] }}
         >
           <PlusIcon className="h-4 w-4 mr-2" />
           Novo Cliente
@@ -150,9 +161,17 @@ const Clients: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
+      <div 
+        className={`rounded-lg shadow-sm p-4 transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">
+          <label 
+            className="text-sm font-medium transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
             Buscar cliente:
           </label>
           <input
@@ -160,52 +179,107 @@ const Clients: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Digite o nome ou email..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+            className="flex-1 px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 transition-all duration-300"
+            style={{
+              backgroundColor: currentTheme.colors.background.primary,
+              color: currentTheme.colors.text.primary,
+              borderColor: currentTheme.colors.border.primary
+            }}
           />
         </div>
       </div>
 
       {/* Clients List */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div 
+        className={`shadow-sm rounded-lg overflow-hidden transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredClients.map((client) => (
               <div
                 key={client.id}
-                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${
+                  currentTheme.type === 'purple' ? 'darkone-glass' : ''
+                }`}
+                style={{
+                  backgroundColor: currentTheme.colors.background.primary,
+                  borderColor: currentTheme.colors.border.primary
+                }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center">
-                      <UsersIcon className="h-5 w-5 text-gray-400 mr-2" />
-                      <h3 className="text-sm font-medium text-gray-900">
+                      <UsersIcon 
+                        className="h-5 w-5 mr-2 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.muted }}
+                      />
+                      <h3 
+                        className="text-sm font-medium transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {client.name}
                       </h3>
                     </div>
                     
                     <div className="mt-3 space-y-2">
-                      <div className="flex items-center text-xs text-gray-600">
-                        <EnvelopeIcon className="h-3 w-3 mr-2 text-gray-400" />
+                      <div 
+                        className="flex items-center text-xs transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.muted }}
+                      >
+                        <EnvelopeIcon 
+                          className="h-3 w-3 mr-2 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        />
                         <span className="truncate">{client.email}</span>
                       </div>
                       
                       {client.phone && (
-                        <div className="flex items-center text-xs text-gray-600">
-                          <PhoneIcon className="h-3 w-3 mr-2 text-gray-400" />
+                        <div 
+                          className="flex items-center text-xs transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        >
+                          <PhoneIcon 
+                            className="h-3 w-3 mr-2 transition-colors duration-300"
+                            style={{ color: currentTheme.colors.text.muted }}
+                          />
                           <span>{client.phone}</span>
                         </div>
                       )}
                       
                       {client.address && (
-                        <div className="flex items-start text-xs text-gray-600">
-                          <MapPinIcon className="h-3 w-3 mr-2 mt-0.5 text-gray-400 flex-shrink-0" />
+                        <div 
+                          className="flex items-start text-xs transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        >
+                          <MapPinIcon 
+                            className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0 transition-colors duration-300"
+                            style={{ color: currentTheme.colors.text.muted }}
+                          />
                           <span className="line-clamp-2">{client.address}</span>
                         </div>
                       )}
                       
                       {client.notes && (
-                        <div className="mt-2 p-2 bg-gray-50 rounded text-xs text-gray-600">
-                          <span className="font-medium">Notes:</span>
+                        <div 
+                          className={`mt-2 p-2 rounded text-xs transition-all duration-300 ${
+                            currentTheme.type === 'purple' ? 'darkone-glass' : 'bg-gray-50'
+                          }`}
+                          style={{
+                            backgroundColor: currentTheme.type === 'purple' 
+                              ? 'rgba(255, 255, 255, 0.05)' 
+                              : undefined,
+                            color: currentTheme.colors.text.muted
+                          }}
+                        >
+                          <span 
+                            className="font-medium transition-colors duration-300"
+                            style={{ color: currentTheme.colors.text.primary }}
+                          >
+                            Notes:
+                          </span>
                           <p className="mt-1 line-clamp-2">{client.notes}</p>
                         </div>
                       )}
@@ -215,14 +289,20 @@ const Clients: React.FC = () => {
                   <div className="flex space-x-1 ml-2">
                     <button
                       onClick={() => handleOpenModal(client)}
-                      className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
+                      className={`p-1 transition-colors duration-200 ${
+                        currentTheme.type === 'purple' ? 'darkone-hover-primary' : 'hover:text-primary-600'
+                      }`}
+                      style={{ color: currentTheme.colors.text.muted }}
                       title="Editar"
                     >
                       <PencilIcon className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(client.id)}
-                      className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                      className={`p-1 transition-colors duration-200 ${
+                        currentTheme.type === 'purple' ? 'darkone-hover-red' : 'hover:text-red-600'
+                      }`}
+                      style={{ color: currentTheme.colors.text.muted }}
                       title="Excluir"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -235,9 +315,20 @@ const Clients: React.FC = () => {
 
           {filteredClients.length === 0 && searchTerm && (
             <div className="text-center py-12">
-              <UsersIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum cliente encontrado</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <UsersIcon 
+                className="mx-auto h-12 w-12 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              />
+              <h3 
+                className="mt-2 text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                Nenhum cliente encontrado
+              </h3>
+              <p 
+                className="mt-1 text-sm transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              >
                 Tente buscar com outros termos.
               </p>
             </div>
@@ -245,15 +336,27 @@ const Clients: React.FC = () => {
 
           {clients.length === 0 && (
             <div className="text-center py-12">
-              <UsersIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum cliente</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <UsersIcon 
+                className="mx-auto h-12 w-12 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              />
+              <h3 
+                className="mt-2 text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
+                Nenhum cliente
+              </h3>
+              <p 
+                className="mt-1 text-sm transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              >
                 Comece criando seu primeiro cliente.
               </p>
               <div className="mt-6">
                 <button
                   onClick={() => handleOpenModal()}
-                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700"
+                  className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200"
+                  style={{ backgroundColor: currentTheme.colors.primary[600] }}
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   Criar Cliente
@@ -272,16 +375,27 @@ const Clients: React.FC = () => {
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div 
+              className={`inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6 ${
+                currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+              }`}
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
               <form onSubmit={handleSubmit}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 
+                    className="text-lg font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {editingClient ? 'Editar Cliente' : 'Novo Cliente'}
                   </h3>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="text-gray-400 hover:text-gray-600"
+                    className={`transition-colors duration-200 ${
+                      currentTheme.type === 'purple' ? 'darkone-hover-white' : 'hover:text-gray-600'
+                    }`}
+                    style={{ color: currentTheme.colors.text.muted }}
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -289,7 +403,10 @@ const Clients: React.FC = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Nome *
                     </label>
                     <input
@@ -297,13 +414,21 @@ const Clients: React.FC = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="Nome do cliente"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Email *
                     </label>
                     <input
@@ -311,63 +436,102 @@ const Clients: React.FC = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="email@exemplo.com"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Telefone
                     </label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="(11) 99999-9999"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Address
                     </label>
                     <textarea
                       rows={2}
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="Client's complete address"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       Notes
                     </label>
                     <textarea
                       rows={3}
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder="Notes about the client..."
                     />
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                <div 
+                  className="flex justify-end space-x-3 mt-6 pt-4 border-t transition-all duration-300"
+                  style={{ borderColor: currentTheme.colors.border.primary }}
+                >
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary,
+                      border: '1px solid'
+                    }}
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 disabled:opacity-50"
+                    className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 transition-all duration-200"
+                    style={{ backgroundColor: currentTheme.colors.primary[600] }}
                   >
                     {(createMutation.isPending || updateMutation.isPending) ? (
                       <>

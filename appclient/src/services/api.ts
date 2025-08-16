@@ -1093,7 +1093,6 @@ export const emailAPI = {
     
     // Calculate real-time metrics from current data
     const activeRules = mockAutomationRules.filter(r => r.isActive).length;
-    const pendingCount = mockPendingQuotes.filter(q => q.status === 'pending').length;
     const approvedCount = mockPendingQuotes.filter(q => q.status === 'approved').length;
     const totalGenerated = mockPendingQuotes.length;
     const conversionRate = totalGenerated > 0 ? (approvedCount / totalGenerated) * 100 : 0;

@@ -93,15 +93,15 @@ export const themes: Record<ThemeType, Theme> = {
         card: '#2d1b69',
       },
       text: {
-        primary: '#f8fafc',
-        secondary: '#e9d5ff',
-        muted: '#c084fc',
+        primary: '#ffffff',
+        secondary: '#e2e8f0',
+        muted: '#94a3b8',
       },
       border: {
-        primary: '#2d1b69',
-        secondary: '#3c1f7a',
+        primary: '#374151',
+        secondary: '#4b5563',
       },
-        },
+    },
   },
 };
 

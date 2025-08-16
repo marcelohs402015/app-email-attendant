@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   PlusIcon,
   PencilIcon,
@@ -26,6 +27,7 @@ interface ServiceFormData {
 
 const Services: React.FC = () => {
   const { t } = useTranslation();
+  const { currentTheme } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -171,14 +173,26 @@ const Services: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('services.title')}</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 
+            className="text-2xl font-bold transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
+            {t('services.title')}
+          </h1>
+          <p 
+            className="mt-1 transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.muted }}
+          >
             {t('services.description')}
           </p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors"
+          style={{
+            backgroundColor: currentTheme.colors.primary[600],
+            color: 'white'
+          }}
         >
           <PlusIcon className="h-4 w-4 mr-2" />
           {t('services.newService')}
@@ -186,15 +200,28 @@ const Services: React.FC = () => {
       </div>
 
       {/* Category Filter */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
+      <div 
+        className={`rounded-lg shadow-sm p-4 transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">
+          <label 
+            className="text-sm font-medium transition-colors duration-300"
+            style={{ color: currentTheme.colors.text.primary }}
+          >
             {t('services.filterByCategory')}:
           </label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+            className="px-3 py-2 border rounded-md transition-all duration-300"
+            style={{
+              backgroundColor: currentTheme.colors.background.primary,
+              color: currentTheme.colors.text.primary,
+              borderColor: currentTheme.colors.border.primary
+            }}
           >
             <option value="">{t('services.allCategories')}</option>
             {categories.map((category) => (
@@ -207,7 +234,12 @@ const Services: React.FC = () => {
       </div>
 
       {/* Services Grid */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div 
+        className={`shadow-sm rounded-lg overflow-hidden transition-all duration-300 ${
+          currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+        }`}
+        style={{ backgroundColor: currentTheme.colors.background.card }}
+      >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => {
@@ -215,17 +247,31 @@ const Services: React.FC = () => {
               return (
                 <div
                   key={service.id}
-                  className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${
-                    service.isActive ? 'border-gray-200' : 'border-gray-300 bg-gray-50'
+                  className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${
+                    currentTheme.type === 'purple' ? 'darkone-glass' : ''
                   }`}
+                  style={{
+                    backgroundColor: currentTheme.colors.background.primary,
+                    borderColor: service.isActive 
+                      ? currentTheme.colors.border.primary 
+                      : currentTheme.colors.border.secondary
+                  }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center">
-                        <WrenchScrewdriverIcon className="h-5 w-5 text-gray-400 mr-2" />
-                        <h3 className={`text-sm font-medium truncate ${
-                          service.isActive ? 'text-gray-900' : 'text-gray-500'
-                        }`}>
+                        <WrenchScrewdriverIcon 
+                          className="h-5 w-5 mr-2 transition-colors duration-300"
+                          style={{ color: currentTheme.colors.text.muted }}
+                        />
+                        <h3 
+                          className="text-sm font-medium truncate transition-colors duration-300"
+                          style={{ 
+                            color: service.isActive 
+                              ? currentTheme.colors.text.primary 
+                              : currentTheme.colors.text.muted 
+                          }}
+                        >
                           {service.name}
                         </h3>
                       </div>
@@ -245,15 +291,25 @@ const Services: React.FC = () => {
                         </div>
                       )}
                       
-                      <p className={`mt-2 text-xs line-clamp-2 ${
-                        service.isActive ? 'text-gray-600' : 'text-gray-400'
-                      }`}>
+                      <p 
+                        className="mt-2 text-xs line-clamp-2 transition-colors duration-300"
+                        style={{ 
+                          color: service.isActive 
+                            ? currentTheme.colors.text.secondary 
+                            : currentTheme.colors.text.muted 
+                        }}
+                      >
                         {service.description}
                       </p>
                       
-                      <div className={`mt-3 text-sm ${
-                        service.isActive ? 'text-gray-700' : 'text-gray-400'
-                      }`}>
+                      <div 
+                        className="mt-3 text-sm transition-colors duration-300"
+                        style={{ 
+                          color: service.isActive 
+                            ? currentTheme.colors.text.secondary 
+                            : currentTheme.colors.text.muted 
+                        }}
+                      >
                         <div className="flex items-center justify-between">
                           <span className="font-medium">
                             {formatPrice(service.defaultPrice)}
@@ -279,14 +335,24 @@ const Services: React.FC = () => {
                     <div className="flex space-x-1 ml-2">
                       <button
                         onClick={() => handleOpenModal(service)}
-                        className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
+                        className={`p-1 transition-colors duration-200 ${
+                          currentTheme.type === 'purple' ? 'darkone-hover-primary' : 'hover:text-primary-600'
+                        }`}
+                        style={{ 
+                          color: currentTheme.colors.text.muted
+                        }}
                         title="Editar"
                       >
                         <PencilIcon className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(service.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                        className={`p-1 transition-colors duration-200 ${
+                          currentTheme.type === 'purple' ? 'darkone-hover-red' : 'hover:text-red-600'
+                        }`}
+                        style={{ 
+                          color: currentTheme.colors.text.muted
+                        }}
                         title="Excluir"
                       >
                         <TrashIcon className="h-4 w-4" />
@@ -300,17 +366,27 @@ const Services: React.FC = () => {
 
           {services.length === 0 && (
             <div className="text-center py-12">
-              <WrenchScrewdriverIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <WrenchScrewdriverIcon 
+                className="mx-auto h-12 w-12 transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              />
+              <h3 
+                className="mt-2 text-sm font-medium transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.primary }}
+              >
                 {selectedCategory ? t('services.noServicesInCategory') : t('services.noServicesRegistered')}
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <p 
+                className="mt-1 text-sm transition-colors duration-300"
+                style={{ color: currentTheme.colors.text.muted }}
+              >
                 {t('services.createFirstHint')}
               </p>
               <div className="mt-6">
                 <button
                   onClick={() => handleOpenModal()}
-                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700"
+                  className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200"
+                  style={{ backgroundColor: currentTheme.colors.primary[600] }}
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   {t('services.createService')}
@@ -329,16 +405,29 @@ const Services: React.FC = () => {
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+            <div 
+              className={`inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6 ${
+                currentTheme.type === 'purple' ? 'darkone-card' : 'bg-white'
+              }`}
+              style={{ backgroundColor: currentTheme.colors.background.card }}
+            >
               <form onSubmit={handleSubmit}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 
+                    className="text-lg font-medium transition-colors duration-300"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
                     {editingService ? t('services.editService') : t('services.newService')}
                   </h3>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="text-gray-400 hover:text-gray-600"
+                    className={`transition-colors duration-200 ${
+                      currentTheme.type === 'purple' ? 'darkone-hover-white' : 'hover:text-gray-600'
+                    }`}
+                    style={{ 
+                      color: currentTheme.colors.text.muted
+                    }}
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -346,7 +435,10 @@ const Services: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       {t('services.serviceName')}
                     </label>
                     <input
@@ -354,13 +446,21 @@ const Services: React.FC = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder={t('services.serviceNamePlaceholder')}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       {t('services.description')}
                     </label>
                     <textarea
@@ -368,21 +468,34 @@ const Services: React.FC = () => {
                       rows={3}
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder={t('services.descriptionPlaceholder')}
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                        className="block text-sm font-medium mb-1 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {t('services.category')}
                       </label>
                       <select
                         required
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       >
                         <option value="">{t('services.selectCategory')}</option>
                         {categories.map((category) => (
@@ -394,7 +507,10 @@ const Services: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                        className="block text-sm font-medium mb-1 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {t('services.defaultPrice')} (R$)
                       </label>
                       <input
@@ -404,20 +520,33 @@ const Services: React.FC = () => {
                         step="0.01"
                         value={formData.defaultPrice}
                         onChange={(e) => setFormData({ ...formData, defaultPrice: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                        className="block text-sm font-medium mb-1 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {t('services.unit')}
                       </label>
                       <select
                         value={formData.unit}
                         onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       >
                         <option value="hora">{t('services.units.hour')}</option>
                         <option value="dia">{t('services.units.day')}</option>
@@ -429,7 +558,10 @@ const Services: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label 
+                        className="block text-sm font-medium mb-1 transition-colors duration-300"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {t('services.estimatedDuration')} ({t('services.hours')})
                       </label>
                       <input
@@ -439,23 +571,39 @@ const Services: React.FC = () => {
                         step="0.5"
                         value={formData.estimatedDuration}
                         onChange={(e) => setFormData({ ...formData, estimatedDuration: parseFloat(e.target.value) || 1 })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        style={{
+                          backgroundColor: currentTheme.colors.background.primary,
+                          color: currentTheme.colors.text.primary,
+                          borderColor: currentTheme.colors.border.primary
+                        }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label 
+                      className="block text-sm font-medium mb-1 transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       {t('services.requiredMaterials')}
                     </label>
                     <input
                       type="text"
                       value={materialsInput}
                       onChange={(e) => setMaterialsInput(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      style={{
+                        backgroundColor: currentTheme.colors.background.primary,
+                        color: currentTheme.colors.text.primary,
+                        borderColor: currentTheme.colors.border.primary
+                      }}
                       placeholder={t('services.materialsPlaceholder')}
                     />
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p 
+                      className="mt-1 text-xs transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.muted }}
+                    >
                       {t('services.materialsHint')}
                     </p>
                   </div>
@@ -468,24 +616,38 @@ const Services: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                       className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
+                    <label 
+                      htmlFor="isActive" 
+                      className="ml-2 text-sm transition-colors duration-300"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
                       {t('services.activeService')}
                     </label>
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                <div 
+                  className="flex justify-end space-x-3 mt-6 pt-4 border-t transition-all duration-300"
+                  style={{ borderColor: currentTheme.colors.border.primary }}
+                >
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+                    style={{
+                      backgroundColor: currentTheme.colors.background.primary,
+                      color: currentTheme.colors.text.primary,
+                      borderColor: currentTheme.colors.border.primary,
+                      border: '1px solid'
+                    }}
                   >
                     {t('buttons.cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 disabled:opacity-50"
+                    className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 transition-all duration-200"
+                    style={{ backgroundColor: currentTheme.colors.primary[600] }}
                   >
                     {(createMutation.isPending || updateMutation.isPending) ? (
                       <>

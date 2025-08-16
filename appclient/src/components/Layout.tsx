@@ -19,7 +19,6 @@ import {
   MagnifyingGlassIcon,
   BellIcon,
   UserCircleIcon,
-  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 
 interface NavigationItem {

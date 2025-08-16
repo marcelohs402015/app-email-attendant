@@ -140,3 +140,47 @@
     display: block !important;
   }
 }
+
+/* Darkone theme specific styles */
+.darkone-card {
+  background: rgba(45, 27, 105, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+}
+
+.darkone-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.darkone-badge {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.darkone-gradient {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+}
+
+.darkone-shadow {
+  box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.2), 0 4px 6px -2px rgba(168, 85, 247, 0.1);
+}
+
+/* Hover effects for dark theme */
+.darkone-hover-primary:hover {
+  color: var(--color-primary-500) !important;
+}
+
+.darkone-hover-red:hover {
+  color: #ef4444 !important;
+}
+
+.darkone-hover-white:hover {
+  color: #ffffff !important;
+}

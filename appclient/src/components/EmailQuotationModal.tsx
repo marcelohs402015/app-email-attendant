@@ -60,7 +60,7 @@ export default function EmailQuotationModal({ quotation, isOpen, onClose }: Emai
           t('quotations.defaultValidDays')
       }));
     }
-  }, [quotation, isOpen]);
+  }, [quotation, isOpen, t]);
 
   const handleSend = () => {
     if (!quotation || !recipientEmail.trim()) {
