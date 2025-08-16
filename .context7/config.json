@@ -1,0 +1,72 @@
+{
+  "project": {
+    "name": "Email Attendant System",
+    "description": "Sistema completo para gerenciamento de serviços de manutenção e atendimento por email",
+    "version": "1.0.0",
+    "phase": "Fase 1 - Interface e Temas",
+    "repository": "https://github.com/marcelohs402015/app-email-attendant"
+  },
+  "context": {
+    "maxMemorySize": "150MB",
+    "autoSaveInterval": 30000,
+    "enableGitIntegration": true,
+    "enableFileWatching": true,
+    "ignorePatterns": [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      ".git/**",
+      "*.log",
+      "appserver/logs/**",
+      "appclient/build/**"
+    ]
+  },
+  "memory": {
+    "sources": [
+      "docs/**/*.md",
+      "appclient/src/**/*.{ts,tsx}",
+      "appserver/**/*.{ts,js}",
+      "package.json",
+      "README.md",
+      "render.yaml",
+      "FASE1-DOCUMENTACAO.md"
+    ],
+    "excludePatterns": [
+      "**/*.test.*",
+      "**/*.spec.*",
+      "**/node_modules/**",
+      "**/build/**",
+      "**/dist/**",
+      "**/*.log"
+    ]
+  },
+  "features": {
+    "codeAnalysis": true,
+    "documentationGeneration": true,
+    "contextAwareness": true,
+    "memoryPersistence": true,
+    "gitIntegration": true,
+    "fileWatching": true,
+    "aiAssistant": true
+  },
+  "plugins": {
+    "typescript": true,
+    "react": true,
+    "supabase": true,
+    "git": true
+  },
+  "analysis": {
+    "codeStructure": true,
+    "dependencies": true,
+    "imports": true,
+    "exports": true,
+    "types": true,
+    "components": true
+  },
+  "documentation": {
+    "autoGenerate": true,
+    "updateOnChanges": true,
+    "includeCodeExamples": true,
+    "includeDiagrams": true
+  }
+}
