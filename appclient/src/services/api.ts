@@ -1,6 +1,6 @@
-import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics } from '../types/api';
+import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics, Category } from '../types/api';
 import { mockEmails } from '../data/mockEmails';
-import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics } from '../data/mockData';
+import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics, mockCategories } from '../data/mockData';
 
 // Mock API service that simulates real API calls
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1180,6 +1180,103 @@ export const emailAPI = {
         detectedKeywords,
         matchedServices
       }
+    };
+  },
+
+  // Category Management Functions
+  getCategories: async (): Promise<ApiResponse<Category[]>> => {
+    await delay(500);
+    return {
+      success: true,
+      data: mockCategories
+    };
+  },
+
+  getCategoryById: async (id: string): Promise<ApiResponse<Category>> => {
+    await delay(300);
+    const category = mockCategories.find(c => c.id === id);
+    if (!category) {
+      return {
+        success: false,
+        error: 'Category not found'
+      };
+    }
+    return {
+      success: true,
+      data: category
+    };
+  },
+
+  createCategory: async (categoryData: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Category>> => {
+    await delay(800);
+    
+    const newCategory: Category = {
+      id: `cat_${Date.now()}`,
+      ...categoryData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    mockCategories.push(newCategory);
+    
+    return {
+      success: true,
+      data: newCategory,
+      message: 'Category created successfully'
+    };
+  },
+
+  updateCategory: async (id: string, categoryData: Partial<Omit<Category, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ApiResponse<Category>> => {
+    await delay(600);
+    
+    const categoryIndex = mockCategories.findIndex(c => c.id === id);
+    if (categoryIndex === -1) {
+      return {
+        success: false,
+        error: 'Category not found'
+      };
+    }
+    
+    const updatedCategory: Category = {
+      ...mockCategories[categoryIndex],
+      ...categoryData,
+      updatedAt: new Date().toISOString()
+    };
+    
+    mockCategories[categoryIndex] = updatedCategory;
+    
+    return {
+      success: true,
+      data: updatedCategory,
+      message: 'Category updated successfully'
+    };
+  },
+
+  deleteCategory: async (id: string): Promise<ApiResponse<void>> => {
+    await delay(400);
+    
+    const categoryIndex = mockCategories.findIndex(c => c.id === id);
+    if (categoryIndex === -1) {
+      return {
+        success: false,
+        error: 'Category not found'
+      };
+    }
+    
+    mockCategories.splice(categoryIndex, 1);
+    
+    return {
+      success: true,
+      message: 'Category deleted successfully'
+    };
+  },
+
+  getActiveCategories: async (): Promise<ApiResponse<Category[]>> => {
+    await delay(300);
+    const activeCategories = mockCategories.filter(c => c.isActive);
+    return {
+      success: true,
+      data: activeCategories
     };
   },
 };

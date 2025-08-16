@@ -269,3 +269,33 @@
 {"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-16T13:49:37.172Z"}
 {"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-16T13:49:37.174Z"}
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-16T13:49:37.178Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-16T16:40:16.572Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-16T16:40:46.064Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-16T16:40:46.132Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-16T16:40:46.133Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-16T16:40:46.134Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-16T16:52:56.877Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-16T17:05:35.523Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-16T17:05:35.623Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-16T17:05:35.625Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-16T17:05:35.630Z"}
+{"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-16T17:14:16.271Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T17:14:34.339Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T17:14:59.832Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-16T17:19:00.898Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-16T17:19:01.000Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-16T17:19:01.007Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-16T17:19:01.014Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-16T17:27:56.785Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-16T17:32:21.413Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-16T17:32:21.594Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-16T17:32:21.599Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-16T17:32:21.601Z"}
+{"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-16T17:33:43.548Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/health","service":"Server","timestamp":"2025-08-16T18:49:36.135Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T18:49:42.122Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T18:50:37.299Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T18:51:03.586Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/emails","service":"Server","timestamp":"2025-08-16T18:51:20.133Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/categories","service":"Server","timestamp":"2025-08-16T18:52:40.479Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/emails","service":"Server","timestamp":"2025-08-16T18:52:55.015Z","userAgent":"curl/8.5.0"}

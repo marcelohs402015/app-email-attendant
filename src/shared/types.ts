@@ -33,6 +33,19 @@ export interface CategoryStats {
   responded_count: number;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  keywords: string[];
+  patterns: string[];
+  domains: string[];
+  color: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Service {
   id: string;
   name: string;

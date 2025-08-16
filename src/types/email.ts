@@ -18,6 +18,38 @@ export interface Categories {
   [key: string]: CategoryDefinition;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+  keywords: string[];
+  patterns: string[];
+  domains: string[];
+  color: string;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateCategoryRequest {
+  name: string;
+  description: string;
+  keywords: string[];
+  patterns: string[];
+  domains: string[];
+  color: string;
+}
+
+export interface UpdateCategoryRequest {
+  name?: string;
+  description?: string;
+  keywords?: string[];
+  patterns?: string[];
+  domains?: string[];
+  color?: string;
+  active?: boolean;
+}
+
 export interface CategorizationResult {
   id: string;
   email: EmailData;

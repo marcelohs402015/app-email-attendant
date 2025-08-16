@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createEmailRoutes } from './routes/emailRoutes.js';
+import { createCategoryRoutes } from './routes/categoryRoutes.js';
+import { initializeDatabase, getDatabaseConfig } from './database.js';
 import { createLogger } from '../shared/logger.js';
 
 dotenv.config();
@@ -11,7 +13,18 @@ const PORT = process.env.PORT || 3001;
 
 async function startServer() {
   try {
-    logger.info('Starting server with mock data...');
+    logger.info('Starting server...');
+
+    // Initialize database
+    let database;
+    try {
+      const dbConfig = getDatabaseConfig();
+      database = await initializeDatabase(dbConfig);
+      logger.info('Database initialized successfully');
+    } catch (error) {
+      logger.warn('Failed to initialize database, using mock data:', (error as Error).message);
+      database = null;
+    }
 
     // Create Express app
     const app = express();
@@ -39,12 +52,21 @@ async function startServer() {
       res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
+        database: database ? 'connected' : 'mock'
       });
     });
 
-    // API routes (using mock data)
+    // API routes
     app.use('/api', createEmailRoutes());
+    
+    // Category routes
+    if (database) {
+      app.use('/api', createCategoryRoutes(database));
+      logger.info('Category routes enabled with database');
+    } else {
+      logger.warn('Category routes disabled - no database connection');
+    }
 
     // Error handling middleware
     app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -73,13 +95,18 @@ async function startServer() {
       logger.info(`Server running on port ${PORT}`);
       logger.info(`Health check: http://localhost:${PORT}/health`);
       logger.info(`API base URL: http://localhost:${PORT}/api`);
+      logger.info(`Database mode: ${database ? 'connected' : 'mock'}`);
     });
 
     // Graceful shutdown
     const gracefulShutdown = async () => {
       logger.info('Received shutdown signal, closing server...');
       
-      server.close(() => {
+      server.close(async () => {
+        if (database) {
+          await database.close();
+          logger.info('Database connection closed');
+        }
         logger.info('HTTP server closed');
         process.exit(0);
       });

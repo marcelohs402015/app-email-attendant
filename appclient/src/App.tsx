@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import EmailList from './pages/EmailList';
 import EmailDetail from './pages/EmailDetail';
 import Services from './pages/Services';
+import Categories from './pages/Categories';
 import Quotations from './pages/Quotations';
 import Clients from './pages/Clients';
 import Calendar from './pages/Calendar';
@@ -34,6 +35,7 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="emails" element={<EmailList />} />
               <Route path="emails/:id" element={<EmailDetail />} />
+              <Route path="categories" element={<Categories />} />
               <Route path="services" element={<Services />} />
               <Route path="quotations" element={<Quotations />} />
               <Route path="clients" element={<Clients />} />

@@ -97,12 +97,29 @@ export class Database {
       )
     `;
 
+    const createCategoriesTable = `
+      CREATE TABLE IF NOT EXISTS categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL,
+        description TEXT,
+        keywords JSONB NOT NULL DEFAULT '[]',
+        patterns JSONB NOT NULL DEFAULT '[]',
+        domains JSONB NOT NULL DEFAULT '[]',
+        color VARCHAR(7) NOT NULL DEFAULT '#3B82F6',
+        active BOOLEAN DEFAULT TRUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
     const createIndexes = `
       CREATE INDEX IF NOT EXISTS idx_emails_gmail_id ON emails(gmail_id);
       CREATE INDEX IF NOT EXISTS idx_emails_category ON emails(category);
       CREATE INDEX IF NOT EXISTS idx_emails_date ON emails(date);
       CREATE INDEX IF NOT EXISTS idx_emails_processed ON emails(processed);
       CREATE INDEX IF NOT EXISTS idx_templates_category ON email_templates(category);
+      CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name);
+      CREATE INDEX IF NOT EXISTS idx_categories_active ON categories(active);
     `;
 
     const createTriggers = `
@@ -125,11 +142,18 @@ export class Database {
         BEFORE UPDATE ON email_templates
         FOR EACH ROW
         EXECUTE FUNCTION update_updated_at_column();
+
+      DROP TRIGGER IF EXISTS update_categories_updated_at ON categories;
+      CREATE TRIGGER update_categories_updated_at
+        BEFORE UPDATE ON categories
+        FOR EACH ROW
+        EXECUTE FUNCTION update_updated_at_column();
     `;
 
     try {
       await this.query(createEmailsTable);
       await this.query(createTemplatesTable);
+      await this.query(createCategoriesTable);
       await this.query(createIndexes);
       await this.query(createTriggers);
       
@@ -209,5 +233,78 @@ Equipe Técnica`,
     }
 
     this.logger.info('Default email templates inserted');
+  }
+
+  async insertDefaultCategories(): Promise<void> {
+    const categories = [
+      {
+        name: 'reclamacao',
+        description: 'Emails relacionados a reclamações e problemas',
+        keywords: ['reclamação', 'reclamar', 'problema', 'defeito', 'erro', 'falha', 'insatisfação', 'ruim', 'péssimo', 'horrível'],
+        patterns: ['\\b(problema|defeito|erro|falha)\\b', '\\b(reclamação|reclamar|insatisfação)\\b', '\\b(ruim|péssimo|horrível|terrível)\\b', 'não funciona', 'não está funcionando'],
+        domains: [],
+        color: '#EF4444'
+      },
+      {
+        name: 'orcamento',
+        description: 'Solicitações de orçamento e cotação',
+        keywords: ['orçamento', 'cotação', 'preço', 'valor', 'custo', 'proposta', 'estimativa', 'quanto custa'],
+        patterns: ['\\b(orçamento|cotação|preço|valor)\\b', '\\b(proposta|estimativa|custo)\\b', 'quanto custa', 'valor.*do.*produto', 'preço.*de'],
+        domains: [],
+        color: '#10B981'
+      },
+      {
+        name: 'informacoes_produto',
+        description: 'Solicitações de informações sobre produtos',
+        keywords: ['informações', 'detalhes', 'especificação', 'características', 'manual', 'como usar', 'funciona', 'dúvida'],
+        patterns: ['\\b(informações|detalhes|especificação)\\b', '\\b(características|manual|como.*usar)\\b', '\\b(funciona|dúvida|pergunta)\\b', 'mais.*informações', 'gostaria.*de.*saber'],
+        domains: [],
+        color: '#3B82F6'
+      },
+      {
+        name: 'suporte',
+        description: 'Solicitações de suporte técnico',
+        keywords: ['suporte', 'ajuda', 'assistência', 'tutorial', 'guia', 'documentação', 'como fazer'],
+        patterns: ['\\b(suporte|ajuda|assistência)\\b', '\\b(tutorial|guia|documentação)\\b', 'como.*fazer', 'preciso.*de.*ajuda', 'pode.*me.*ajudar'],
+        domains: [],
+        color: '#F59E0B'
+      },
+      {
+        name: 'vendas',
+        description: 'Interesse em compra e vendas',
+        keywords: ['comprar', 'venda', 'pedido', 'encomenda', 'interesse', 'adquirir', 'disponibilidade'],
+        patterns: ['\\b(comprar|venda|pedido|encomenda)\\b', '\\b(interesse|adquirir|disponibilidade)\\b', 'gostaria.*de.*comprar', 'tenho.*interesse', 'está.*disponível'],
+        domains: [],
+        color: '#8B5CF6'
+      }
+    ];
+
+    for (const category of categories) {
+      try {
+        await this.query(
+          `INSERT INTO categories (name, description, keywords, patterns, domains, color) 
+           VALUES ($1, $2, $3, $4, $5, $6) 
+           ON CONFLICT (name) DO UPDATE SET
+           description = EXCLUDED.description,
+           keywords = EXCLUDED.keywords,
+           patterns = EXCLUDED.patterns,
+           domains = EXCLUDED.domains,
+           color = EXCLUDED.color,
+           updated_at = CURRENT_TIMESTAMP`,
+          [
+            category.name, 
+            category.description, 
+            JSON.stringify(category.keywords), 
+            JSON.stringify(category.patterns), 
+            JSON.stringify(category.domains), 
+            category.color
+          ]
+        );
+      } catch (error) {
+        this.logger.warn(`Failed to insert category ${category.name}:`, (error as Error).message);
+      }
+    }
+
+    this.logger.info('Default categories inserted');
   }
 }

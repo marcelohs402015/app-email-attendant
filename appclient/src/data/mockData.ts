@@ -1,4 +1,4 @@
-import { EmailTemplate, CategoryStats, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics } from '../types/api';
+import { EmailTemplate, CategoryStats, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics, Category } from '../types/api';
 
 export const mockTemplates: EmailTemplate[] = [
   {
@@ -1109,3 +1109,67 @@ export const mockAutomationMetrics: AutomationMetrics = {
     }
   ]
 };
+
+// Mock Categories for Email Classification
+export const mockCategories: Category[] = [
+  {
+    id: 'cat_001',
+    name: 'reclamacao',
+    description: 'Emails relacionados a reclamações e problemas',
+    keywords: ['reclamação', 'reclamar', 'problema', 'defeito', 'erro', 'falha', 'insatisfação', 'ruim', 'péssimo', 'horrível'],
+    patterns: ['\\b(problema|defeito|erro|falha)\\b', '\\b(reclamação|reclamar|insatisfação)\\b', '\\b(ruim|péssimo|horrível|terrível)\\b', 'não funciona', 'não está funcionando'],
+    domains: [],
+    color: '#EF4444',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_002',
+    name: 'orcamento',
+    description: 'Emails solicitando orçamentos e cotações',
+    keywords: ['orçamento', 'cotação', 'preço', 'valor', 'quanto custa', 'quanto é', 'precisa de orçamento', 'gostaria de saber o preço'],
+    patterns: ['\\b(orçamento|cotação|preço|valor)\\b', 'quanto (custa|é|vale)', 'precisa de (orçamento|cotação)', 'gostaria de saber o preço'],
+    domains: [],
+    color: '#3B82F6',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_003',
+    name: 'informacoes_produto',
+    description: 'Emails pedindo informações sobre produtos e serviços',
+    keywords: ['informação', 'dúvida', 'pergunta', 'como funciona', 'quais são', 'pode me explicar', 'gostaria de saber'],
+    patterns: ['\\b(informação|dúvida|pergunta)\\b', 'como funciona', 'quais são', 'pode me explicar', 'gostaria de saber'],
+    domains: [],
+    color: '#10B981',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_004',
+    name: 'suporte',
+    description: 'Emails de suporte técnico e ajuda',
+    keywords: ['suporte', 'ajuda', 'assistência', 'técnico', 'problema técnico', 'não consigo', 'preciso de ajuda'],
+    patterns: ['\\b(suporte|ajuda|assistência|técnico)\\b', 'problema técnico', 'não consigo', 'preciso de ajuda'],
+    domains: [],
+    color: '#F59E0B',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_005',
+    name: 'vendas',
+    description: 'Emails relacionados a vendas e promoções',
+    keywords: ['venda', 'compra', 'promoção', 'desconto', 'oferta', 'especial', 'limitado', 'última chance'],
+    patterns: ['\\b(venda|compra|promoção|desconto|oferta)\\b', 'especial', 'limitado', 'última chance'],
+    domains: [],
+    color: '#8B5CF6',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  }
+];

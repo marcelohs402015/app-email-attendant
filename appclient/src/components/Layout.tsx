@@ -19,6 +19,7 @@ import {
   MagnifyingGlassIcon,
   BellIcon,
   UserCircleIcon,
+  TagIcon,
 } from '@heroicons/react/24/outline';
 
 interface NavigationItem {
@@ -33,6 +34,7 @@ const getNavigation = (t: any, themeType: string): NavigationItem[] => {
   return [
     { name: t('navigation.dashboard'), href: '/', icon: HomeIcon, badge: '12' },
     { name: t('navigation.emails'), href: '/emails', icon: EnvelopeIcon },
+    { name: t('navigation.categories'), href: '/categories', icon: TagIcon },
     { name: t('navigation.services'), href: '/services', icon: WrenchScrewdriverIcon },
     { name: t('navigation.quotations'), href: '/quotations', icon: DocumentTextIcon },
     { name: t('navigation.clients'), href: '/clients', icon: UsersIcon },

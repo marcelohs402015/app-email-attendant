@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { createLogger } from '../../shared/logger.js';
-import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockClients, mockAppointments, mockCalendarAvailability } from '../../shared/data/mockData.js';
+import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockClients, mockAppointments, mockCalendarAvailability, mockCategories } from '../../shared/data/mockData.js';
 import { mockEmails } from '../../shared/data/mockEmails.js';
 import { EmailTemplate } from '../../shared/types.js';
 
@@ -13,6 +13,7 @@ let services = [...mockServices];
 let quotations = [...mockQuotations];
 let clients = [...mockClients];
 let appointments = [...mockAppointments];
+let categories = [...mockCategories];
 
 // Helper function to simulate delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1037,6 +1038,185 @@ export function createEmailRoutes(): Router {
       return res.status(500).json({
         success: false,
         error: 'Failed to delete appointment'
+      });
+    }
+  });
+
+  // === CATEGORY ROUTES ===
+
+  // Get all categories
+  router.get('/categories', async (req: Request, res: Response) => {
+    try {
+      await delay(300);
+      
+      return res.json({
+        success: true,
+        data: categories
+      });
+    } catch (error) {
+      logger.error('Failed to get categories:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve categories'
+      });
+    }
+  });
+
+  // Get category by ID
+  router.get('/categories/:id', async (req: Request, res: Response) => {
+    try {
+      await delay(300);
+      
+      const categoryId = req.params.id;
+      const category = categories.find(c => c.id === categoryId);
+      
+      if (!category) {
+        return res.status(404).json({
+          success: false,
+          error: 'Category not found'
+        });
+      }
+
+      return res.json({
+        success: true,
+        data: category
+      });
+    } catch (error) {
+      logger.error('Failed to get category:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve category'
+      });
+    }
+  });
+
+  // Create new category
+  router.post('/categories', async (req: Request, res: Response) => {
+    try {
+      await delay(500);
+      
+      const { name, description, keywords, patterns, domains, color, isActive } = req.body;
+      
+      if (!name || !description) {
+        return res.status(400).json({
+          success: false,
+          error: 'Name and description are required'
+        });
+      }
+
+      const newCategory = {
+        id: `cat_${Date.now()}`,
+        name,
+        description,
+        keywords: keywords || [],
+        patterns: patterns || [],
+        domains: domains || [],
+        color: color || '#3B82F6',
+        isActive: isActive !== undefined ? isActive : true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      categories.push(newCategory);
+
+      return res.status(201).json({
+        success: true,
+        data: newCategory,
+        message: 'Category created successfully'
+      });
+    } catch (error) {
+      logger.error('Failed to create category:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to create category'
+      });
+    }
+  });
+
+  // Update category
+  router.put('/categories/:id', async (req: Request, res: Response) => {
+    try {
+      await delay(500);
+      
+      const categoryId = req.params.id;
+      const updates = req.body;
+      
+      const categoryIndex = categories.findIndex(c => c.id === categoryId);
+      if (categoryIndex === -1) {
+        return res.status(404).json({
+          success: false,
+          error: 'Category not found'
+        });
+      }
+
+      const updatedCategory = {
+        ...categories[categoryIndex],
+        ...updates,
+        updatedAt: new Date().toISOString()
+      };
+
+      categories[categoryIndex] = updatedCategory;
+
+      return res.json({
+        success: true,
+        data: updatedCategory,
+        message: 'Category updated successfully'
+      });
+    } catch (error) {
+      logger.error('Failed to update category:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to update category'
+      });
+    }
+  });
+
+  // Delete category
+  router.delete('/categories/:id', async (req: Request, res: Response) => {
+    try {
+      await delay(500);
+      
+      const categoryId = req.params.id;
+      
+      const categoryIndex = categories.findIndex(c => c.id === categoryId);
+      if (categoryIndex === -1) {
+        return res.status(404).json({
+          success: false,
+          error: 'Category not found'
+        });
+      }
+
+      categories.splice(categoryIndex, 1);
+
+      return res.json({
+        success: true,
+        message: 'Category deleted successfully'
+      });
+    } catch (error) {
+      logger.error('Failed to delete category:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to delete category'
+      });
+    }
+  });
+
+  // Get active categories
+  router.get('/categories/active/list', async (req: Request, res: Response) => {
+    try {
+      await delay(300);
+      
+      const activeCategories = categories.filter(c => c.isActive);
+      
+      return res.json({
+        success: true,
+        data: activeCategories
+      });
+    } catch (error) {
+      logger.error('Failed to get active categories:', (error as Error).message);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve active categories'
       });
     }
   });

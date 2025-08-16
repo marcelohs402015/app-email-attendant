@@ -200,7 +200,31 @@ interface Quotation {
 - `AutomationRuleModal.tsx` - Criação de regras
 - `AutomationMetrics.tsx` - Métricas
 
-#### 8. Statistics (`/statistics`)
+#### 8. Categories (`/categories`) - **NOVA FUNCIONALIDADE**
+**Funcionalidades:**
+- Gerenciamento completo de categorias de email
+- Criação e edição de categorias personalizadas
+- Configuração de palavras-chave e padrões regex
+- Definição de domínios específicos
+- Cores personalizadas para identificação visual
+- Status ativo/inativo para controle
+- Classificação automática de emails
+- Integração com sistema de filtros
+
+**Categorias Padrão Implementadas:**
+- 🔴 **Reclamação** - Emails de problemas e reclamações
+- 🔵 **Orçamento** - Solicitações de cotações
+- 🟢 **Informações Produto** - Dúvidas sobre produtos
+- 🟠 **Suporte** - Suporte técnico
+- 🟣 **Vendas** - Emails de vendas e promoções
+
+**Tecnologias Utilizadas:**
+- React Query para gerenciamento de estado
+- TypeScript para type safety
+- Mock data com persistência em memória
+- Interface responsiva com tema escuro
+
+#### 9. Statistics (`/statistics`)
 **Funcionalidades:**
 - Relatórios detalhados
 - Gráficos de performance
@@ -208,7 +232,7 @@ interface Quotation {
 - Evolução temporal
 - Exportação (preparado)
 
-#### 9. Settings (`/settings`)
+#### 10. Settings (`/settings`)
 **Funcionalidades:**
 - Templates de email
 - Configurações do sistema
@@ -242,6 +266,7 @@ const routes = [
   { path: '/dashboard', element: <Dashboard /> },
   { path: '/services', element: <Services /> },
   { path: '/emails', element: <EmailList /> },
+  { path: '/categories', element: <Categories /> }, // Nova rota
   { path: '/quotations', element: <Quotations /> },
   { path: '/clients', element: <Clients /> },
   { path: '/calendar', element: <Calendar /> },
@@ -250,6 +275,68 @@ const routes = [
   { path: '/settings', element: <Settings /> }
 ];
 ```
+
+### 🏷️ Sistema de Categorias de Email
+
+#### Visão Geral
+O sistema de categorias permite a classificação automática de emails baseada em regras configuráveis. Cada categoria possui palavras-chave, padrões regex e domínios específicos para identificar automaticamente o tipo de email.
+
+#### Funcionalidades Principais
+- **Classificação Automática:** Emails são categorizados automaticamente baseado no conteúdo
+- **Regras Configuráveis:** Palavras-chave, padrões regex e domínios personalizáveis
+- **Cores Visuais:** Cada categoria possui uma cor única para identificação
+- **Status Ativo/Inativo:** Controle de quais categorias estão ativas
+- **Integração com Filtros:** Categorias são usadas no sistema de filtros de emails
+
+#### Estrutura de Dados
+```typescript
+interface Category {
+  id: string;
+  name: string;           // Nome único da categoria
+  description: string;    // Descrição detalhada
+  keywords: string[];     // Palavras-chave para matching
+  patterns: string[];     // Padrões regex para matching preciso
+  domains: string[];      // Domínios de email específicos
+  color: string;          // Cor hexadecimal para identificação
+  isActive: boolean;      // Status ativo/inativo
+  createdAt: string;      // Data de criação
+  updatedAt: string;      // Data de última atualização
+}
+```
+
+#### API Mock Implementada
+```typescript
+// Funções disponíveis no emailAPI
+getCategories(): Promise<ApiResponse<Category[]>>
+getCategoryById(id: string): Promise<ApiResponse<Category>>
+createCategory(data: CategoryData): Promise<ApiResponse<Category>>
+updateCategory(id: string, data: Partial<Category>): Promise<ApiResponse<Category>>
+deleteCategory(id: string): Promise<ApiResponse<void>>
+getActiveCategories(): Promise<ApiResponse<Category[]>>
+```
+
+#### Categorias Padrão
+O sistema vem com 5 categorias pré-configuradas:
+
+1. **Reclamação** (`#EF4444`)
+   - Keywords: reclamação, problema, defeito, erro, falha
+   - Patterns: `\b(problema|defeito|erro|falha)\b`
+
+2. **Orçamento** (`#3B82F6`)
+   - Keywords: orçamento, cotação, preço, valor
+   - Patterns: `\b(orçamento|cotação|preço|valor)\b`
+
+3. **Informações Produto** (`#10B981`)
+   - Keywords: informação, dúvida, pergunta, como funciona
+   - Patterns: `\b(informação|dúvida|pergunta)\b`
+
+4. **Suporte** (`#F59E0B`)
+   - Keywords: suporte, ajuda, assistência, técnico
+   - Patterns: `\b(suporte|ajuda|assistência|técnico)\b`
+
+5. **Vendas** (`#8B5CF6`)
+   - Keywords: venda, compra, promoção, desconto, oferta
+   - Patterns: `\b(venda|compra|promoção|desconto|oferta)\b`
 
 ### 🔄 Gerenciamento de Estado
 
@@ -294,6 +381,19 @@ interface Service {
   price: number;
   category: string;
   status: 'active' | 'inactive';
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  keywords: string[];
+  patterns: string[];
+  domains: string[];
+  color: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Email {
@@ -521,6 +621,12 @@ interface AuthContextType {
    - Webhooks
    - Cron jobs
 
+4. **Melhorias no Sistema de Categorias**
+   - Classificação automática com IA
+   - Aprendizado de máquina para melhorar precisão
+   - Análise de sentimento dos emails
+   - Sugestões automáticas de categorias
+
 ### 📚 Recursos e Referências
 
 #### Documentação Técnica
@@ -562,6 +668,7 @@ A Fase 1 foi concluída com sucesso, estabelecendo uma base sólida para o Email
 - ✅ Componentes reutilizáveis
 - ✅ Arquitetura escalável
 - ✅ Deploy automatizado
+- ✅ **Sistema de categorias de email implementado** ⭐
 
 **Próxima Fase:**
 - 🔄 Integração com APIs reais
@@ -572,5 +679,6 @@ A Fase 1 foi concluída com sucesso, estabelecendo uma base sólida para o Email
 ---
 
 *Documento criado em: Agosto 2024*  
-*Versão: 1.0*  
-*Status: Fase 1 Concluída* ✅
+*Versão: 1.1*  
+*Status: Fase 1 Concluída + Sistema de Categorias* ✅  
+*Última atualização: Agosto 2024*

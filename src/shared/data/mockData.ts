@@ -289,3 +289,66 @@ export const mockCalendarAvailability: CalendarAvailability[] = [
     ]
   }
 ];
+
+export const mockCategories: Category[] = [
+  {
+    id: 'cat_001',
+    name: 'reclamacao',
+    description: 'Emails relacionados a reclamações e problemas',
+    keywords: ['reclamação', 'reclamar', 'problema', 'defeito', 'erro'],
+    patterns: ['\\b(problema|defeito|erro|falha)\\b'],
+    domains: [],
+    color: '#EF4444',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_002',
+    name: 'orcamento',
+    description: 'Solicitações de orçamento e cotação de preços',
+    keywords: ['orçamento', 'cotação', 'preço', 'valor', 'quanto custa'],
+    patterns: ['\\b(orçamento|cotação|preço|valor)\\b'],
+    domains: [],
+    color: '#10B981',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_003',
+    name: 'informacoes_produto',
+    description: 'Perguntas sobre produtos e serviços',
+    keywords: ['informação', 'detalhes', 'especificações', 'como funciona'],
+    patterns: ['\\b(informação|detalhes|especificações)\\b'],
+    domains: [],
+    color: '#3B82F6',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_004',
+    name: 'suporte',
+    description: 'Solicitações de suporte técnico',
+    keywords: ['suporte', 'ajuda', 'assistência', 'técnico'],
+    patterns: ['\\b(suporte|ajuda|assistência)\\b'],
+    domains: [],
+    color: '#F59E0B',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 'cat_005',
+    name: 'vendas',
+    description: 'Oportunidades de venda e parcerias',
+    keywords: ['venda', 'parceria', 'negócio', 'comercial'],
+    patterns: ['\\b(venda|parceria|negócio|comercial)\\b'],
+    domains: [],
+    color: '#8B5CF6',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  }
+];

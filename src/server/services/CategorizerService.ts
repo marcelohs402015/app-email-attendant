@@ -1,13 +1,19 @@
 import { EmailData, Categories, CategorizationResult, CategoryDefinition } from '../../types/email.js';
+import { CategoryService } from './CategoryService.js';
+import { CategoryRepository } from '../../database/CategoryRepository.js';
+import { Database } from '../../database/Database.js';
 import { Logger } from 'winston';
 import { createLogger } from '../../shared/logger.js';
 
 export class CategorizerService {
   private categories: Categories;
   private logger: Logger;
+  private categoryService?: CategoryService;
 
-  constructor() {
+  constructor(database?: Database) {
     this.logger = createLogger('CategorizerService');
+    
+    // Initialize with default categories
     this.categories = {
       reclamacao: {
         keywords: ['reclamação', 'reclamar', 'problema', 'defeito', 'erro', 'falha', 'insatisfação', 'ruim', 'péssimo', 'horrível'],
@@ -65,6 +71,33 @@ export class CategorizerService {
         domains: []
       }
     };
+
+    // Initialize category service if database is provided
+    if (database) {
+      const categoryRepository = new CategoryRepository(database);
+      this.categoryService = new CategoryService(categoryRepository);
+      this.loadCategoriesFromDatabase();
+    }
+  }
+
+  async loadCategoriesFromDatabase(): Promise<void> {
+    if (!this.categoryService) {
+      this.logger.warn('Category service not initialized, skipping database load');
+      return;
+    }
+
+    try {
+      this.logger.info('Loading categories from database...');
+      const dbCategories = await this.categoryService.getCategoriesForCategorization();
+      
+      // Merge database categories with default ones
+      this.categories = { ...this.categories, ...dbCategories };
+      
+      this.logger.info(`Loaded ${Object.keys(dbCategories).length} categories from database`);
+    } catch (error) {
+      this.logger.error('Failed to load categories from database:', (error as Error).message);
+      this.logger.info('Using default categories only');
+    }
   }
 
   categorizeEmail(email: EmailData): Omit<CategorizationResult, 'id' | 'email'> {
