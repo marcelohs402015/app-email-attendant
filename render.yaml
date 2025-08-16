@@ -3,7 +3,7 @@ services:
   - type: web
     name: handyman-manager-backend
     env: node
-    buildCommand: "rm -f .npmrc && cd appserver && npm install && npm run build"
+    buildCommand: "cd appserver && npm install && npm run build"
     startCommand: "cd appserver && npm start"
     plan: free
     envVars:
@@ -18,7 +18,7 @@ services:
   - type: web
     name: handyman-manager-frontend
     env: static
-    buildCommand: "rm -f .npmrc && cd appclient && npm install --legacy-peer-deps && npm run build"
+    buildCommand: "cd appclient && npm install --legacy-peer-deps && npm run build"
     staticPublishPath: ./appclient/build
     plan: free
     envVars:
