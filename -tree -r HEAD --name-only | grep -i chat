@@ -1,0 +1,10 @@
+[33m5b4c2b3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/chat-integration-v2.0[m[33m, [m[1;31morigin/feature/chat-integration-v2.0[m[33m)[m fix: Update Render config for proper v2.0 deployment
+[33maeb79ef[m feat: Update Render deployment config for v2.0
+[33m171f72c[m feat: Update footer version from v1.0 to v2.0
+[33m77afe78[m[33m ([m[1;31morigin/app-original-handyman-lts-v1.0[m[33m, [m[1;32mapp-original-handyman-lts-v1.0[m[33m)[m fix: Resolve TypeScript errors in chat system
+[33mebe3557[m feat: Implement AI Chat System v2.0
+[33m3a55e30[m[33m ([m[1;33mtag: [m[1;33mv1.0.0[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m feat: adiciona prompt para implementação de chat interativo com funcionalidades de orçamento e cadastro
+[33meb0e66e[m fix all
+[33m479d928[m fix: Correção do deploy no Render
+[33m7a4e5ea[m feat: Implementação completa do sistema de categorias
+[33m5e9cb81[m docs: adiciona diretrizes para engenheiro de software sênior

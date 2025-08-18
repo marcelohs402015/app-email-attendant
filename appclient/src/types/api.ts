@@ -257,3 +257,99 @@ export interface AutomationMetrics {
     sent: number;
   }[];
 }
+
+// Chat System Types - v2.0
+export interface ChatMessage {
+  id: string;
+  sessionId: string;
+  type: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: string;
+  metadata?: {
+    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'greeting' | 'help' | 'error';
+    data?: any;
+    confidence?: number;
+    suggestedActions?: ChatAction[];
+    nextStep?: string;
+  };
+}
+
+export interface ChatAction {
+  id: string;
+  type: 'create_quotation' | 'register_service' | 'register_client' | 'view_details';
+  label: string;
+  data: any;
+  requiresConfirmation: boolean;
+}
+
+export interface ChatSession {
+  id: string;
+  clientId?: string;
+  title: string;
+  messages: ChatMessage[];
+  status: 'active' | 'completed' | 'archived';
+  context: ChatContext;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatContext {
+  currentAction?: string;
+  collectingData?: {
+    type: 'quotation' | 'service' | 'client';
+    step: number;
+    data: Record<string, any>;
+  };
+  lastClientId?: string;
+  preferredServices?: string[];
+}
+
+export interface ChatQuotationData {
+  clientName?: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  services: Array<{
+    serviceId: string;
+    quantity: number;
+    notes?: string;
+  }>;
+  urgency?: 'low' | 'medium' | 'high';
+  description?: string;
+  budget?: number;
+}
+
+export interface ChatServiceData {
+  name: string;
+  description: string;
+  category: string;
+  defaultPrice: number;
+  unit: string;
+  estimatedDuration: number;
+  materials?: string[];
+}
+
+export interface ChatClientData {
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  notes?: string;
+}
+
+export interface ChatResponse {
+  message: string;
+  sessionId: string;
+  metadata?: {
+    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'greeting' | 'help' | 'error';
+    data?: any;
+    nextStep?: string;
+    suggestedActions?: ChatAction[];
+    confidence?: number;
+  };
+}
+
+export interface ChatIntent {
+  type: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'help';
+  confidence: number;
+  entities: Record<string, any>;
+}

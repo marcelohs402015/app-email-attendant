@@ -14,6 +14,7 @@ import Calendar from './pages/Calendar';
 import Stats from './pages/Stats';
 import Settings from './pages/Settings';
 import Automation from './pages/Automation';
+import Chat from './pages/Chat';
 import './i18n';
 
 const queryClient = new QueryClient({
@@ -41,6 +42,7 @@ function App() {
               <Route path="clients" element={<Clients />} />
               <Route path="calendar" element={<Calendar />} />
               <Route path="automation" element={<Automation />} />
+              <Route path="chat" element={<Chat />} />
               <Route path="stats" element={<Stats />} />
               <Route path="settings" element={<Settings />} />
             </Route>

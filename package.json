@@ -1,7 +1,7 @@
 {
   "name": "email-attendant",
-  "version": "1.0.0",
-  "description": "Sistema de categorização e resposta automática de emails Gmail",
+  "version": "2.0.0",
+  "description": "Sistema de categorização e resposta automática de emails Gmail com Chat Inteligente para criação de orçamentos e gestão de serviços",
   "main": "appserver/dist/server.js",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
@@ -27,7 +27,10 @@
     "automation",
     "typescript",
     "react",
-    "postgresql"
+    "postgresql",
+    "chat",
+    "ai",
+    "quotation-automation"
   ],
   "author": "",
   "license": "MIT",
