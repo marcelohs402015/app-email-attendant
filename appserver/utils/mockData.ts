@@ -8,7 +8,7 @@ interface MockChatMessage {
   content: string;
   timestamp: string;
   metadata?: {
-    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry';
+    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'quotation_completed' | 'service_completed' | 'client_completed' | 'help' | 'greeting';
     data?: any;
     confidence?: number;
     suggestedActions?: any[];

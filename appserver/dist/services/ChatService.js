@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createLogger } from '../shared/logger.js';
+import { MockDataGenerator } from '../utils/mockData.js';
 const logger = createLogger('ChatService');
 /**
  * ChatService - Intelligent Chat System for Business Management
@@ -84,6 +85,7 @@ export class ChatService {
                 ]
             }
         };
+        this.initializeMockData();
     }
     /**
      * Create a new chat session
@@ -427,6 +429,22 @@ export class ChatService {
             general_inquiry: 'General Inquiry'
         };
         return titles[intentType] || 'Chat Session';
+    }
+    /**
+     * Initialize mock data for demonstration purposes
+     */
+    initializeMockData() {
+        try {
+            const mockSessions = MockDataGenerator.generateMockSessions();
+            mockSessions.forEach(session => {
+                this.sessions.set(session.id, session);
+            });
+            logger.info(`Initialized ${mockSessions.length} mock chat sessions`);
+            logger.info('Mock sessions loaded:', mockSessions.map(s => `${s.title} (${s.status})`));
+        }
+        catch (error) {
+            logger.error('Error initializing mock data:', error);
+        }
     }
     /**
      * Get random response from array

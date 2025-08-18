@@ -61,6 +61,7 @@ interface ChatResponse {
  */
 export declare class ChatService {
     private sessions;
+    constructor();
     private readonly mockResponses;
     private readonly intentPatterns;
     private readonly conversationFlows;
@@ -124,6 +125,10 @@ export declare class ChatService {
      * Generate session title based on intent and message
      */
     private generateSessionTitle;
+    /**
+     * Initialize mock data for demonstration purposes
+     */
+    private initializeMockData;
     /**
      * Get random response from array
      */
