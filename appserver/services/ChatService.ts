@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { logger } from '../utils/logger';
+import { createLogger } from '../shared/logger.js';
+
+const logger = createLogger('ChatService');
 
 // Chat Types (duplicated for backend - ideally shared)
 interface ChatMessage {
@@ -211,7 +213,7 @@ export class ChatService {
         type: 'assistant',
         content: response.message,
         timestamp: new Date().toISOString(),
-        metadata: response.metadata
+        metadata: response.metadata as any
       };
 
       session.messages.push(assistantMsg);
@@ -547,7 +549,7 @@ export class ChatService {
    * Generate session title based on intent and message
    */
   private generateSessionTitle(intentType: string, message: string): string {
-    const titles = {
+    const titles: Record<string, string> = {
       create_quotation: 'New Quotation Request',
       register_service: 'Service Registration',
       register_client: 'Client Registration',
@@ -561,7 +563,7 @@ export class ChatService {
    * Get random response from array
    */
   private getRandomResponse(type: string): string {
-    const responses = this.mockResponses[type] || this.mockResponses.error;
+    const responses = (this.mockResponses as any)[type] || this.mockResponses.error;
     return responses[Math.floor(Math.random() * responses.length)];
   }
 }

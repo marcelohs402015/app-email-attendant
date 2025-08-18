@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { ChatService } from '../services/ChatService.js';
-import { logger } from '../utils/logger.js';
+import { createLogger } from '../shared/logger.js';
+
+const logger = createLogger('ChatRoutes');
 
 const router = Router();
 const chatService = new ChatService();

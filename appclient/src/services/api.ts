@@ -1455,7 +1455,7 @@ function generateMockAIResponse(userMessage: string, session: ChatSession): Chat
 
 // Handle specific intents
 function handleIntent(intent: string, userMessage: string, session: ChatSession): ChatResponse {
-  const responses = mockChatData.responses[intent] || mockChatData.responses.error;
+  const responses = (mockChatData.responses as any)[intent] || mockChatData.responses.error;
   const responseMessage = responses[Math.floor(Math.random() * responses.length)];
 
   switch (intent) {
@@ -1502,7 +1502,7 @@ function handleIntent(intent: string, userMessage: string, session: ChatSession)
       return {
         message: responseMessage,
         sessionId: session.id,
-        metadata: { action: intent }
+        metadata: { action: intent as any }
       };
   }
 }
@@ -1542,7 +1542,7 @@ function handleConversationFlow(userMessage: string, session: ChatSession): Chat
       message: successMessages[collectingData.type],
       sessionId: session.id,
       metadata: {
-        action: `${collectingData.type}_completed`,
+        action: `${collectingData.type}_completed` as any,
         data: { id: resourceId, ...collectingData.data }
       }
     };
@@ -1555,7 +1555,7 @@ function handleConversationFlow(userMessage: string, session: ChatSession): Chat
     message: `Great! ${nextStep.question}`,
     sessionId: session.id,
     metadata: {
-      action: collectingData.type,
+      action: collectingData.type as any,
       nextStep: nextStep.field
     }
   };

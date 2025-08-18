@@ -266,10 +266,11 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   metadata?: {
-    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry';
+    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'greeting' | 'help' | 'error';
     data?: any;
     confidence?: number;
     suggestedActions?: ChatAction[];
+    nextStep?: string;
   };
 }
 
@@ -339,7 +340,7 @@ export interface ChatResponse {
   message: string;
   sessionId: string;
   metadata?: {
-    action?: string;
+    action?: 'create_quotation' | 'register_service' | 'register_client' | 'general_inquiry' | 'greeting' | 'help' | 'error';
     data?: any;
     nextStep?: string;
     suggestedActions?: ChatAction[];
