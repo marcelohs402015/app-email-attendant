@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createLogger } from '../shared/logger.js';
+import { MockDataGenerator } from '../utils/mockData.js';
 
 const logger = createLogger('ChatService');
 
@@ -78,6 +79,10 @@ interface ChatIntent {
  */
 export class ChatService {
   private sessions: Map<string, ChatSession> = new Map();
+  
+  constructor() {
+    this.initializeMockData();
+  }
   
   // Mock AI responses
   private readonly mockResponses = {
@@ -557,6 +562,24 @@ export class ChatService {
     };
 
     return titles[intentType] || 'Chat Session';
+  }
+
+  /**
+   * Initialize mock data for demonstration purposes
+   */
+  private initializeMockData(): void {
+    try {
+      const mockSessions = MockDataGenerator.generateMockSessions();
+      
+      mockSessions.forEach(session => {
+        this.sessions.set(session.id, session as any);
+      });
+      
+      logger.info(`Initialized ${mockSessions.length} mock chat sessions`);
+      logger.info('Mock sessions loaded:', mockSessions.map(s => `${s.title} (${s.status})`));
+    } catch (error) {
+      logger.error('Error initializing mock data:', error);
+    }
   }
 
   /**

@@ -331,3 +331,114 @@
 {"ip":"::1","level":"info","message":"POST /api/chat/sessions/58d9dedf-d1eb-4d0b-82a6-cd1a4602191a/messages","service":"Server","timestamp":"2025-08-18T19:01:08.408Z","userAgent":"curl/8.5.0"}
 {"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:01:08.419Z"}
 {"level":"info","message":"Processed message in session 58d9dedf-d1eb-4d0b-82a6-cd1a4602191a: Olá, preciso de um orçamento...","service":"ChatRoutes","timestamp":"2025-08-18T19:01:08.420Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T19:06:53.680Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T19:06:53.705Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T19:06:53.706Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T19:06:53.706Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T19:06:54.492Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T19:07:01.447Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T19:07:01.468Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T19:07:01.469Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T19:07:01.470Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:25.594Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:29.159Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Created new chat session: b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"ChatService","timestamp":"2025-08-18T19:07:29.161Z"}
+{"level":"info","message":"Created new chat session: b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"ChatRoutes","timestamp":"2025-08-18T19:07:29.162Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:29.170Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:07:29.182Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:07:35.489Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: register_client (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:07:35.496Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: I need to register a new client...","service":"ChatRoutes","timestamp":"2025-08-18T19:07:35.499Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:07:35.518Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:35.527Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:07:41.865Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:07:41.867Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: marcelo...","service":"ChatRoutes","timestamp":"2025-08-18T19:07:41.868Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:07:41.879Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:41.890Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:07:47.948Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:07:47.950Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: joiao...","service":"ChatRoutes","timestamp":"2025-08-18T19:07:47.950Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:07:47.959Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:47.968Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:07:53.780Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:07:53.782Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: jj@jj...","service":"ChatRoutes","timestamp":"2025-08-18T19:07:53.782Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:07:53.794Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:07:53.801Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:08:02.335Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:08:02.337Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: jj@gmial.com...","service":"ChatRoutes","timestamp":"2025-08-18T19:08:02.337Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:08:02.351Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:08:02.360Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:08:08.824Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:08:08.825Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: 1555551...","service":"ChatRoutes","timestamp":"2025-08-18T19:08:08.826Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:08:08.839Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:08:08.847Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:08:13.899Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:08:13.901Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: ssss...","service":"ChatRoutes","timestamp":"2025-08-18T19:08:13.901Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:08:13.916Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:08:13.927Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7/messages","service":"Server","timestamp":"2025-08-18T19:08:18.580Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-18T19:08:18.581Z"}
+{"level":"info","message":"Processed message in session b9d0b888-5a5a-4468-bd01-a5ab1b4888a7: yes...","service":"ChatRoutes","timestamp":"2025-08-18T19:08:18.582Z"}
+{"level":"info","message":"Created client 017A0551: marcelo","service":"ChatService","timestamp":"2025-08-18T19:08:18.581Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/b9d0b888-5a5a-4468-bd01-a5ab1b4888a7","service":"Server","timestamp":"2025-08-18T19:08:18.593Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:08:18.600Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T19:08:37.441Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-18T19:20:30.363Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-18T19:20:30.368Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T19:20:30.372Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T19:20:30.385Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T19:20:30.385Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T19:20:30.386Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:20:41.993Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/68868da7-ef9f-4503-9abc-083d19957192","service":"Server","timestamp":"2025-08-18T19:20:59.682Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/health","service":"Server","timestamp":"2025-08-18T19:21:04.681Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:21:10.034Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: 9ff76cbb-5718-4843-8f6e-3909cc4c4517","service":"ChatService","timestamp":"2025-08-18T19:21:10.037Z"}
+{"level":"info","message":"Created new chat session: 9ff76cbb-5718-4843-8f6e-3909cc4c4517","service":"ChatRoutes","timestamp":"2025-08-18T19:21:10.040Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/9ff76cbb-5718-4843-8f6e-3909cc4c4517/messages","service":"Server","timestamp":"2025-08-18T19:21:15.640Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:21:15.645Z"}
+{"level":"info","message":"Processed message in session 9ff76cbb-5718-4843-8f6e-3909cc4c4517: Olá! Como você pode me ajudar?...","service":"ChatRoutes","timestamp":"2025-08-18T19:21:15.647Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:41:14.673Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T19:41:22.527Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-18T19:41:29.386Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T19:41:29.413Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-18T19:41:29.396Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T19:41:29.452Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T19:41:29.455Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T19:41:29.458Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:43:02.652Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:56:32.590Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:57:58.279Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:58:04.334Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/9ff76cbb-5718-4843-8f6e-3909cc4c4517/messages","service":"Server","timestamp":"2025-08-18T19:58:11.046Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:58:15.032Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: e5ca164b-e7b1-4f3c-947d-cbc075d89ab7","service":"ChatService","timestamp":"2025-08-18T19:58:15.034Z"}
+{"level":"info","message":"Created new chat session: e5ca164b-e7b1-4f3c-947d-cbc075d89ab7","service":"ChatRoutes","timestamp":"2025-08-18T19:58:15.035Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/e5ca164b-e7b1-4f3c-947d-cbc075d89ab7/messages","service":"Server","timestamp":"2025-08-18T19:58:23.168Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: create_quotation (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:58:23.180Z"}
+{"level":"info","message":"Processed message in session e5ca164b-e7b1-4f3c-947d-cbc075d89ab7: Preciso criar um orçamento...","service":"ChatRoutes","timestamp":"2025-08-18T19:58:23.191Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:59:41.666Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/health","service":"Server","timestamp":"2025-08-18T20:01:20.011Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:01:23.926Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:01:35.394Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:01:43.642Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions/e5ca164b-e7b1-4f3c-947d-cbc075d89ab7","service":"Server","timestamp":"2025-08-18T20:01:49.316Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:01:53.855Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: d55d8836-d8e1-4d10-87dd-45e8e5807792","service":"ChatService","timestamp":"2025-08-18T20:01:53.856Z"}
+{"level":"info","message":"Created new chat session: d55d8836-d8e1-4d10-87dd-45e8e5807792","service":"ChatRoutes","timestamp":"2025-08-18T20:01:53.856Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/d55d8836-d8e1-4d10-87dd-45e8e5807792/messages","service":"Server","timestamp":"2025-08-18T20:01:59.990Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T20:01:59.991Z"}
+{"level":"info","message":"Processed message in session d55d8836-d8e1-4d10-87dd-45e8e5807792: Olá! Como você pode me ajudar?...","service":"ChatRoutes","timestamp":"2025-08-18T20:01:59.992Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-18T20:02:29.275Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T20:02:29.285Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-18T20:02:29.279Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T20:02:29.298Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T20:02:29.298Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T20:02:29.299Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:02:41.501Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T20:02:48.915Z"}
