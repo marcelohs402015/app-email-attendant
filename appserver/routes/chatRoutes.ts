@@ -235,18 +235,23 @@ router.delete('/sessions/:sessionId', async (req: Request, res: Response) => {
 
 /**
  * GET /api/chat/health
- * Health check endpoint for chat service
+ * Health check endpoint for chat service v2.0
  */
 router.get('/health', (req: Request, res: Response) => {
+  const version = process.env.APP_VERSION || '2.0.0';
+  
   res.json({
     success: true,
     data: {
       service: 'ChatService',
-      version: '2.0.0',
+      version: version,
       status: 'healthy',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      features: ['ai-conversation', 'quotation-generation', 'service-registration', 'client-management'],
+      environment: process.env.NODE_ENV || 'development',
+      branch: 'feature/chat-integration-v2.0'
     },
-    message: 'Chat service is healthy'
+    message: 'AI Chat service v2.0 is healthy and ready'
   });
 });
 

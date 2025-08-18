@@ -35,13 +35,19 @@ async function startServer() {
       next();
     });
 
-    // Health check endpoint
+    // Health check endpoint v2.0
     app.get('/health', (req, res) => {
+      const version = process.env.APP_VERSION || '2.0.0';
+      const features = process.env.FEATURES ? process.env.FEATURES.split(',') : ['email-management', 'ai-chat', 'quotation-automation'];
+      
       res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: '2.0.0',
-        features: ['email-management', 'ai-chat', 'quotation-automation']
+        version: version,
+        features: features,
+        environment: process.env.NODE_ENV || 'development',
+        port: process.env.PORT || 3001,
+        branch: 'feature/chat-integration-v2.0'
       });
     });
 
