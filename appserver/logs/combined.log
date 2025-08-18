@@ -315,3 +315,19 @@
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T18:14:47.894Z"}
 {"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-18T18:15:09.105Z","userAgent":"curl/8.5.0"}
 {"ip":"::1","level":"info","message":"GET /api/chat/health","service":"Server","timestamp":"2025-08-18T18:15:17.878Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T18:43:29.874Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T18:43:29.998Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T18:43:30.000Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T18:43:30.011Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T18:43:52.508Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-18T18:57:49.084Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-18T18:57:49.158Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-18T18:57:49.160Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-18T18:57:49.161Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/health","service":"Server","timestamp":"2025-08-18T18:58:08.708Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-18T19:00:56.847Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: 58d9dedf-d1eb-4d0b-82a6-cd1a4602191a","service":"ChatService","timestamp":"2025-08-18T19:00:56.856Z"}
+{"level":"info","message":"Created new chat session: 58d9dedf-d1eb-4d0b-82a6-cd1a4602191a","service":"ChatRoutes","timestamp":"2025-08-18T19:00:56.858Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/58d9dedf-d1eb-4d0b-82a6-cd1a4602191a/messages","service":"Server","timestamp":"2025-08-18T19:01:08.408Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-18T19:01:08.419Z"}
+{"level":"info","message":"Processed message in session 58d9dedf-d1eb-4d0b-82a6-cd1a4602191a: Olá, preciso de um orçamento...","service":"ChatRoutes","timestamp":"2025-08-18T19:01:08.420Z"}

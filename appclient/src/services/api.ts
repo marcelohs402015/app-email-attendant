@@ -2,6 +2,8 @@ import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse
 import { mockEmails } from '../data/mockEmails';
 import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics, mockCategories } from '../data/mockData';
 import mockChatData from '../data/mockChatData';
+import axios from 'axios';
+import { API_CONFIG } from '../config/api';
 
 // Mock API service that simulates real API calls
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1282,148 +1284,228 @@ export const emailAPI = {
   },
 };
 
-// Chat API - v2.0
+// Chat API - v2.0 - Real Backend Integration
 export const chatAPI = {
   // Create a new chat session
   createSession: async (): Promise<ApiResponse<ChatSession>> => {
-    await delay(300);
-    
-    const sessionId = `session_${Date.now()}`;
-    const newSession: ChatSession = {
-      id: sessionId,
-      title: 'New Chat Session',
-      status: 'active',
-      context: {},
-      messages: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    try {
+      if (API_CONFIG.baseURL === 'mock') {
+        // Keep mock implementation for development
+        await delay(300);
+        
+        const sessionId = `session_${Date.now()}`;
+        const newSession: ChatSession = {
+          id: sessionId,
+          title: 'New Chat Session',
+          status: 'active',
+          context: {},
+          messages: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
 
-    // Add welcome message
-    const welcomeMessage: ChatMessage = {
-      id: `msg_${Date.now()}`,
-      sessionId,
-      type: 'assistant',
-      content: mockChatData.responses.greeting[0],
-      timestamp: new Date().toISOString(),
-      metadata: { action: 'greeting' }
-    };
+        // Add welcome message
+        const welcomeMessage: ChatMessage = {
+          id: `msg_${Date.now()}`,
+          sessionId,
+          type: 'assistant',
+          content: mockChatData.responses.greeting[0],
+          timestamp: new Date().toISOString(),
+          metadata: { action: 'greeting' }
+        };
 
-    newSession.messages.push(welcomeMessage);
-    mockChatData.sessions.push(newSession);
+        newSession.messages.push(welcomeMessage);
+        mockChatData.sessions.push(newSession);
 
-    return {
-      success: true,
-      data: newSession,
-      message: 'Chat session created successfully'
-    };
+        return {
+          success: true,
+          data: newSession,
+          message: 'Chat session created successfully'
+        };
+      }
+
+      // Real backend API call
+      const response = await axios.post(`${API_CONFIG.baseURL}/api/chat/sessions`, {});
+      return response.data;
+    } catch (error) {
+      console.error('Error creating chat session:', error);
+      return {
+        success: false,
+        error: 'Failed to create chat session',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   },
 
   // List all chat sessions
   getSessions: async (): Promise<ApiResponse<ChatSession[]>> => {
-    await delay(200);
-    
-    const sessions = [...mockChatData.sessions].sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
+    try {
+      if (API_CONFIG.baseURL === 'mock') {
+        await delay(200);
+        
+        const sessions = [...mockChatData.sessions].sort(
+          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
 
-    return {
-      success: true,
-      data: sessions
-    };
+        return {
+          success: true,
+          data: sessions
+        };
+      }
+
+      // Real backend API call
+      const response = await axios.get(`${API_CONFIG.baseURL}/api/chat/sessions`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting chat sessions:', error);
+      return {
+        success: false,
+        error: 'Failed to get chat sessions',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   },
 
   // Get specific session by ID
   getSession: async (sessionId: string): Promise<ApiResponse<ChatSession>> => {
-    await delay(200);
-    
-    const session = mockChatData.sessions.find(s => s.id === sessionId);
-    
-    if (!session) {
+    try {
+      if (API_CONFIG.baseURL === 'mock') {
+        await delay(200);
+        
+        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        
+        if (!session) {
+          return {
+            success: false,
+            error: 'Session not found'
+          };
+        }
+
+        return {
+          success: true,
+          data: session
+        };
+      }
+
+      // Real backend API call
+      const response = await axios.get(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting chat session:', error);
       return {
         success: false,
-        error: 'Session not found'
+        error: 'Failed to get chat session',
+        message: error instanceof Error ? error.message : 'Unknown error'
       };
     }
-
-    return {
-      success: true,
-      data: session
-    };
   },
 
   // Send message to chat session
   sendMessage: async (sessionId: string, message: string): Promise<ApiResponse<ChatResponse>> => {
-    await delay(800); // Simulate AI processing time
-    
-    const session = mockChatData.sessions.find(s => s.id === sessionId);
-    
-    if (!session) {
+    try {
+      if (API_CONFIG.baseURL === 'mock') {
+        await delay(800); // Simulate AI processing time
+        
+        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        
+        if (!session) {
+          return {
+            success: false,
+            error: 'Session not found'
+          };
+        }
+
+        // Add user message
+        const userMessage: ChatMessage = {
+          id: `msg_${Date.now()}_user`,
+          sessionId,
+          type: 'user',
+          content: message,
+          timestamp: new Date().toISOString()
+        };
+
+        session.messages.push(userMessage);
+
+        // Generate AI response based on mock patterns
+        const aiResponse = generateMockAIResponse(message, session);
+        
+        // Add AI message
+        const aiMessage: ChatMessage = {
+          id: `msg_${Date.now()}_ai`,
+          sessionId,
+          type: 'assistant',
+          content: aiResponse.message,
+          timestamp: new Date().toISOString(),
+          metadata: aiResponse.metadata
+        };
+
+        session.messages.push(aiMessage);
+        session.updatedAt = new Date().toISOString();
+
+        // Update session title if it's meaningful
+        if (session.messages.length === 3) { // First user message + welcome + AI response
+          session.title = generateSessionTitle(message);
+        }
+
+        return {
+          success: true,
+          data: aiResponse
+        };
+      }
+
+      // Real backend API call
+      const response = await axios.post(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}/messages`, {
+        message: message
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending message:', error);
       return {
         success: false,
-        error: 'Session not found'
+        error: 'Failed to send message',
+        message: error instanceof Error ? error.message : 'Unknown error'
       };
     }
-
-    // Add user message
-    const userMessage: ChatMessage = {
-      id: `msg_${Date.now()}_user`,
-      sessionId,
-      type: 'user',
-      content: message,
-      timestamp: new Date().toISOString()
-    };
-
-    session.messages.push(userMessage);
-
-    // Generate AI response based on mock patterns
-    const aiResponse = generateMockAIResponse(message, session);
-    
-    // Add AI message
-    const aiMessage: ChatMessage = {
-      id: `msg_${Date.now()}_ai`,
-      sessionId,
-      type: 'assistant',
-      content: aiResponse.message,
-      timestamp: new Date().toISOString(),
-      metadata: aiResponse.metadata
-    };
-
-    session.messages.push(aiMessage);
-    session.updatedAt = new Date().toISOString();
-
-    // Update session title if it's meaningful
-    if (session.messages.length === 3) { // First user message + welcome + AI response
-      session.title = generateSessionTitle(message);
-    }
-
-    return {
-      success: true,
-      data: aiResponse
-    };
   },
 
   // Update session status
   updateSessionStatus: async (sessionId: string, status: 'active' | 'completed' | 'archived'): Promise<ApiResponse<ChatSession>> => {
-    await delay(200);
-    
-    const session = mockChatData.sessions.find(s => s.id === sessionId);
-    
-    if (!session) {
+    try {
+      if (API_CONFIG.baseURL === 'mock') {
+        await delay(200);
+        
+        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        
+        if (!session) {
+          return {
+            success: false,
+            error: 'Session not found'
+          };
+        }
+
+        session.status = status;
+        session.updatedAt = new Date().toISOString();
+
+        return {
+          success: true,
+          data: session,
+          message: `Session ${status} successfully`
+        };
+      }
+
+      // Real backend API call
+      const response = await axios.put(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}/status`, {
+        status: status
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating session status:', error);
       return {
         success: false,
-        error: 'Session not found'
+        error: 'Failed to update session status',
+        message: error instanceof Error ? error.message : 'Unknown error'
       };
     }
-
-    session.status = status;
-    session.updatedAt = new Date().toISOString();
-
-    return {
-      success: true,
-      data: session,
-      message: `Session ${status} successfully`
-    };
   }
 };
 
