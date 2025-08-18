@@ -1,7 +1,7 @@
 {
   "name": "email-attendant-server",
-  "version": "1.0.0",
-  "description": "Backend server for Email Attendant application",
+  "version": "2.0.0",
+  "description": "Backend server v2.0 for Email Attendant with AI Chat Integration",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
