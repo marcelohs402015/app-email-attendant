@@ -1,6 +1,7 @@
-import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics, Category } from '../types/api';
+import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics, Category, ChatSession, ChatMessage, ChatResponse } from '../types/api';
 import { mockEmails } from '../data/mockEmails';
 import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics, mockCategories } from '../data/mockData';
+import mockChatData from '../data/mockChatData';
 
 // Mock API service that simulates real API calls
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1280,6 +1281,318 @@ export const emailAPI = {
     };
   },
 };
+
+// Chat API - v2.0
+export const chatAPI = {
+  // Create a new chat session
+  createSession: async (): Promise<ApiResponse<ChatSession>> => {
+    await delay(300);
+    
+    const sessionId = `session_${Date.now()}`;
+    const newSession: ChatSession = {
+      id: sessionId,
+      title: 'New Chat Session',
+      status: 'active',
+      context: {},
+      messages: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    // Add welcome message
+    const welcomeMessage: ChatMessage = {
+      id: `msg_${Date.now()}`,
+      sessionId,
+      type: 'assistant',
+      content: mockChatData.responses.greeting[0],
+      timestamp: new Date().toISOString(),
+      metadata: { action: 'greeting' }
+    };
+
+    newSession.messages.push(welcomeMessage);
+    mockChatData.sessions.push(newSession);
+
+    return {
+      success: true,
+      data: newSession,
+      message: 'Chat session created successfully'
+    };
+  },
+
+  // List all chat sessions
+  getSessions: async (): Promise<ApiResponse<ChatSession[]>> => {
+    await delay(200);
+    
+    const sessions = [...mockChatData.sessions].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+
+    return {
+      success: true,
+      data: sessions
+    };
+  },
+
+  // Get specific session by ID
+  getSession: async (sessionId: string): Promise<ApiResponse<ChatSession>> => {
+    await delay(200);
+    
+    const session = mockChatData.sessions.find(s => s.id === sessionId);
+    
+    if (!session) {
+      return {
+        success: false,
+        error: 'Session not found'
+      };
+    }
+
+    return {
+      success: true,
+      data: session
+    };
+  },
+
+  // Send message to chat session
+  sendMessage: async (sessionId: string, message: string): Promise<ApiResponse<ChatResponse>> => {
+    await delay(800); // Simulate AI processing time
+    
+    const session = mockChatData.sessions.find(s => s.id === sessionId);
+    
+    if (!session) {
+      return {
+        success: false,
+        error: 'Session not found'
+      };
+    }
+
+    // Add user message
+    const userMessage: ChatMessage = {
+      id: `msg_${Date.now()}_user`,
+      sessionId,
+      type: 'user',
+      content: message,
+      timestamp: new Date().toISOString()
+    };
+
+    session.messages.push(userMessage);
+
+    // Generate AI response based on mock patterns
+    const aiResponse = generateMockAIResponse(message, session);
+    
+    // Add AI message
+    const aiMessage: ChatMessage = {
+      id: `msg_${Date.now()}_ai`,
+      sessionId,
+      type: 'assistant',
+      content: aiResponse.message,
+      timestamp: new Date().toISOString(),
+      metadata: aiResponse.metadata
+    };
+
+    session.messages.push(aiMessage);
+    session.updatedAt = new Date().toISOString();
+
+    // Update session title if it's meaningful
+    if (session.messages.length === 3) { // First user message + welcome + AI response
+      session.title = generateSessionTitle(message);
+    }
+
+    return {
+      success: true,
+      data: aiResponse
+    };
+  },
+
+  // Update session status
+  updateSessionStatus: async (sessionId: string, status: 'active' | 'completed' | 'archived'): Promise<ApiResponse<ChatSession>> => {
+    await delay(200);
+    
+    const session = mockChatData.sessions.find(s => s.id === sessionId);
+    
+    if (!session) {
+      return {
+        success: false,
+        error: 'Session not found'
+      };
+    }
+
+    session.status = status;
+    session.updatedAt = new Date().toISOString();
+
+    return {
+      success: true,
+      data: session,
+      message: `Session ${status} successfully`
+    };
+  }
+};
+
+// Helper function to generate mock AI responses
+function generateMockAIResponse(userMessage: string, session: ChatSession): ChatResponse {
+  const lowerMessage = userMessage.toLowerCase();
+  
+  // Check if we're in a conversation flow
+  if (session.context.collectingData) {
+    return handleConversationFlow(userMessage, session);
+  }
+
+  // Detect intent
+  for (const [intent, patterns] of Object.entries(mockChatData.patterns)) {
+    for (const pattern of patterns) {
+      if (pattern.test(lowerMessage)) {
+        return handleIntent(intent, userMessage, session);
+      }
+    }
+  }
+
+  // Default response
+  return {
+    message: mockChatData.responses.error[Math.floor(Math.random() * mockChatData.responses.error.length)],
+    sessionId: session.id,
+    metadata: { action: 'general_inquiry' }
+  };
+}
+
+// Handle specific intents
+function handleIntent(intent: string, userMessage: string, session: ChatSession): ChatResponse {
+  const responses = mockChatData.responses[intent] || mockChatData.responses.error;
+  const responseMessage = responses[Math.floor(Math.random() * responses.length)];
+
+  switch (intent) {
+    case 'create_quotation':
+      session.context.currentAction = 'create_quotation';
+      session.context.collectingData = {
+        type: 'quotation',
+        step: 0,
+        data: {}
+      };
+      return {
+        message: `${responseMessage}\n\nTo get started, what's the client's name?`,
+        sessionId: session.id,
+        metadata: { action: 'create_quotation', nextStep: 'clientName' }
+      };
+
+    case 'register_service':
+      session.context.currentAction = 'register_service';
+      session.context.collectingData = {
+        type: 'service',
+        step: 0,
+        data: {}
+      };
+      return {
+        message: `${responseMessage}\n\nWhat's the name of the service you'd like to add?`,
+        sessionId: session.id,
+        metadata: { action: 'register_service', nextStep: 'name' }
+      };
+
+    case 'register_client':
+      session.context.currentAction = 'register_client';
+      session.context.collectingData = {
+        type: 'client',
+        step: 0,
+        data: {}
+      };
+      return {
+        message: `${responseMessage}\n\nWhat's the client's full name?`,
+        sessionId: session.id,
+        metadata: { action: 'register_client', nextStep: 'name' }
+      };
+
+    default:
+      return {
+        message: responseMessage,
+        sessionId: session.id,
+        metadata: { action: intent }
+      };
+  }
+}
+
+// Handle conversation flow progression
+function handleConversationFlow(userMessage: string, session: ChatSession): ChatResponse {
+  const { collectingData } = session.context;
+  if (!collectingData) {
+    return {
+      message: "I'm sorry, something went wrong. Let's start over.",
+      sessionId: session.id
+    };
+  }
+
+  const flow = mockChatData.flows[collectingData.type];
+  const currentStep = flow.steps[collectingData.step];
+  
+  // Store the data
+  collectingData.data[currentStep.field] = userMessage;
+  collectingData.step++;
+
+  // Check if we've completed all steps
+  if (collectingData.step >= flow.steps.length) {
+    const resourceId = createMockResource(collectingData.type, collectingData.data);
+    
+    // Clear the collecting data
+    session.context.collectingData = undefined;
+    session.context.currentAction = undefined;
+
+    const successMessages = {
+      quotation: `Perfect! I've created the quotation successfully.\n\n**Quotation ID:** ${resourceId}\n**Client:** ${collectingData.data.clientName}\n**Email:** ${collectingData.data.clientEmail || 'Not provided'}\n\nThe quotation has been saved and is ready to be sent. Is there anything else I can help you with?`,
+      service: `Excellent! I've registered the new service successfully.\n\n**Service ID:** ${resourceId}\n**Name:** ${collectingData.data.name}\n**Category:** ${collectingData.data.category || 'General'}\n\nThe service is now available in your catalog. What else can I help you with?`,
+      client: `Great! I've registered the new client successfully.\n\n**Client ID:** ${resourceId}\n**Name:** ${collectingData.data.name}\n**Email:** ${collectingData.data.email || 'Not provided'}\n\nThe client is now in your system. How else can I assist you?`
+    };
+
+    return {
+      message: successMessages[collectingData.type],
+      sessionId: session.id,
+      metadata: {
+        action: `${collectingData.type}_completed`,
+        data: { id: resourceId, ...collectingData.data }
+      }
+    };
+  }
+
+  // Move to next step
+  const nextStep = flow.steps[collectingData.step];
+  
+  return {
+    message: `Great! ${nextStep.question}`,
+    sessionId: session.id,
+    metadata: {
+      action: collectingData.type,
+      nextStep: nextStep.field
+    }
+  };
+}
+
+// Create mock resource
+function createMockResource(type: string, data: Record<string, any>): string {
+  const id = Date.now().toString().substring(-6);
+  
+  switch (type) {
+    case 'quotation':
+      return `QUO-${id}`;
+    case 'service':
+      return `SRV-${id}`;
+    case 'client':
+      return `CLI-${id}`;
+    default:
+      return `RES-${id}`;
+  }
+}
+
+// Generate session title
+function generateSessionTitle(message: string): string {
+  const lowerMessage = message.toLowerCase();
+  
+  if (lowerMessage.includes('quote') || lowerMessage.includes('orçamento')) {
+    return 'Quotation Request';
+  }
+  if (lowerMessage.includes('service') || lowerMessage.includes('serviço')) {
+    return 'Service Registration';
+  }
+  if (lowerMessage.includes('client') || lowerMessage.includes('cliente')) {
+    return 'Client Registration';
+  }
+  
+  return 'Chat Session';
+}
 
 // Remove axios export since we're using mocks
 export default emailAPI;

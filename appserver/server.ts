@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createEmailRoutes } from './routes/emailRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 import { createLogger } from './shared/logger.js';
 
 dotenv.config();
@@ -39,12 +40,14 @@ async function startServer() {
       res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '2.0.0',
+        features: ['email-management', 'ai-chat', 'quotation-automation']
       });
     });
 
     // API routes (using mock data)
     app.use('/api', createEmailRoutes());
+    app.use('/api/chat', chatRoutes);
 
     // Error handling middleware
     app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
