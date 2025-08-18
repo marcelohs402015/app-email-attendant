@@ -3,7 +3,7 @@ services:
   - type: web
     name: handyman-manager-backend
     env: node
-    buildCommand: "cd appserver && npm ci && npm run build"
+    buildCommand: "cd appserver && ./build.sh"
     startCommand: "cd appserver && npm start"
     plan: free
     envVars:
