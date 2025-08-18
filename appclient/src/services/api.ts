@@ -1372,7 +1372,7 @@ export const chatAPI = {
       if (API_CONFIG.baseURL === 'mock') {
         await delay(200);
         
-        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        const session = mockChatData.sessions.find((s: ChatSession) => s.id === sessionId);
         
         if (!session) {
           return {
@@ -1406,7 +1406,7 @@ export const chatAPI = {
       if (API_CONFIG.baseURL === 'mock') {
         await delay(800); // Simulate AI processing time
         
-        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        const session = mockChatData.sessions.find((s: ChatSession) => s.id === sessionId);
         
         if (!session) {
           return {
@@ -1474,7 +1474,7 @@ export const chatAPI = {
       if (API_CONFIG.baseURL === 'mock') {
         await delay(200);
         
-        const session = mockChatData.sessions.find(s => s.id === sessionId);
+        const session = mockChatData.sessions.find((s: ChatSession) => s.id === sessionId);
         
         if (!session) {
           return {
@@ -1520,7 +1520,7 @@ function generateMockAIResponse(userMessage: string, session: ChatSession): Chat
 
   // Detect intent
   for (const [intent, patterns] of Object.entries(mockChatData.patterns)) {
-    for (const pattern of patterns) {
+    for (const pattern of patterns as RegExp[]) {
       if (pattern.test(lowerMessage)) {
         return handleIntent(intent, userMessage, session);
       }
