@@ -15,6 +15,7 @@ import Stats from './pages/Stats';
 import Settings from './pages/Settings';
 import Automation from './pages/Automation';
 import Chat from './pages/Chat';
+import { StorageManager } from './components/StorageManager';
 import './i18n';
 
 const queryClient = new QueryClient({
@@ -27,6 +28,11 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const handleDataChange = () => {
+    // Invalidate all queries to refresh data
+    queryClient.invalidateQueries();
+  };
+
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
@@ -47,6 +53,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
+          <StorageManager onDataChange={handleDataChange} />
         </Router>
       </QueryClientProvider>
     </ThemeProvider>
