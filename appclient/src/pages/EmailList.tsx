@@ -96,7 +96,7 @@ export default function EmailList() {
   }
 
   const emails = emailsData?.data || [];
-  const paginationInfo = emailsData?.pagination;
+  const paginationInfo = emailsData?.data;
 
   return (
     <div className="space-y-6">
@@ -240,7 +240,7 @@ export default function EmailList() {
         }`}
         style={{ backgroundColor: currentTheme.colors.background.card }}
       >
-        {emails.length === 0 ? (
+        {(emails as any[]).length === 0 ? (
           <div className="text-center py-12">
             <p 
               className="text-lg transition-colors duration-300"
@@ -309,7 +309,7 @@ export default function EmailList() {
                     borderColor: currentTheme.colors.border.primary
                   }}
                 >
-                  {emails.map((email) => (
+                  {(emails as any[]).map((email) => (
                     <tr 
                       key={email.id} 
                       className={`transition-all duration-200 ${

@@ -15,7 +15,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
-import emailAPI from '../services/api';
+import { emailAPI } from '../services/api';
 import { Appointment } from '../types/api';
 import { format, addDays, subDays, isSameDay, startOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { enUS } from 'date-fns/locale';
@@ -130,7 +130,7 @@ const Calendar: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const selectedClient = clients.find(c => c.id === formData.clientId);
+    const selectedClient = clients.find((c: any) => c.id === formData.clientId);
     if (!selectedClient) return;
 
     const appointmentData = {
@@ -145,13 +145,13 @@ const Calendar: React.FC = () => {
         ...appointmentData
       });
     } else {
-      createMutation.mutate(appointmentData);
+      createMutation.mutate(appointmentData as any);
     }
   };
 
   const handleDelete = (appointmentId: string) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
-      deleteMutation.mutate(appointmentId);
+      deleteMutation.mutate(appointmentId as any);
     }
   };
 
@@ -182,7 +182,7 @@ const Calendar: React.FC = () => {
 
   const getAppointmentsForDate = (date: Date) => {
     const dateString = format(date, 'yyyy-MM-dd');
-    return appointments.filter(apt => apt.date === dateString);
+    return appointments.filter((apt: any) => apt.date === dateString);
   };
 
   const navigateWeek = (direction: 'prev' | 'next') => {
@@ -371,7 +371,7 @@ const Calendar: React.FC = () => {
                     </div>
                   </div>
                   <div className="p-2 space-y-1">
-                    {dayAppointments.map((appointment) => (
+                    {dayAppointments.map((appointment: any) => (
                       <div
                         key={appointment.id}
                         className="text-xs p-2 rounded cursor-pointer transition-all duration-200"
@@ -416,7 +416,7 @@ const Calendar: React.FC = () => {
         ) : (
           <div className="p-6">
             <div className="space-y-4">
-              {getAppointmentsForDate(currentDate).map((appointment) => (
+              {getAppointmentsForDate(currentDate).map((appointment: any) => (
                 <div
                   key={appointment.id}
                   className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${
@@ -624,7 +624,7 @@ const Calendar: React.FC = () => {
                       }}
                     >
                       <option value="">Selecione um cliente</option>
-                      {clients.map((client) => (
+                      {clients.map((client: any) => (
                         <option key={client.id} value={client.id}>
                           {client.name}
                         </option>

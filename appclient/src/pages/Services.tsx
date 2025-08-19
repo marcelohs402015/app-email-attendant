@@ -11,7 +11,7 @@ import {
   CheckIcon,
   TagIcon
 } from '@heroicons/react/24/outline';
-import emailAPI from '../services/api';
+import { emailAPI } from '../services/api';
 import { Service, ServiceCategory } from '../types/api';
 
 interface ServiceFormData {
@@ -139,18 +139,18 @@ const Services: React.FC = () => {
         ...serviceData
       });
     } else {
-      createMutation.mutate(serviceData);
+      createMutation.mutate(serviceData as any);
     }
   };
 
   const handleDelete = (serviceId: string) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
-      deleteMutation.mutate(serviceId);
+      deleteMutation.mutate(serviceId as any);
     }
   };
 
   const getCategoryInfo = (categoryId: string): ServiceCategory | undefined => {
-    return categories.find(cat => cat.id === categoryId);
+    return categories.find((cat: any) => cat.id === categoryId);
   };
 
   const formatPrice = (price: number) => {
@@ -224,7 +224,7 @@ const Services: React.FC = () => {
             }}
           >
             <option value="">{t('services.allCategories')}</option>
-            {categories.map((category) => (
+            {categories.map((category: any) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -242,7 +242,7 @@ const Services: React.FC = () => {
       >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => {
+            {services.map((service: any) => {
               const categoryInfo = getCategoryInfo(service.category);
               return (
                 <div

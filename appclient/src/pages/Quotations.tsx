@@ -13,7 +13,7 @@ import {
   EyeIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline';
-import emailAPI from '../services/api';
+import { emailAPI } from '../services/api';
 import EmailQuotationModal from '../components/EmailQuotationModal';
 import { Quotation, QuotationItem } from '../types/api';
 import { format, parseISO } from 'date-fns';
@@ -147,7 +147,7 @@ const Quotations: React.FC = () => {
 
   const handleServiceSelect = (serviceId: string) => {
     setSelectedService(serviceId);
-    const service = services.find(s => s.id === serviceId);
+    const service = services.find((s: any) => s.id === serviceId);
     if (service) {
       setUnitPrice(service.defaultPrice);
     }
@@ -156,7 +156,7 @@ const Quotations: React.FC = () => {
   const handleAddItem = () => {
     if (!selectedService || quantity <= 0 || unitPrice <= 0) return;
 
-    const service = services.find(s => s.id === selectedService);
+    const service = services.find((s: any) => s.id === selectedService);
     if (!service) return;
 
     const newItem: QuotationItem = {
@@ -217,13 +217,13 @@ const Quotations: React.FC = () => {
         ...quotationData
       });
     } else {
-      createMutation.mutate(quotationData);
+      createMutation.mutate(quotationData as any);
     }
   };
 
   const handleDelete = (quotationId: string) => {
     if (window.confirm('Are you sure you want to delete this quotation?')) {
-      deleteMutation.mutate(quotationId);
+      deleteMutation.mutate(quotationId as any);
     }
   };
 
@@ -238,7 +238,7 @@ const Quotations: React.FC = () => {
   };
 
   const getServiceName = (serviceId: string) => {
-    const service = services.find(s => s.id === serviceId);
+    const service = services.find((s: any) => s.id === serviceId);
     return service?.name || 'Service not found';
   };
 

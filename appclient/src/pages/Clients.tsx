@@ -12,7 +12,7 @@ import {
   EnvelopeIcon,
   MapPinIcon
 } from '@heroicons/react/24/outline';
-import emailAPI from '../services/api';
+import { emailAPI } from '../services/api';
 import { Client } from '../types/api';
 
 interface ClientFormData {
@@ -108,18 +108,18 @@ const Clients: React.FC = () => {
       createMutation.mutate({
         ...formData,
         isActive: true
-      });
+      } as any);
     }
   };
 
   const handleDelete = (clientId: string) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
-      deleteMutation.mutate(clientId);
+      deleteMutation.mutate(clientId as any);
     }
   };
 
   const clients = clientsResponse?.data || [];
-  const filteredClients = clients.filter(client =>
+  const filteredClients = clients.filter((client: any) =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -198,7 +198,7 @@ const Clients: React.FC = () => {
       >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredClients.map((client) => (
+            {filteredClients.map((client: any) => (
               <div
                 key={client.id}
                 className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${

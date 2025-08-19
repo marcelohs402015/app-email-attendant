@@ -131,13 +131,13 @@ const Categories: React.FC = () => {
         ...categoryData
       });
     } else {
-      createMutation.mutate(categoryData);
+      createMutation.mutate(categoryData as any);
     }
   };
 
   const handleDelete = (categoryId: string) => {
     if (window.confirm(t('categories.confirmDelete') || 'Are you sure you want to delete this category?')) {
-      deleteMutation.mutate(categoryId);
+      deleteMutation.mutate(categoryId as any);
     }
   };
 

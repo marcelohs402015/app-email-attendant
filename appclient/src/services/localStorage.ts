@@ -11,6 +11,7 @@ export interface LocalStorageData {
   templates: any[];
   automationRules: any[];
   pendingQuotes: any[];
+  categories: any[];
 }
 
 const STORAGE_KEY = 'handyman_manager_data';
@@ -23,7 +24,8 @@ const DEFAULT_DATA: LocalStorageData = {
   emails: [],
   templates: [],
   automationRules: [],
-  pendingQuotes: []
+  pendingQuotes: [],
+  categories: []
 };
 
 class LocalStorageService {

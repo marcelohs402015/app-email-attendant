@@ -597,3 +597,61 @@
 {"level":"info","message":"Created new chat session: 72ce55d1-189c-499e-8737-407024ac06fe","service":"ChatService","timestamp":"2025-08-19T13:11:32.219Z"}
 {"level":"info","message":"Created new chat session: 72ce55d1-189c-499e-8737-407024ac06fe","service":"ChatRoutes","timestamp":"2025-08-19T13:11:32.221Z"}
 {"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T13:13:57.983Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T14:00:42.835Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T14:00:42.853Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T14:00:42.847Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T14:00:42.884Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T14:00:42.885Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T14:00:42.886Z"}
+{"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-19T14:00:46.461Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T14:02:52.125Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T14:03:03.873Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T14:03:03.881Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T14:03:03.876Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T14:03:03.894Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T14:03:03.895Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T14:03:03.895Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T14:03:43.073Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T14:04:01.713Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T14:04:01.721Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T14:04:01.717Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T14:04:01.737Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T14:04:01.738Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T14:04:01.739Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T14:07:47.969Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T14:19:06.683Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T14:19:06.800Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T14:19:06.744Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T14:19:06.948Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T14:19:06.967Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T14:19:06.969Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-19T14:21:56.549Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: 0bf9038d-6063-4047-9e76-44dd52c31a69","service":"ChatService","timestamp":"2025-08-19T14:21:56.556Z"}
+{"level":"info","message":"Created new chat session: 0bf9038d-6063-4047-9e76-44dd52c31a69","service":"ChatRoutes","timestamp":"2025-08-19T14:21:56.560Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:22:13.960Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-19T14:22:13.964Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Quero criar uma cotação...","service":"ChatRoutes","timestamp":"2025-08-19T14:22:13.966Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:22:26.719Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: register_service (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-19T14:22:26.723Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Preciso de uma cotação para serviços de encanament...","service":"ChatRoutes","timestamp":"2025-08-19T14:22:26.724Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T14:22:35.884Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:22:45.889Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: register_service (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-19T14:22:45.890Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Serviço de Encanamento...","service":"ChatRoutes","timestamp":"2025-08-19T14:22:45.891Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:23:03.634Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-19T14:23:03.637Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Encanamento...","service":"ChatRoutes","timestamp":"2025-08-19T14:23:03.640Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:23:10.897Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: greeting (confidence: 0.85)","service":"ChatService","timestamp":"2025-08-19T14:23:10.899Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Reparo e instalação de sistemas hidráulicos...","service":"ChatRoutes","timestamp":"2025-08-19T14:23:10.900Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:23:18.459Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-19T14:23:18.461Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: 80...","service":"ChatRoutes","timestamp":"2025-08-19T14:23:18.462Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:23:24.959Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-19T14:23:24.961Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Hora...","service":"ChatRoutes","timestamp":"2025-08-19T14:23:24.962Z"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions/0bf9038d-6063-4047-9e76-44dd52c31a69/messages","service":"Server","timestamp":"2025-08-19T14:23:34.289Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Detected intent: general_inquiry (confidence: 0.5)","service":"ChatService","timestamp":"2025-08-19T14:23:34.293Z"}
+{"level":"info","message":"Processed message in session 0bf9038d-6063-4047-9e76-44dd52c31a69: Sim...","service":"ChatRoutes","timestamp":"2025-08-19T14:23:34.296Z"}
+{"level":"info","message":"Created service 310E6CC1: Serviço de Encanamento","service":"ChatService","timestamp":"2025-08-19T14:23:34.295Z"}
+{"ip":"::1","level":"info","message":"GET /api/services","service":"Server","timestamp":"2025-08-19T14:23:40.453Z","userAgent":"curl/8.5.0"}

@@ -9,7 +9,7 @@ import {
   XMarkIcon,
   CheckIcon
 } from '@heroicons/react/24/outline';
-import emailAPI from '../services/api';
+import { emailAPI } from '../services/api';
 import { EmailTemplate } from '../types/api';
 import { categoryLabels } from '../data/mockData';
 
@@ -92,13 +92,13 @@ const Settings: React.FC = () => {
         ...formData
       });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(formData as any);
     }
   };
 
   const handleDelete = (templateId: string) => {
     if (window.confirm('Are you sure you want to delete this template?')) {
-      deleteMutation.mutate(templateId);
+      deleteMutation.mutate(templateId as any);
     }
   };
 
@@ -150,7 +150,7 @@ const Settings: React.FC = () => {
       >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {templates.map((template) => (
+            {templates.map((template: any) => (
               <div
                 key={template.id}
                 className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 ${

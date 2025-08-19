@@ -39,7 +39,7 @@ export default function BusinessStats() {
     );
   }
 
-  const stats = businessStats?.data;
+  const stats = businessStats?.data as any;
   
   if (!stats) {
     return (

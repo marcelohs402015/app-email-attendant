@@ -30,7 +30,7 @@ export default function EmailDetail() {
 
   const { data: emailData, isLoading: emailLoading } = useQuery({
     queryKey: ['email', id],
-    queryFn: () => emailAPI.getEmailById(parseInt(id!)),
+    queryFn: () => emailAPI.getEmailById(id!),
     enabled: !!id,
   });
 

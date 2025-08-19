@@ -29,7 +29,7 @@ export default function PendingQuoteCard({ quote, detailed = false }: PendingQuo
 
   const approveMutation = useMutation({
     mutationFn: (data: { notes?: string }) => 
-      emailAPI.approvePendingQuote(quote.id, data.notes),
+      emailAPI.approvePendingQuote(quote.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-quotes'] });
       queryClient.invalidateQueries({ queryKey: ['automation-metrics'] });
@@ -38,7 +38,7 @@ export default function PendingQuoteCard({ quote, detailed = false }: PendingQuo
 
   const rejectMutation = useMutation({
     mutationFn: (data: { notes?: string }) => 
-      emailAPI.rejectPendingQuote(quote.id, data.notes),
+      emailAPI.rejectPendingQuote(quote.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-quotes'] });
       queryClient.invalidateQueries({ queryKey: ['automation-metrics'] });

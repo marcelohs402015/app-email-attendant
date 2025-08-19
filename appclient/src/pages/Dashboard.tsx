@@ -367,9 +367,9 @@ export default function Dashboard() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2" 
               style={{ borderColor: currentTheme.colors.primary[600] }}></div>
           </div>
-        ) : recentEmails?.data && recentEmails.data.length > 0 ? (
+        ) : recentEmails?.data && (recentEmails.data as any).length > 0 ? (
           <div className="space-y-4">
-            {recentEmails.data.map((email: any) => (
+                          {(recentEmails.data as any[]).map((email: any) => (
               <div 
                 key={email.id}
                 className="flex items-center justify-between p-4 rounded-lg transition-all duration-200 hover:bg-white/5"
