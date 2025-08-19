@@ -489,3 +489,18 @@
 {"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-18T20:28:47.707Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
 {"ip":"::1","level":"info","message":"GET /api/chat/sessions/9c71170c-fdc2-4d10-ace7-31c96edbedc0","service":"Server","timestamp":"2025-08-18T20:28:50.529Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-18T20:29:35.908Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T00:30:12.417Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T00:30:12.450Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T00:30:12.431Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T00:30:12.500Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T00:30:12.501Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T00:30:12.502Z"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T00:30:23.185Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T00:30:50.443Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T00:30:50.491Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T00:30:50.463Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T00:30:50.546Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T00:30:50.549Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T00:30:50.554Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T00:31:12.315Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T00:31:23.907Z"}
