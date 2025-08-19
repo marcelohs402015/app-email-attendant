@@ -4,12 +4,9 @@ services:
     name: handyman-manager-frontend
     runtime: static
     buildCommand: |
-      echo "Building client..."
       cd appclient
       npm install --legacy-peer-deps
       npm run build
-      echo "Build completed successfully!"
-      ls -la build/
     plan: free
     envVars:
       - key: REACT_APP_API_URL
@@ -22,3 +19,7 @@ services:
         value: "production"
       - key: CI
         value: "false"
+      - key: NODE_ENV
+        value: "production"
+      - key: GENERATE_SOURCEMAP
+        value: "false" 
