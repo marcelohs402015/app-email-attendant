@@ -2,7 +2,7 @@ services:
   # Backend service v2.0 - Node.js API with AI Chat Integration
   - type: web
     name: handyman-manager-backend
-    env: node
+    runtime: node
     buildCommand: "cd appserver && ./build.sh"
     startCommand: "cd appserver && npm start"
     plan: free
@@ -21,9 +21,8 @@ services:
   # Frontend service v2.0 - React app with AI Chat Interface
   - type: web
     name: handyman-manager-frontend
-    env: static
+    runtime: static
     buildCommand: "cd appclient && npm ci --legacy-peer-deps && npm run build"
-    staticPublishPath: ./appclient/build
     plan: free
     envVars:
       - key: REACT_APP_API_URL

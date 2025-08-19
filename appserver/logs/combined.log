@@ -527,3 +527,11 @@
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T00:46:18.012Z"}
 {"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T00:46:33.495Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T00:46:39.031Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T01:06:46.488Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T01:06:46.509Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T01:06:46.495Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T01:06:46.562Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T01:06:46.568Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T01:06:46.576Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T01:07:01.404Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T01:07:08.415Z"}
