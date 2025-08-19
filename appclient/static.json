@@ -7,10 +7,23 @@
   "https_only": true,
   "headers": {
     "/**": {
-      "Cache-Control": "public, max-age=0, must-revalidate"
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin"
     },
     "/static/**": {
       "Cache-Control": "public, max-age=31536000, immutable"
+    },
+    "/asset-manifest.json": {
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    },
+    "/manifest.json": {
+      "Cache-Control": "public, max-age=86400"
+    },
+    "/favicon.ico": {
+      "Cache-Control": "public, max-age=86400"
     }
-  }
+  },
+  "error_page": "index.html"
 }

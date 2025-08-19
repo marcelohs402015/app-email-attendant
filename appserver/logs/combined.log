@@ -585,3 +585,15 @@
 {"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T08:51:44.175Z"}
 {"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T08:52:06.608Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
 {"level":"info","message":"Received shutdown signal, closing server...","service":"Server","timestamp":"2025-08-19T08:53:16.981Z"}
+{"level":"info","message":"Initialized 5 mock chat sessions","service":"ChatService","timestamp":"2025-08-19T13:05:14.943Z"}
+{"level":"info","message":"Starting server with mock data...","service":"Server","timestamp":"2025-08-19T13:05:14.984Z"}
+{"0":"Quotation for Electrical Repair (completed)","1":"Service Registration - Painting (completed)","2":"Client Registration - Maria Santos (completed)","3":"General Inquiry - Business Hours (active)","4":"Help Request (active)","level":"info","message":"Mock sessions loaded:","service":"ChatService","timestamp":"2025-08-19T13:05:14.963Z"}
+{"level":"info","message":"Server running on port 3001","service":"Server","timestamp":"2025-08-19T13:05:15.023Z"}
+{"level":"info","message":"Health check: http://localhost:3001/health","service":"Server","timestamp":"2025-08-19T13:05:15.029Z"}
+{"level":"info","message":"API base URL: http://localhost:3001/api","service":"Server","timestamp":"2025-08-19T13:05:15.031Z"}
+{"ip":"::1","level":"info","message":"GET /health","service":"Server","timestamp":"2025-08-19T13:05:30.268Z","userAgent":"curl/8.5.0"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T13:06:19.389Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::1","level":"info","message":"POST /api/chat/sessions","service":"Server","timestamp":"2025-08-19T13:11:32.205Z","userAgent":"curl/8.5.0"}
+{"level":"info","message":"Created new chat session: 72ce55d1-189c-499e-8737-407024ac06fe","service":"ChatService","timestamp":"2025-08-19T13:11:32.219Z"}
+{"level":"info","message":"Created new chat session: 72ce55d1-189c-499e-8737-407024ac06fe","service":"ChatRoutes","timestamp":"2025-08-19T13:11:32.221Z"}
+{"ip":"::1","level":"info","message":"GET /api/chat/sessions","service":"Server","timestamp":"2025-08-19T13:13:57.983Z","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}

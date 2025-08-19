@@ -1,47 +1,24 @@
 services:
-  # Backend service v2.0 - Node.js API with AI Chat Integration
-  - type: web
-    name: handyman-manager-backend
-    runtime: node
-    buildCommand: |
-      echo "Building server..."
-      cd appserver
-      npm install
-      npm run build
-      ls -la dist/
-    startCommand: |
-      echo "Starting server..."
-      cd appserver
-      ls -la
-      node dist/server.js
-    plan: free
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 10000
-      - key: CLIENT_URL
-        value: https://handyman-manager-frontend.onrender.com
-      - key: APP_VERSION
-        value: "2.0.0"
-      - key: FEATURES
-        value: "email-management,ai-chat,quotation-automation"
-    
-  # Frontend service v2.0 - React app with AI Chat Interface
+  # Frontend service v2.0 - React app with AI Chat Interface (Static Site)
   - type: web
     name: handyman-manager-frontend
     runtime: static
     buildCommand: |
       echo "Building client..."
       cd appclient
-      npm install
+      npm install --legacy-peer-deps
       npm run build
+      echo "Build completed successfully!"
       ls -la build/
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://handyman-manager-backend.onrender.com
+        value: mock
       - key: REACT_APP_VERSION
         value: "2.0.0"
       - key: REACT_APP_FEATURES
-        value: "ai-chat,quotation-automation"
+        value: "ai-chat,quotation-automation,email-management"
+      - key: REACT_APP_ENVIRONMENT
+        value: "production"
+      - key: CI
+        value: "false"
