@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { chatAPI } from '../services/api';
-import { ChatSession, ChatMessage } from '../types/api';
 import { 
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
@@ -19,7 +17,6 @@ import { format, parseISO } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
 const Chat: React.FC = () => {
-  const { t } = useTranslation();
   const { currentTheme } = useTheme();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);

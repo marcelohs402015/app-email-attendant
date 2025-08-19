@@ -1,4 +1,4 @@
-import { ChatSession, ChatMessage, ChatAction, ChatIntent } from '../types/api';
+import { ChatSession, ChatAction } from '../types/api';
 
 // Mock Chat Sessions
 export const mockChatSessions: ChatSession[] = [
@@ -206,10 +206,12 @@ export const mockConversationFlows = {
 };
 
 // Export default object with all mock data
-export default {
+const mockData = {
   sessions: mockChatSessions,
   actions: mockChatActions,
   responses: mockAIResponses,
   patterns: mockIntentPatterns,
   flows: mockConversationFlows
 };
+
+export default mockData;
