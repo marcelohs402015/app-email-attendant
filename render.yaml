@@ -3,8 +3,17 @@ services:
   - type: web
     name: handyman-manager-backend
     runtime: node
-    buildCommand: "cd appserver && ./build.sh"
-    startCommand: "cd appserver && npm start"
+    buildCommand: |
+      echo "Building server..."
+      cd appserver
+      npm install
+      npm run build
+      ls -la dist/
+    startCommand: |
+      echo "Starting server..."
+      cd appserver
+      ls -la
+      node dist/server.js
     plan: free
     envVars:
       - key: NODE_ENV
@@ -22,7 +31,12 @@ services:
   - type: web
     name: handyman-manager-frontend
     runtime: static
-    buildCommand: "cd appclient && npm ci --legacy-peer-deps && npm run build"
+    buildCommand: |
+      echo "Building client..."
+      cd appclient
+      npm install
+      npm run build
+      ls -la build/
     plan: free
     envVars:
       - key: REACT_APP_API_URL
@@ -31,7 +45,3 @@ services:
         value: "2.0.0"
       - key: REACT_APP_FEATURES
         value: "ai-chat,quotation-automation"
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
