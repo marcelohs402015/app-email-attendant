@@ -124,7 +124,17 @@ const Chat: React.FC = () => {
 
   const formatMessageTime = (timestamp: string) => {
     try {
-      return format(parseISO(timestamp), 'HH:mm', { locale: enUS });
+      const date = parseISO(timestamp);
+      const now = new Date();
+      const diffInHours = Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60);
+      
+      if (diffInHours < 24) {
+        return format(date, 'HH:mm', { locale: enUS });
+      } else if (diffInHours < 48) {
+        return 'Yesterday';
+      } else {
+        return format(date, 'MMM d', { locale: enUS });
+      }
     } catch {
       return '';
     }
@@ -132,7 +142,19 @@ const Chat: React.FC = () => {
 
   const formatSessionTime = (timestamp: string) => {
     try {
-      return format(parseISO(timestamp), 'MMM d, HH:mm', { locale: enUS });
+      const date = parseISO(timestamp);
+      const now = new Date();
+      const diffInHours = Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60);
+      
+      if (diffInHours < 1) {
+        return 'Just now';
+      } else if (diffInHours < 24) {
+        return format(date, 'HH:mm', { locale: enUS });
+      } else if (diffInHours < 48) {
+        return 'Yesterday';
+      } else {
+        return format(date, 'MMM d', { locale: enUS });
+      }
     } catch {
       return '';
     }
@@ -208,33 +230,59 @@ const Chat: React.FC = () => {
                   className="w-full text-left p-3 rounded-lg transition-colors"
                   style={{
                     backgroundColor: selectedSessionId === session.id 
-                      ? currentTheme.colors.primary[50] 
+                      ? currentTheme.colors.primary[100] 
                       : 'transparent',
                     border: selectedSessionId === session.id 
-                      ? `1px solid ${currentTheme.colors.primary[200]}` 
+                      ? `1px solid ${currentTheme.colors.primary[300]}` 
+                      : 'none',
+                    boxShadow: selectedSessionId === session.id 
+                      ? '0 2px 4px rgba(0, 0, 0, 0.1)' 
                       : 'none'
                   }}
                   onMouseEnter={(e) => {
                     if (selectedSessionId !== session.id) {
                       e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                      e.currentTarget.style.border = `1px solid ${currentTheme.colors.border.primary}`;
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (selectedSessionId !== session.id) {
                       e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.border = 'none';
                     }
                   }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium truncate" style={{ color: currentTheme.colors.text.primary }}>
+                      <h3 
+                        className="text-sm font-medium truncate" 
+                        style={{ 
+                          color: selectedSessionId === session.id 
+                            ? currentTheme.colors.primary[800] 
+                            : currentTheme.colors.text.primary 
+                        }}
+                      >
                         {session.title}
                       </h3>
-                      <p className="text-xs mt-1" style={{ color: currentTheme.colors.text.muted }}>
+                      <p 
+                        className="text-xs mt-1" 
+                        style={{ 
+                          color: selectedSessionId === session.id 
+                            ? currentTheme.colors.primary[600] 
+                            : currentTheme.colors.text.muted 
+                        }}
+                      >
                         {formatSessionTime(session.updatedAt)}
                       </p>
                       {session.messages.length > 0 && (
-                        <p className="text-xs mt-1 truncate" style={{ color: currentTheme.colors.text.secondary }}>
+                        <p 
+                          className="text-xs mt-1 truncate" 
+                          style={{ 
+                            color: selectedSessionId === session.id 
+                              ? currentTheme.colors.primary[700] 
+                              : currentTheme.colors.text.secondary 
+                          }}
+                        >
                           {session.messages[session.messages.length - 1].content}
                         </p>
                       )}
@@ -318,10 +366,61 @@ const Chat: React.FC = () => {
                           : currentTheme.colors.text.primary,
                         border: message.type === 'user'
                           ? 'none'
-                          : `1px solid ${currentTheme.colors.border.primary}`
+                          : `1px solid ${currentTheme.colors.border.primary}`,
+                        boxShadow: message.type === 'assistant' 
+                          ? '0 2px 8px rgba(0, 0, 0, 0.1)' 
+                          : 'none'
                       }}
                     >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      {/* Message Header for Assistant Messages */}
+                      {message.type === 'assistant' && (
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <span 
+                              className="text-xs font-medium px-2 py-1 rounded-full"
+                              style={{
+                                backgroundColor: currentTheme.colors.primary[100],
+                                color: currentTheme.colors.primary[800]
+                              }}
+                            >
+                              AI Assistant
+                            </span>
+                            {message.metadata?.action && (
+                              <span 
+                                className="text-xs px-2 py-1 rounded-full"
+                                style={{
+                                  backgroundColor: currentTheme.colors.background.secondary,
+                                  color: currentTheme.colors.text.secondary
+                                }}
+                              >
+                                {message.metadata.action.replace('_', ' ')}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <ClockIcon className="h-3 w-3" style={{ color: currentTheme.colors.text.muted }} />
+                            <span 
+                              className="text-xs"
+                              style={{ color: currentTheme.colors.text.muted }}
+                            >
+                              {formatMessageTime(message.timestamp)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div 
+                        className="whitespace-pre-wrap"
+                        style={{
+                          color: message.type === 'user' 
+                            ? 'white' 
+                            : currentTheme.colors.text.primary,
+                          fontSize: '14px',
+                          lineHeight: '1.5'
+                        }}
+                      >
+                        {message.content}
+                      </div>
                       
                       {/* Message Actions */}
                       {message.metadata?.suggestedActions && (
@@ -329,17 +428,19 @@ const Chat: React.FC = () => {
                           {message.metadata.suggestedActions.map((action) => (
                             <button
                               key={action.id}
-                              className="block w-full text-left px-3 py-2 rounded border text-sm"
+                              className="block w-full text-left px-3 py-2 rounded border text-sm transition-colors"
                               style={{
                                 backgroundColor: currentTheme.colors.background.secondary,
                                 borderColor: currentTheme.colors.border.primary,
                                 color: currentTheme.colors.text.primary
                               }}
                                                 onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                                e.currentTarget.style.backgroundColor = currentTheme.colors.primary[100];
+                                e.currentTarget.style.borderColor = currentTheme.colors.primary[300];
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.primary;
+                                e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                                e.currentTarget.style.borderColor = currentTheme.colors.border.primary;
                   }}
                             >
                               {action.label}
@@ -348,16 +449,18 @@ const Chat: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Timestamp for User Messages */}
+                      {message.type === 'user' && (
                       <div
-                        className="text-xs mt-2"
+                          className="text-xs mt-2 flex items-center justify-end space-x-1"
                         style={{
-                          color: message.type === 'user' 
-                            ? currentTheme.colors.primary[100] 
-                            : currentTheme.colors.text.muted
+                            color: currentTheme.colors.primary[100]
                         }}
                       >
-                        {formatMessageTime(message.timestamp)}
+                          <ClockIcon className="h-3 w-3" />
+                          <span>{formatMessageTime(message.timestamp)}</span>
                       </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -454,13 +557,16 @@ const Chat: React.FC = () => {
                   className="px-3 py-1 text-sm rounded-full transition-colors"
                   style={{
                     backgroundColor: currentTheme.colors.background.secondary,
-                    color: currentTheme.colors.text.primary
+                    color: currentTheme.colors.text.primary,
+                    border: `1px solid ${currentTheme.colors.border.primary}`
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.primary[100];
+                    e.currentTarget.style.borderColor = currentTheme.colors.primary[300];
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.primary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.borderColor = currentTheme.colors.border.primary;
                   }}
                 >
                   Create Quote
@@ -470,13 +576,16 @@ const Chat: React.FC = () => {
                   className="px-3 py-1 text-sm rounded-full transition-colors"
                   style={{
                     backgroundColor: currentTheme.colors.background.secondary,
-                    color: currentTheme.colors.text.primary
+                    color: currentTheme.colors.text.primary,
+                    border: `1px solid ${currentTheme.colors.border.primary}`
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.primary[100];
+                    e.currentTarget.style.borderColor = currentTheme.colors.primary[300];
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.primary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.borderColor = currentTheme.colors.border.primary;
                   }}
                 >
                   Add Service
@@ -486,13 +595,16 @@ const Chat: React.FC = () => {
                   className="px-3 py-1 text-sm rounded-full transition-colors"
                   style={{
                     backgroundColor: currentTheme.colors.background.secondary,
-                    color: currentTheme.colors.text.primary
+                    color: currentTheme.colors.text.primary,
+                    border: `1px solid ${currentTheme.colors.border.primary}`
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.primary[100];
+                    e.currentTarget.style.borderColor = currentTheme.colors.primary[300];
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.primary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.borderColor = currentTheme.colors.border.primary;
                   }}
                 >
                   Add Client
@@ -502,13 +614,16 @@ const Chat: React.FC = () => {
                   className="px-3 py-1 text-sm rounded-full transition-colors"
                   style={{
                     backgroundColor: currentTheme.colors.background.secondary,
-                    color: currentTheme.colors.text.primary
+                    color: currentTheme.colors.text.primary,
+                    border: `1px solid ${currentTheme.colors.border.primary}`
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.primary[100];
+                    e.currentTarget.style.borderColor = currentTheme.colors.primary[300];
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.primary;
+                    e.currentTarget.style.backgroundColor = currentTheme.colors.background.secondary;
+                    e.currentTarget.style.borderColor = currentTheme.colors.border.primary;
                   }}
                 >
                   Help

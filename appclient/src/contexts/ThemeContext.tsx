@@ -90,7 +90,7 @@ export const themes: Record<ThemeType, Theme> = {
         primary: '#0f0a1a',
         secondary: '#1a1625',
         sidebar: '#1a1625',
-        card: '#2d1b69',
+        card: '#1e1b2e',
       },
       text: {
         primary: '#ffffff',
