@@ -95,7 +95,7 @@ export default function EmailList() {
     );
   }
 
-  const emails = emailsData?.data || [];
+  const emails = emailsData?.data?.items || [];
   const paginationInfo = emailsData?.data;
 
   return (
@@ -240,7 +240,7 @@ export default function EmailList() {
         }`}
         style={{ backgroundColor: currentTheme.colors.background.card }}
       >
-        {(emails as any[]).length === 0 ? (
+        {emails.length === 0 ? (
           <div className="text-center py-12">
             <p 
               className="text-lg transition-colors duration-300"
@@ -309,7 +309,7 @@ export default function EmailList() {
                     borderColor: currentTheme.colors.border.primary
                   }}
                 >
-                  {(emails as any[]).map((email) => (
+                  {emails.map((email) => (
                     <tr 
                       key={email.id} 
                       className={`transition-all duration-200 ${
@@ -377,7 +377,7 @@ export default function EmailList() {
             </div>
 
             {/* Pagination */}
-            {paginationInfo && paginationInfo.pages > 1 && (
+            {paginationInfo && paginationInfo.totalPages > 1 && (
               <div 
                 className="px-4 py-3 flex items-center justify-between border-t sm:px-6 transition-all duration-300"
                 style={{ 
@@ -400,7 +400,7 @@ export default function EmailList() {
                     </button>
                     <button
                       onClick={() => handlePageChange(pagination.page + 1)}
-                      disabled={pagination.page >= paginationInfo.pages}
+                      disabled={pagination.page >= paginationInfo.totalPages}
                       className="ml-3 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                       style={{
                         backgroundColor: currentTheme.colors.background.primary,
@@ -455,9 +455,9 @@ export default function EmailList() {
                         {t('emails.previous')}
                       </button>
                       
-                      {Array.from({ length: Math.min(5, paginationInfo.pages) }, (_, i) => {
+                      {Array.from({ length: Math.min(5, paginationInfo.totalPages) }, (_, i) => {
                         let pageNum = i + 1;
-                        if (paginationInfo.pages > 5 && pagination.page > 3) {
+                        if (paginationInfo.totalPages > 5 && pagination.page > 3) {
                           pageNum = pagination.page - 2 + i;
                         }
                         
@@ -489,7 +489,7 @@ export default function EmailList() {
 
                       <button
                         onClick={() => handlePageChange(pagination.page + 1)}
-                        disabled={pagination.page >= paginationInfo.pages}
+                        disabled={pagination.page >= paginationInfo.totalPages}
                         className="relative inline-flex items-center px-2 py-2 rounded-r-md border text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         style={{
                           backgroundColor: currentTheme.colors.background.primary,

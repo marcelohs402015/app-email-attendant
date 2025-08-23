@@ -1,25 +1,54 @@
 services:
-  # Frontend service v2.0 - React app with AI Chat Interface (Static Site)
   - type: web
-    name: handyman-manager-frontend
-    runtime: static
+    name: handyman-manager-backend
+    runtime: node
     buildCommand: |
-      cd appclient
-      npm install --legacy-peer-deps
+      echo "Building server..."
+      cd appserver
+      npm install
       npm run build
+      ls -la dist/
+    startCommand: |
+      echo "Starting server..."
+      cd appserver
+      node dist/server.js
     plan: free
     envVars:
-      - key: REACT_APP_API_URL
-        value: mock
-      - key: REACT_APP_VERSION
-        value: "2.0.0"
-      - key: REACT_APP_FEATURES
-        value: "ai-chat,quotation-automation,email-management"
-      - key: REACT_APP_ENVIRONMENT
-        value: "production"
-      - key: CI
-        value: "false"
       - key: NODE_ENV
-        value: "production"
-      - key: GENERATE_SOURCEMAP
-        value: "false" 
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://handyman-manager-frontend.onrender.com
+      - key: APP_VERSION
+        value: "2.0.0"
+      - key: FEATURES
+        value: "email-management,ai-chat,quotation-automation"
+      - key: DATA_MODE
+        value: real
+      - key: DB_HOST
+        fromDatabase:
+          name: handyman-pg
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handyman-pg
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: handyman-pg
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: handyman-pg
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handyman-pg
+          property: password
+      - key: DB_SSL
+        value: "true"
+
+databases:
+  - name: handyman-pg
+    plan: free

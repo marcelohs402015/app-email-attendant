@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
+    "db:setup": "tsx scripts/db-setup.ts",
     "build": "tsc && echo 'Build completed successfully' && ls -la dist/",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",

@@ -1,18 +1,52 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { createEmailRoutes } from './routes/emailRoutes.js';
+import { Database } from './database/Database.js';
+import { DatabaseConfig } from './types/database.js';
+import { runMigrations } from './database/migrations.js';
+import { ensureDatabaseExists } from './database/ensureDatabase.js';
 import chatRoutes from './routes/chatRoutes.js';
+import { createCategoryRoutesReal } from './routes/categoryRoutes.real.js';
+import { createServicesRoutesReal } from './routes/servicesRoutes.real.js';
+import { createClientsRoutesReal } from './routes/clientsRoutes.real.js';
+import { createTemplatesRoutesReal } from './routes/templatesRoutes.real.js';
+import { createQuotationsRoutesReal } from './routes/quotationsRoutes.real.js';
+import { createAppointmentsRoutesReal } from './routes/appointmentsRoutes.real.js';
+import { createAutomationRoutesReal } from './routes/automationRoutes.real.js';
 import { createLogger } from './shared/logger.js';
 
 dotenv.config();
 
 const logger = createLogger('Server');
 const PORT = process.env.PORT || 3001;
+const DATA_MODE = (process.env.DATA_MODE || 'mock').toLowerCase();
+
+function getDatabaseConfig(): DatabaseConfig {
+  if (process.env.DATABASE_URL) {
+    const useSSL = (process.env.DB_SSL || 'true').toLowerCase() === 'true';
+    return {
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      database: process.env.DB_NAME || 'handyman-api',
+      user: process.env.DB_USER || 'admin',
+      password: process.env.DB_PASSWORD || 'admin',
+      ssl: useSSL ? { rejectUnauthorized: false } : false
+    } as any;
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    database: process.env.DB_NAME || 'handyman-api',
+    user: process.env.DB_USER || 'admin',
+    password: process.env.DB_PASSWORD || 'admin',
+    ssl: (process.env.DB_SSL || 'false') === 'true'
+  } as any;
+}
 
 async function startServer() {
   try {
-    logger.info('Starting server with mock data...');
+    logger.info(`Starting server in data mode: ${DATA_MODE} ...`);
 
     // Create Express app
     const app = express();
@@ -25,6 +59,13 @@ async function startServer() {
     
     app.use(express.json({ limit: '10mb' }));
     app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+    // Response headers with runtime metadata
+    app.use((req, res, next) => {
+      res.setHeader('x-data-mode', DATA_MODE);
+      res.setHeader('x-app-version', process.env.APP_VERSION || '2.0.0');
+      next();
+    });
 
     // Request logging middleware
     app.use((req, res, next) => {
@@ -47,12 +88,50 @@ async function startServer() {
         features: features,
         environment: process.env.NODE_ENV || 'development',
         port: process.env.PORT || 3001,
-        branch: 'feature/chat-integration-v2.0'
+        branch: 'feature/chat-integration-v2.0',
+        dataMode: DATA_MODE
       });
     });
 
-    // API routes (using mock data)
-    app.use('/api', createEmailRoutes());
+    // Simple endpoint to inspect current data mode
+    app.get('/mode', (_req, res) => {
+      res.json({ dataMode: DATA_MODE });
+    });
+
+    // API routes - Always use real mode with DB
+    if (DATA_MODE === 'real') {
+      try {
+        const dbConfig = getDatabaseConfig();
+        await ensureDatabaseExists(dbConfig.database, {
+          host: dbConfig.host,
+          port: dbConfig.port,
+          user: dbConfig.user,
+          password: dbConfig.password,
+          ssl: dbConfig.ssl,
+        });
+        const db = new Database(dbConfig);
+        app.set('db', db);
+        await runMigrations(db);
+        
+        // Mount all DB-backed routes
+        app.use('/api', createCategoryRoutesReal(db));
+        app.use('/api', createServicesRoutesReal(db));
+        app.use('/api', createClientsRoutesReal(db));
+        app.use('/api', createTemplatesRoutesReal(db));
+        app.use('/api', createQuotationsRoutesReal(db));
+        app.use('/api', createAppointmentsRoutesReal(db));
+        app.use('/api', createAutomationRoutesReal(db));
+        
+        logger.info('Database initialized, migrations applied, and all real DB-backed routes enabled');
+      } catch (e) {
+        logger.error('Failed to initialize database in real mode', (e as Error).message);
+        process.exit(1);
+      }
+    } else {
+      logger.error('Application requires DATA_MODE=real. Mock mode is no longer supported.');
+      process.exit(1);
+    }
+    
     app.use('/api/chat', chatRoutes);
 
     // Error handling middleware

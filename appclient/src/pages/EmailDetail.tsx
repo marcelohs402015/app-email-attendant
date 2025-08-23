@@ -41,7 +41,7 @@ export default function EmailDetail() {
 
   const replyMutation = useMutation({
     mutationFn: ({ emailId, templateId, message, quotationId }: { 
-      emailId: number; 
+      emailId: string; 
       templateId?: string; 
       message?: string; 
       quotationId?: string; 
@@ -73,7 +73,7 @@ export default function EmailDetail() {
     }
 
     replyMutation.mutate({
-      emailId: parseInt(id),
+      emailId: id,
       templateId: selectedTemplate || undefined,
       message: customMessage.trim() || undefined,
       quotationId: selectedQuotation?.id || undefined,

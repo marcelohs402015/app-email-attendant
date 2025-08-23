@@ -1,5 +1,6 @@
-// Local Storage Service for Mock Data Persistence
-// This service provides persistent storage for mock data using localStorage
+// Local Storage Service - Deprecated
+// This service is no longer used as the application now connects to real APIs
+// Keeping this file for backward compatibility during migration
 
 export interface LocalStorageData {
   quotations: any[];
@@ -15,160 +16,46 @@ export interface LocalStorageData {
 }
 
 const STORAGE_KEY = 'handyman_manager_data';
-const DEFAULT_DATA: LocalStorageData = {
-  quotations: [],
-  clients: [],
-  services: [],
-  chatSessions: [],
-  appointments: [],
-  emails: [],
-  templates: [],
-  automationRules: [],
-  pendingQuotes: [],
-  categories: []
-};
 
 class LocalStorageService {
-  private data: LocalStorageData;
-
-  constructor() {
-    this.data = this.loadData();
-  }
-
   /**
-   * Load data from localStorage or return default data
-   */
-  private loadData(): LocalStorageData {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Merge with default data to ensure all keys exist
-        return { ...DEFAULT_DATA, ...parsed };
-      }
-    } catch (error) {
-      console.error('Error loading data from localStorage:', error);
-    }
-    return { ...DEFAULT_DATA };
-  }
-
-  /**
-   * Save data to localStorage
-   */
-  private saveData(): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
-    } catch (error) {
-      console.error('Error saving data to localStorage:', error);
-    }
-  }
-
-  /**
-   * Initialize with mock data if storage is empty
-   */
-  initializeWithMockData(mockData: Partial<LocalStorageData>): void {
-    const hasData = Object.values(this.data).some(arr => arr.length > 0);
-    
-    if (!hasData) {
-      this.data = { ...this.data, ...mockData };
-      this.saveData();
-      console.log('Initialized localStorage with mock data');
-    }
-  }
-
-  /**
-   * Generic CRUD operations
-   */
-  getAll<T>(key: keyof LocalStorageData): T[] {
-    return [...this.data[key]] as T[];
-  }
-
-  getById<T>(key: keyof LocalStorageData, id: string): T | null {
-    const items = this.data[key] as any[];
-    return items.find(item => item.id === id) || null;
-  }
-
-  create<T>(key: keyof LocalStorageData, item: T): T {
-    const items = this.data[key] as any[];
-    const newItem = { ...item, id: this.generateId(key) };
-    items.push(newItem);
-    this.saveData();
-    return newItem;
-  }
-
-  update<T>(key: keyof LocalStorageData, id: string, updates: Partial<T>): T | null {
-    const items = this.data[key] as any[];
-    const index = items.findIndex(item => item.id === id);
-    
-    if (index === -1) return null;
-    
-    const updatedItem = { 
-      ...items[index], 
-      ...updates, 
-      updatedAt: new Date().toISOString() 
-    };
-    items[index] = updatedItem;
-    this.saveData();
-    return updatedItem;
-  }
-
-  delete(key: keyof LocalStorageData, id: string): boolean {
-    const items = this.data[key] as any[];
-    const index = items.findIndex(item => item.id === id);
-    
-    if (index === -1) return false;
-    
-    items.splice(index, 1);
-    this.saveData();
-    return true;
-  }
-
-  /**
-   * Generate unique ID for new items
-   */
-  private generateId(key: keyof LocalStorageData): string {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substr(2, 9);
-    return `${key}_${timestamp}_${random}`;
-  }
-
-  /**
-   * Clear all data
+   * Clear all localStorage data to force using real APIs
    */
   clearAll(): void {
-    this.data = { ...DEFAULT_DATA };
-    this.saveData();
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      console.log('Cleared all localStorage data - now using real APIs');
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+    }
   }
 
   /**
-   * Export data (for backup)
+   * Check if localStorage has any data (for migration purposes)
    */
-  exportData(): LocalStorageData {
-    return { ...this.data };
+  hasData(): boolean {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored !== null;
+    } catch (error) {
+      return false;
+    }
   }
 
   /**
-   * Import data (for restore)
+   * Get data for migration purposes only
    */
-  importData(data: LocalStorageData): void {
-    this.data = { ...DEFAULT_DATA, ...data };
-    this.saveData();
-  }
-
-  /**
-   * Get storage statistics
-   */
-  getStats(): Record<string, number> {
-    const stats: Record<string, number> = {};
-    Object.keys(this.data).forEach(key => {
-      stats[key] = this.data[key as keyof LocalStorageData].length;
-    });
-    return stats;
+  getData(): LocalStorageData | null {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      console.error('Error reading localStorage:', error);
+      return null;
+    }
   }
 }
 
-// Create singleton instance
+// Export singleton instance
 export const localStorageService = new LocalStorageService();
-
-// Export types for convenience
-export type { LocalStorageData };
+export default localStorageService;

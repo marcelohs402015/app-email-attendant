@@ -1,1249 +1,610 @@
 import { EmailData, EmailTemplate, CategoryStats, ApiResponse, PaginatedResponse, FilterOptions, PaginationOptions, Service, ServiceCategory, Quotation, CalendarAvailability, Client, Appointment, AutomationRule, PendingQuote, AutomationMetrics, Category, ChatSession, ChatMessage, ChatResponse } from '../types/api';
-import { mockEmails } from '../data/mockEmails';
-import { mockTemplates, mockCategoryStats, mockServices, mockServiceCategories, mockQuotations, mockCalendarAvailability, mockClients, mockAppointments, mockAutomationRules, mockPendingQuotes, mockAutomationMetrics, mockCategories } from '../data/mockData';
-import mockChatData from '../data/mockChatData';
-import { localStorageService } from './localStorage';
 import axios from 'axios';
 import { API_CONFIG } from '../config/api';
 
-// Mock API service that simulates real API calls with localStorage persistence
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Initialize localStorage with mock data on first load
-localStorageService.initializeWithMockData({
-  quotations: mockQuotations,
-  clients: mockClients,
-  services: mockServices,
-  chatSessions: mockChatData.sessions,
-  appointments: mockAppointments,
-  emails: mockEmails,
-  templates: mockTemplates,
-  automationRules: mockAutomationRules,
-  pendingQuotes: mockPendingQuotes
+// Real API service that connects to backend
+const axiosInstance = axios.create({
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
 export const emailAPI = {
   // Get emails with filters and pagination
   getEmails: async (filters?: FilterOptions, pagination?: PaginationOptions): Promise<ApiResponse<PaginatedResponse<EmailData>>> => {
-    await delay(300);
-    
-    let emails = localStorageService.getAll<EmailData>('emails');
-    
-    // Apply filters
-    if (filters) {
-      if (filters.category) {
-        emails = emails.filter(email => email.category === filters.category);
-      }
-      if (filters.from) {
-        emails = emails.filter(email => email.from.toLowerCase().includes(filters.from!.toLowerCase()));
-      }
-      if (filters.responded !== undefined) {
-        emails = emails.filter(email => email.responded === filters.responded);
-      }
-      if (filters.processed !== undefined) {
-        emails = emails.filter(email => email.processed === filters.processed);
-      }
+    try {
+      const params = new URLSearchParams();
+      if (filters?.category) params.append('category', filters.category);
+      if (filters?.from) params.append('from', filters.from);
+      if (filters?.responded !== undefined) params.append('responded', filters.responded.toString());
+      if (filters?.processed !== undefined) params.append('processed', filters.processed.toString());
+      if (pagination?.page) params.append('page', pagination.page.toString());
+      if (pagination?.limit) params.append('limit', pagination.limit.toString());
+
+      const response = await axiosInstance.get(`/emails?${params.toString()}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch emails:', error);
+      return {
+        success: false,
+        error: 'Failed to fetch emails',
+        data: { items: [], total: 0, page: 1, limit: 10, totalPages: 0 }
+      };
     }
-    
-    // Apply pagination
-    const page = pagination?.page || 1;
-    const limit = pagination?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedEmails = emails.slice(startIndex, endIndex);
-    
-    return {
-      success: true,
-      data: {
-        items: paginatedEmails,
-        total: emails.length,
-        page,
-        limit,
-        totalPages: Math.ceil(emails.length / limit)
-      }
-    };
   },
 
   // Get email by ID
-  getEmailById: async (emailId: string): Promise<ApiResponse<EmailData>> => {
-    await delay(200);
-    
-    const email = localStorageService.getById<EmailData>('emails', emailId);
-    if (!email) {
-      return {
-        success: false,
-        error: 'Email not found'
-      };
+  getEmail: async (id: number): Promise<ApiResponse<EmailData>> => {
+    try {
+      const response = await axiosInstance.get(`/emails/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch email:', error);
+      return { success: false, error: 'Failed to fetch email' };
     }
-    
-    return {
-      success: true,
-      data: email
-    };
+  },
+
+  // Sync emails from Gmail
+  syncEmails: async (): Promise<ApiResponse<{ synced: number }>> => {
+    try {
+      const response = await axiosInstance.post('/emails/sync');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to sync emails:', error);
+      return { success: false, error: 'Failed to sync emails' };
+    }
+  },
+
+  // Reply to email
+  replyToEmail: async (id: number, templateId: string, customMessage?: string): Promise<ApiResponse<{ sent: boolean }>> => {
+    try {
+      const response = await axiosInstance.post(`/emails/${id}/reply`, {
+        templateId,
+        customMessage
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to reply to email:', error);
+      return { success: false, error: 'Failed to reply to email' };
+    }
   },
 
   // Update email status
-  updateEmailStatus: async (emailId: string, updates: Partial<EmailData>): Promise<ApiResponse<EmailData>> => {
-    await delay(300);
-    
-    const updatedEmail = localStorageService.update<EmailData>('emails', emailId, updates);
-    if (!updatedEmail) {
-      return {
-        success: false,
-        error: 'Email not found'
-      };
+  updateEmailStatus: async (id: number, status: { processed?: boolean; responded?: boolean }): Promise<ApiResponse<EmailData>> => {
+    try {
+      const response = await axiosInstance.patch(`/emails/${id}/status`, status);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update email status:', error);
+      return { success: false, error: 'Failed to update email status' };
     }
-    
-    return {
-      success: true,
-      data: updatedEmail,
-      message: 'Email status updated successfully'
-    };
-  },
+  }
+};
 
-  // Sync emails from Gmail (mock)
-  syncEmails: async (query?: string, maxResults?: number): Promise<ApiResponse<{ synced: number; total_fetched: number }>> => {
-    await delay(2000); // Simulate longer operation
-    
-    const syncedCount = Math.floor(Math.random() * 10) + 1;
-    return {
-      success: true,
-      data: {
-        synced: syncedCount,
-        total_fetched: syncedCount + Math.floor(Math.random() * 5)
-      },
-      message: `${syncedCount} emails sincronizados com sucesso`
-    };
-  },
-
-  // Reply to email (mock)
-  replyToEmail: async (emailId: string, templateId?: string, customMessage?: string, quotationId?: string): Promise<ApiResponse<void>> => {
-    await delay(1000);
-    
-    // Update the email as responded in mock data
-    const email = localStorageService.getById<EmailData>('emails', emailId);
-    if (email) {
-      localStorageService.update<EmailData>('emails', emailId, {
-        responded: true,
-        responseTemplate: templateId,
-        updatedAt: new Date().toISOString()
-      });
-    }
-    
-    // Log quotation attachment if provided
-    if (quotationId) {
-      console.log(`Email ${emailId} replied with quotation ${quotationId} attached`);
-    }
-    
-    return {
-      success: true,
-      message: quotationId ? 'Response sent with quotation attached successfully' : 'Response sent successfully'
-    };
-  },
-
-  // === TEMPLATES API ===
-  
+export const templateAPI = {
   // Get all templates
   getTemplates: async (): Promise<ApiResponse<EmailTemplate[]>> => {
-    await delay(200);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<EmailTemplate>('templates')
-    };
+    try {
+      const response = await axiosInstance.get('/templates');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch templates:', error);
+      return { success: false, error: 'Failed to fetch templates', data: [] };
+    }
+  },
+
+  // Get template by ID
+  getTemplate: async (id: string): Promise<ApiResponse<EmailTemplate>> => {
+    try {
+      const response = await axiosInstance.get(`/templates/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch template:', error);
+      return { success: false, error: 'Failed to fetch template' };
+    }
   },
 
   // Create template
   createTemplate: async (template: Omit<EmailTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<EmailTemplate>> => {
-    await delay(400);
-    
-    const newTemplate = localStorageService.create<EmailTemplate>('templates', {
-      id: '', // Will be generated by localStorageService
-      ...template,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newTemplate,
-      message: 'Template created successfully'
-    };
+    try {
+      const response = await axiosInstance.post('/templates', template);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create template:', error);
+      return { success: false, error: 'Failed to create template' };
+    }
   },
 
   // Update template
-  updateTemplate: async (templateId: string, updates: Partial<Omit<EmailTemplate, 'id' | 'createdAt'>>): Promise<ApiResponse<EmailTemplate>> => {
-    await delay(300);
-    
-    const updatedTemplate = localStorageService.update<EmailTemplate>('templates', templateId, updates);
-    if (!updatedTemplate) {
-      return {
-        success: false,
-        error: 'Template not found'
-      };
+  updateTemplate: async (id: string, template: Partial<EmailTemplate>): Promise<ApiResponse<EmailTemplate>> => {
+    try {
+      const response = await axiosInstance.put(`/templates/${id}`, template);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update template:', error);
+      return { success: false, error: 'Failed to update template' };
     }
-    
-    return {
-      success: true,
-      data: updatedTemplate,
-      message: 'Template updated successfully'
-    };
   },
 
   // Delete template
-  deleteTemplate: async (templateId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('templates', templateId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Template not found'
-      };
+  deleteTemplate: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/templates/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete template:', error);
+      return { success: false, error: 'Failed to delete template' };
     }
-    
-    return {
-      success: true,
-      message: 'Template deleted successfully'
-    };
-  },
+  }
+};
 
-  // === SERVICES API ===
-  
-  // Get all services
-  getServices: async (): Promise<ApiResponse<Service[]>> => {
-    await delay(200);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<Service>('services')
-    };
-  },
-
-  // Create service
-  createService: async (service: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Service>> => {
-    await delay(400);
-    
-    const newService = localStorageService.create<Service>('services', {
-      id: '', // Will be generated by localStorageService
-      ...service,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newService,
-      message: 'Service created successfully'
-    };
-  },
-
-  // Update service
-  updateService: async (serviceId: string, updates: Partial<Omit<Service, 'id' | 'createdAt'>>): Promise<ApiResponse<Service>> => {
-    await delay(300);
-    
-    const updatedService = localStorageService.update<Service>('services', serviceId, updates);
-    if (!updatedService) {
-      return {
-        success: false,
-        error: 'Service not found'
-      };
-    }
-    
-    return {
-      success: true,
-      data: updatedService,
-      message: 'Service updated successfully'
-    };
-  },
-
-  // Delete service
-  deleteService: async (serviceId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('services', serviceId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Service not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Service deleted successfully'
-    };
-  },
-
-  // === QUOTATIONS API ===
-  
-  // Get all quotations
-  getQuotations: async (): Promise<ApiResponse<Quotation[]>> => {
-    await delay(300);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<Quotation>('quotations')
-    };
-  },
-
-  // Create quotation
-  createQuotation: async (quotation: Omit<Quotation, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Quotation>> => {
-    await delay(500);
-    
-    const newQuotation = localStorageService.create<Quotation>('quotations', {
-      id: '', // Will be generated by localStorageService
-      ...quotation,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newQuotation,
-      message: 'Quotation created successfully'
-    };
-  },
-
-  // Update quotation
-  updateQuotation: async (quotationId: string, updates: Partial<Omit<Quotation, 'id' | 'createdAt'>>): Promise<ApiResponse<Quotation>> => {
-    await delay(400);
-    
-    const updatedQuotation = localStorageService.update<Quotation>('quotations', quotationId, updates);
-    if (!updatedQuotation) {
-      return {
-        success: false,
-        error: 'Quotation not found'
-      };
-    }
-    
-    return {
-      success: true,
-      data: updatedQuotation,
-      message: 'Quotation updated successfully'
-    };
-  },
-
-  // Delete quotation
-  deleteQuotation: async (quotationId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('quotations', quotationId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Quotation not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Quotation deleted successfully'
-    };
-  },
-
-  // Send quotation by email (mock)
-  sendQuotation: async (quotationId: string, recipientEmail: string): Promise<ApiResponse<void>> => {
-    await delay(1500);
-    
-    const quotation = localStorageService.getById<Quotation>('quotations', quotationId);
-    if (!quotation) {
-      return {
-        success: false,
-        error: 'Quotation not found'
-      };
-    }
-    
-    // Update status to sent
-    localStorageService.update<Quotation>('quotations', quotationId, {
-      status: 'sent',
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      message: `Quotation sent to ${recipientEmail} successfully`
-    };
-  },
-
-  // === CLIENTS API ===
-  
-  // Get all clients
-  getClients: async (): Promise<ApiResponse<Client[]>> => {
-    await delay(300);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<Client>('clients')
-    };
-  },
-
-  // Create client
-  createClient: async (client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Client>> => {
-    await delay(400);
-    
-    const newClient = localStorageService.create<Client>('clients', {
-      id: '', // Will be generated by localStorageService
-      ...client,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newClient,
-      message: 'Client created successfully'
-    };
-  },
-
-  // Update client
-  updateClient: async (clientId: string, updates: Partial<Omit<Client, 'id' | 'createdAt'>>): Promise<ApiResponse<Client>> => {
-    await delay(300);
-    
-    const updatedClient = localStorageService.update<Client>('clients', clientId, updates);
-    if (!updatedClient) {
-      return {
-        success: false,
-        error: 'Client not found'
-      };
-    }
-    
-    return {
-      success: true,
-      data: updatedClient,
-      message: 'Client updated successfully'
-    };
-  },
-
-  // Delete client
-  deleteClient: async (clientId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('clients', clientId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Client not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Client deleted successfully'
-    };
-  },
-
-  // === APPOINTMENTS API ===
-  
-  // Get all appointments
-  getAppointments: async (): Promise<ApiResponse<Appointment[]>> => {
-    await delay(400);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<Appointment>('appointments')
-    };
-  },
-
-  // Create appointment
-  createAppointment: async (appointment: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Appointment>> => {
-    await delay(600);
-    
-    const newAppointment = localStorageService.create<Appointment>('appointments', {
-      id: '', // Will be generated by localStorageService
-      ...appointment,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newAppointment,
-      message: 'Appointment created successfully'
-    };
-  },
-
-  // Update appointment
-  updateAppointment: async (appointmentId: string, updates: Partial<Omit<Appointment, 'id' | 'createdAt'>>): Promise<ApiResponse<Appointment>> => {
-    await delay(500);
-    
-    const updatedAppointment = localStorageService.update<Appointment>('appointments', appointmentId, updates);
-    if (!updatedAppointment) {
-      return {
-        success: false,
-        error: 'Appointment not found'
-      };
-    }
-    
-    return {
-      success: true,
-      data: updatedAppointment,
-      message: 'Appointment updated successfully'
-    };
-  },
-
-  // Delete appointment
-  deleteAppointment: async (appointmentId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('appointments', appointmentId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Appointment not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Appointment deleted successfully'
-    };
-  },
-
-  // === STATS API ===
-  
-  // Get category stats
-  getCategoryStats: async (): Promise<ApiResponse<CategoryStats[]>> => {
-    await delay(300);
-    
-    return {
-      success: true,
-      data: mockCategoryStats
-    };
-  },
-
-  // Get automation metrics
-  getAutomationMetrics: async (): Promise<ApiResponse<AutomationMetrics>> => {
-    await delay(400);
-    
-    return {
-      success: true,
-      data: mockAutomationMetrics
-    };
-  },
-
-  // Get business statistics for handyman services
-  getBusinessStats: async (): Promise<ApiResponse<any>> => {
-    await delay(400);
-    
-    const services = localStorageService.getAll<Service>('services');
-    const quotations = localStorageService.getAll<Quotation>('quotations');
-    const clients = localStorageService.getAll<Client>('clients');
-    const appointments = localStorageService.getAll<Appointment>('appointments');
-    
-    // Calculate service demand stats
-    const servicesByCategory = services.reduce((acc, service) => {
-      acc[service.category] = (acc[service.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    // Calculate quotation stats
-    const quotationStats = {
-      total: quotations.length,
-      accepted: quotations.filter(q => q.status === 'accepted').length,
-      pending: quotations.filter(q => q.status === 'sent').length,
-      rejected: quotations.filter(q => q.status === 'rejected').length,
-      completed: quotations.filter(q => q.status === 'completed').length,
-      averageValue: quotations.length > 0 ? 
-        quotations.reduce((sum, q) => sum + q.total, 0) / quotations.length : 0
-    };
-
-    // Calculate appointment stats
-    const appointmentStats = {
-      total: appointments.length,
-      scheduled: appointments.filter(a => a.status === 'scheduled').length,
-      confirmed: appointments.filter(a => a.status === 'confirmed').length,
-      completed: appointments.filter(a => a.status === 'completed').length,
-      inProgress: appointments.filter(a => a.status === 'in_progress').length,
-      cancelled: appointments.filter(a => a.status === 'cancelled').length
-    };
-
-    // Calculate client stats
-    const clientStats = {
-      total: clients.length,
-      active: clients.filter(c => c.isActive).length,
-      withAppointments: clients.filter(c => 
-        appointments.some(a => a.clientId === c.id)
-      ).length,
-      withQuotations: clients.filter(c => 
-        quotations.some(q => q.clientEmail === c.email)
-      ).length
-    };
-
-    // Calculate revenue estimation
-    const totalRevenue = quotations
-      .filter(q => q.status === 'accepted' || q.status === 'completed')
-      .reduce((sum, q) => sum + q.total, 0);
-
-    const businessStats = {
-      servicesByCategory,
-      quotationStats,
-      appointmentStats,
-      clientStats,
-      totalRevenue
-    };
-    
-    return {
-      success: true,
-      data: businessStats
-    };
-  },
-
-  // Get revenue statistics by period
-  getRevenueStats: async (period: string = 'monthly'): Promise<ApiResponse<any>> => {
-    await delay(300);
-    
-    // Mock revenue data for demonstration
-    const revenueData = {
-      monthly: [
-        { period: 'Jan 2024', revenue: 3250.00, quotations: 8, completed: 6 },
-        { period: 'Feb 2024', revenue: 4100.00, quotations: 12, completed: 9 },
-        { period: 'Mar 2024', revenue: 2800.00, quotations: 7, completed: 5 },
-        { period: 'Apr 2024', revenue: 5200.00, quotations: 15, completed: 12 },
-        { period: 'May 2024', revenue: 4650.00, quotations: 13, completed: 10 },
-        { period: 'Jun 2024', revenue: 3900.00, quotations: 11, completed: 8 }
-      ],
-      weekly: [
-        { period: 'Week 1', revenue: 1200.00, quotations: 4, completed: 3 },
-        { period: 'Week 2', revenue: 900.00, quotations: 3, completed: 2 },
-        { period: 'Week 3', revenue: 1500.00, quotations: 5, completed: 4 },
-        { period: 'Week 4', revenue: 1300.00, quotations: 4, completed: 3 }
-      ]
-    };
-    
-    return {
-      success: true,
-      data: revenueData[period as keyof typeof revenueData] || revenueData.monthly
-    };
-  },
-
-  // === AUTOMATION API ===
-  
-  // Get automation rules
-  getAutomationRules: async (): Promise<ApiResponse<AutomationRule[]>> => {
-    await delay(300);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<AutomationRule>('automationRules')
-    };
-  },
-
-  // Create automation rule
-  createAutomationRule: async (rule: Omit<AutomationRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<AutomationRule>> => {
-    await delay(500);
-    
-    const newRule = localStorageService.create<AutomationRule>('automationRules', {
-      id: '', // Will be generated by localStorageService
-      ...rule,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newRule,
-      message: 'Automation rule created successfully'
-    };
-  },
-
-  // Update automation rule
-  updateAutomationRule: async (ruleId: string, updates: Partial<Omit<AutomationRule, 'id' | 'createdAt'>>): Promise<ApiResponse<AutomationRule>> => {
-    await delay(400);
-    
-    const updatedRule = localStorageService.update<AutomationRule>('automationRules', ruleId, updates);
-    if (!updatedRule) {
-      return {
-        success: false,
-        error: 'Automation rule not found'
-      };
-    }
-    
-    return {
-      success: true,
-      data: updatedRule,
-      message: 'Automation rule updated successfully'
-    };
-  },
-
-  // Delete automation rule
-  deleteAutomationRule: async (ruleId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('automationRules', ruleId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Automation rule not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Automation rule deleted successfully'
-    };
-  },
-
-  // Get pending quotes
-  getPendingQuotes: async (): Promise<ApiResponse<PendingQuote[]>> => {
-    await delay(300);
-    
-    return {
-      success: true,
-      data: localStorageService.getAll<PendingQuote>('pendingQuotes')
-    };
-  },
-
-  // Approve pending quote
-  approvePendingQuote: async (quoteId: string, managerNotes?: string): Promise<ApiResponse<void>> => {
-    await delay(400);
-    
-    const updatedQuote = localStorageService.update<PendingQuote>('pendingQuotes', quoteId, { 
-      status: 'approved',
-      approvedAt: new Date().toISOString(),
-      managerNotes: managerNotes
-    });
-    
-    if (!updatedQuote) {
-      return {
-        success: false,
-        error: 'Pending quote not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Quote approved successfully'
-    };
-  },
-
-  // Reject pending quote
-  rejectPendingQuote: async (quoteId: string, managerNotes?: string): Promise<ApiResponse<void>> => {
-    await delay(400);
-    
-    const updatedQuote = localStorageService.update<PendingQuote>('pendingQuotes', quoteId, { 
-      status: 'rejected',
-      managerNotes: managerNotes
-    });
-    
-    if (!updatedQuote) {
-      return {
-        success: false,
-        error: 'Pending quote not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Quote rejected successfully'
-    };
-  },
-
-  // === CATEGORIES API ===
-  
+export const categoryAPI = {
   // Get all categories
   getCategories: async (): Promise<ApiResponse<Category[]>> => {
-    await delay(200);
-    
-    const activeCategories = mockCategories.filter(cat => cat.isActive);
-    
-    return {
-      success: true,
-      data: activeCategories
-    };
+    try {
+      const response = await axiosInstance.get('/categories');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+      return { success: false, error: 'Failed to fetch categories', data: [] };
+    }
+  },
+
+  // Get category by ID
+  getCategory: async (id: number): Promise<ApiResponse<Category>> => {
+    try {
+      const response = await axiosInstance.get(`/categories/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch category:', error);
+      return { success: false, error: 'Failed to fetch category' };
+    }
   },
 
   // Create category
   createCategory: async (category: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Category>> => {
-    await delay(400);
-    
-    const newCategory = localStorageService.create<Category>('categories', {
-      id: '', // Will be generated by localStorageService
-      ...category,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-    
-    return {
-      success: true,
-      data: newCategory,
-      message: 'Category created successfully'
-    };
+    try {
+      const response = await axiosInstance.post('/categories', category);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create category:', error);
+      return { success: false, error: 'Failed to create category' };
+    }
   },
 
   // Update category
-  updateCategory: async (categoryId: string, updates: Partial<Omit<Category, 'id' | 'createdAt'>>): Promise<ApiResponse<Category>> => {
-    await delay(300);
-    
-    const updatedCategory = localStorageService.update<Category>('categories', categoryId, updates);
-    if (!updatedCategory) {
-      return {
-        success: false,
-        error: 'Category not found'
-      };
+  updateCategory: async (id: number, category: Partial<Category>): Promise<ApiResponse<Category>> => {
+    try {
+      const response = await axiosInstance.put(`/categories/${id}`, category);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update category:', error);
+      return { success: false, error: 'Failed to update category' };
     }
-    
-    return {
-      success: true,
-      data: updatedCategory,
-      message: 'Category updated successfully'
-    };
   },
 
   // Delete category
-  deleteCategory: async (categoryId: string): Promise<ApiResponse<void>> => {
-    await delay(300);
-    
-    const deleted = localStorageService.delete('categories', categoryId);
-    if (!deleted) {
-      return {
-        success: false,
-        error: 'Category not found'
-      };
-    }
-    
-    return {
-      success: true,
-      message: 'Category deleted successfully'
-    };
-  },
-};
-
-// Chat API - v2.0 - Real Backend Integration with localStorage persistence
-export const chatAPI = {
-  // Create a new chat session
-  createSession: async (): Promise<ApiResponse<ChatSession>> => {
+  deleteCategory: async (id: number): Promise<ApiResponse<{ deleted: boolean }>> => {
     try {
-      if (API_CONFIG.baseURL === 'mock') {
-        await delay(300);
-        
-        const sessionId = `session_${Date.now()}`;
-        const newSession: ChatSession = {
-          id: sessionId,
-          title: 'New Chat Session',
-          status: 'active',
-          context: {},
-          messages: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-
-        // Add welcome message
-        const welcomeMessage: ChatMessage = {
-          id: `msg_${Date.now()}`,
-          sessionId,
-          type: 'assistant',
-          content: mockChatData.responses.greeting[0],
-          timestamp: new Date().toISOString(),
-          metadata: { action: 'greeting' }
-        };
-
-        newSession.messages.push(welcomeMessage);
-        
-        // Save to localStorage
-        localStorageService.create<ChatSession>('chatSessions', newSession);
-
-        return {
-          success: true,
-          data: newSession,
-          message: 'Chat session created successfully'
-        };
-      }
-
-      // Real backend API call
-      const response = await axios.post(`${API_CONFIG.baseURL}/api/chat/sessions`, {});
+      const response = await axiosInstance.delete(`/categories/${id}`);
       return response.data;
     } catch (error) {
-      console.error('Error creating chat session:', error);
-      return {
-        success: false,
-        error: 'Failed to create chat session',
-        message: error instanceof Error ? error.message : 'Unknown error'
+      console.error('Failed to delete category:', error);
+      return { success: false, error: 'Failed to delete category' };
+    }
+  },
+
+  // Get category statistics
+  getCategoryStats: async (): Promise<ApiResponse<CategoryStats[]>> => {
+    try {
+      const response = await axiosInstance.get('/categories/stats');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch category stats:', error);
+      return { success: false, error: 'Failed to fetch category stats', data: [] };
+    }
+  }
+};
+
+export const serviceAPI = {
+  // Get all services
+  getServices: async (): Promise<ApiResponse<Service[]>> => {
+    try {
+      const response = await axiosInstance.get('/services');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch services:', error);
+      return { success: false, error: 'Failed to fetch services', data: [] };
+    }
+  },
+
+  // Get service by ID
+  getService: async (id: string): Promise<ApiResponse<Service>> => {
+    try {
+      const response = await axiosInstance.get(`/services/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch service:', error);
+      return { success: false, error: 'Failed to fetch service' };
+    }
+  },
+
+  // Create service
+  createService: async (service: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Service>> => {
+    try {
+      const response = await axiosInstance.post('/services', service);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create service:', error);
+      return { success: false, error: 'Failed to create service' };
+    }
+  },
+
+  // Update service
+  updateService: async (id: string, service: Partial<Service>): Promise<ApiResponse<Service>> => {
+    try {
+      const response = await axiosInstance.put(`/services/${id}`, service);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update service:', error);
+      return { success: false, error: 'Failed to update service' };
+    }
+  },
+
+  // Delete service
+  deleteService: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/services/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete service:', error);
+      return { success: false, error: 'Failed to delete service' };
+    }
+  }
+};
+
+export const clientAPI = {
+  // Get all clients
+  getClients: async (): Promise<ApiResponse<Client[]>> => {
+    try {
+      const response = await axiosInstance.get('/clients');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch clients:', error);
+      return { success: false, error: 'Failed to fetch clients', data: [] };
+    }
+  },
+
+  // Get client by ID
+  getClient: async (id: string): Promise<ApiResponse<Client>> => {
+    try {
+      const response = await axiosInstance.get(`/clients/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch client:', error);
+      return { success: false, error: 'Failed to fetch client' };
+    }
+  },
+
+  // Create client
+  createClient: async (client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Client>> => {
+    try {
+      const response = await axiosInstance.post('/clients', client);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create client:', error);
+      return { success: false, error: 'Failed to create client' };
+    }
+  },
+
+  // Update client
+  updateClient: async (id: string, client: Partial<Client>): Promise<ApiResponse<Client>> => {
+    try {
+      const response = await axiosInstance.put(`/clients/${id}`, client);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update client:', error);
+      return { success: false, error: 'Failed to update client' };
+    }
+  },
+
+  // Delete client
+  deleteClient: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/clients/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete client:', error);
+      return { success: false, error: 'Failed to delete client' };
+    }
+  }
+};
+
+export const quotationAPI = {
+  // Get all quotations
+  getQuotations: async (): Promise<ApiResponse<Quotation[]>> => {
+    try {
+      const response = await axiosInstance.get('/quotations');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch quotations:', error);
+      return { success: false, error: 'Failed to fetch quotations', data: [] };
+    }
+  },
+
+  // Get quotation by ID
+  getQuotation: async (id: string): Promise<ApiResponse<Quotation>> => {
+    try {
+      const response = await axiosInstance.get(`/quotations/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch quotation:', error);
+      return { success: false, error: 'Failed to fetch quotation' };
+    }
+  },
+
+  // Create quotation
+  createQuotation: async (quotation: Omit<Quotation, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Quotation>> => {
+    try {
+      const response = await axiosInstance.post('/quotations', quotation);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create quotation:', error);
+      return { success: false, error: 'Failed to create quotation' };
+    }
+  },
+
+  // Update quotation
+  updateQuotation: async (id: string, quotation: Partial<Quotation>): Promise<ApiResponse<Quotation>> => {
+    try {
+      const response = await axiosInstance.put(`/quotations/${id}`, quotation);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update quotation:', error);
+      return { success: false, error: 'Failed to update quotation' };
+    }
+  },
+
+  // Delete quotation
+  deleteQuotation: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/quotations/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete quotation:', error);
+      return { success: false, error: 'Failed to delete quotation' };
+    }
+  },
+
+  // Send quotation by email
+  sendQuotation: async (id: string): Promise<ApiResponse<{ sent: boolean }>> => {
+    try {
+      const response = await axiosInstance.post(`/quotations/${id}/send`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to send quotation:', error);
+      return { success: false, error: 'Failed to send quotation' };
+    }
+  }
+};
+
+export const appointmentAPI = {
+  // Get all appointments
+  getAppointments: async (): Promise<ApiResponse<Appointment[]>> => {
+    try {
+      const response = await axiosInstance.get('/appointments');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch appointments:', error);
+      return { success: false, error: 'Failed to fetch appointments', data: [] };
+    }
+  },
+
+  // Get appointment by ID
+  getAppointment: async (id: string): Promise<ApiResponse<Appointment>> => {
+    try {
+      const response = await axiosInstance.get(`/appointments/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch appointment:', error);
+      return { success: false, error: 'Failed to fetch appointment' };
+    }
+  },
+
+  // Create appointment
+  createAppointment: async (appointment: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Appointment>> => {
+    try {
+      const response = await axiosInstance.post('/appointments', appointment);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create appointment:', error);
+      return { success: false, error: 'Failed to create appointment' };
+    }
+  },
+
+  // Update appointment
+  updateAppointment: async (id: string, appointment: Partial<Appointment>): Promise<ApiResponse<Appointment>> => {
+    try {
+      const response = await axiosInstance.put(`/appointments/${id}`, appointment);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update appointment:', error);
+      return { success: false, error: 'Failed to update appointment' };
+    }
+  },
+
+  // Delete appointment
+  deleteAppointment: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/appointments/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
+      return { success: false, error: 'Failed to delete appointment' };
+    }
+  }
+};
+
+export const automationAPI = {
+  // Get automation metrics
+  getMetrics: async (): Promise<ApiResponse<AutomationMetrics>> => {
+    try {
+      const response = await axiosInstance.get('/automation/metrics');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch automation metrics:', error);
+      return { 
+        success: false, 
+        error: 'Failed to fetch automation metrics',
+        data: {
+          totalRules: 0,
+          activeRules: 0,
+          emailsProcessed: 0,
+          quotesGenerated: 0,
+          successRate: 0,
+          avgResponseTime: 0
+        }
       };
     }
   },
 
-  // List all chat sessions
+  // Get automation rules
+  getRules: async (): Promise<ApiResponse<AutomationRule[]>> => {
+    try {
+      const response = await axiosInstance.get('/automation/rules');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch automation rules:', error);
+      return { success: false, error: 'Failed to fetch automation rules', data: [] };
+    }
+  },
+
+  // Create automation rule
+  createRule: async (rule: Omit<AutomationRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<AutomationRule>> => {
+    try {
+      const response = await axiosInstance.post('/automation/rules', rule);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create automation rule:', error);
+      return { success: false, error: 'Failed to create automation rule' };
+    }
+  },
+
+  // Update automation rule
+  updateRule: async (id: string, rule: Partial<AutomationRule>): Promise<ApiResponse<AutomationRule>> => {
+    try {
+      const response = await axiosInstance.put(`/automation/rules/${id}`, rule);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update automation rule:', error);
+      return { success: false, error: 'Failed to update automation rule' };
+    }
+  },
+
+  // Delete automation rule
+  deleteRule: async (id: string): Promise<ApiResponse<{ deleted: boolean }>> => {
+    try {
+      const response = await axiosInstance.delete(`/automation/rules/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete automation rule:', error);
+      return { success: false, error: 'Failed to delete automation rule' };
+    }
+  },
+
+  // Get pending quotes
+  getPendingQuotes: async (): Promise<ApiResponse<PendingQuote[]>> => {
+    try {
+      const response = await axiosInstance.get('/automation/pending-quotes');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch pending quotes:', error);
+      return { success: false, error: 'Failed to fetch pending quotes', data: [] };
+    }
+  },
+
+  // Approve pending quote
+  approvePendingQuote: async (id: string): Promise<ApiResponse<{ approved: boolean }>> => {
+    try {
+      const response = await axiosInstance.post(`/automation/pending-quotes/${id}/approve`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to approve pending quote:', error);
+      return { success: false, error: 'Failed to approve pending quote' };
+    }
+  },
+
+  // Reject pending quote
+  rejectPendingQuote: async (id: string, reason?: string): Promise<ApiResponse<{ rejected: boolean }>> => {
+    try {
+      const response = await axiosInstance.post(`/automation/pending-quotes/${id}/reject`, { reason });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to reject pending quote:', error);
+      return { success: false, error: 'Failed to reject pending quote' };
+    }
+  }
+};
+
+export const chatAPI = {
+  // Get chat sessions
   getSessions: async (): Promise<ApiResponse<ChatSession[]>> => {
     try {
-      if (API_CONFIG.baseURL === 'mock') {
-        await delay(200);
-        
-        const sessions = localStorageService.getAll<ChatSession>('chatSessions').sort(
-          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        );
-
-        return {
-          success: true,
-          data: sessions
-        };
-      }
-
-      // Real backend API call
-      const response = await axios.get(`${API_CONFIG.baseURL}/api/chat/sessions`);
+      const response = await axiosInstance.get('/chat/sessions');
       return response.data;
     } catch (error) {
-      console.error('Error getting chat sessions:', error);
-      return {
-        success: false,
-        error: 'Failed to get chat sessions',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      };
+      console.error('Failed to fetch chat sessions:', error);
+      return { success: false, error: 'Failed to fetch chat sessions', data: [] };
     }
   },
 
-  // Get specific session by ID
-  getSession: async (sessionId: string): Promise<ApiResponse<ChatSession>> => {
+  // Get chat session by ID
+  getSession: async (id: string): Promise<ApiResponse<ChatSession>> => {
     try {
-      if (API_CONFIG.baseURL === 'mock') {
-        await delay(200);
-        
-        const session = localStorageService.getById<ChatSession>('chatSessions', sessionId);
-        
-        if (!session) {
-          return {
-            success: false,
-            error: 'Session not found'
-          };
-        }
-
-        return {
-          success: true,
-          data: session
-        };
-      }
-
-      // Real backend API call
-      const response = await axios.get(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}`);
+      const response = await axiosInstance.get(`/chat/sessions/${id}`);
       return response.data;
     } catch (error) {
-      console.error('Error getting chat session:', error);
-      return {
-        success: false,
-        error: 'Failed to get chat session',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      };
+      console.error('Failed to fetch chat session:', error);
+      return { success: false, error: 'Failed to fetch chat session' };
     }
   },
 
-  // Send message to chat session
+  // Send message
   sendMessage: async (sessionId: string, message: string): Promise<ApiResponse<ChatResponse>> => {
     try {
-      if (API_CONFIG.baseURL === 'mock') {
-        await delay(800); // Simulate AI processing time
-        
-        const session = localStorageService.getById<ChatSession>('chatSessions', sessionId);
-        
-        if (!session) {
-          return {
-            success: false,
-            error: 'Session not found'
-          };
-        }
-
-        // Add user message
-        const userMessage: ChatMessage = {
-          id: `msg_${Date.now()}_user`,
-          sessionId,
-          type: 'user',
-          content: message,
-          timestamp: new Date().toISOString()
-        };
-
-        session.messages.push(userMessage);
-
-        // Generate AI response based on mock patterns
-        const aiResponse = generateMockAIResponse(message, session);
-        
-        // Add AI message
-        const aiMessage: ChatMessage = {
-          id: `msg_${Date.now()}_ai`,
-          sessionId,
-          type: 'assistant',
-          content: aiResponse.message,
-          timestamp: new Date().toISOString(),
-          metadata: aiResponse.metadata
-        };
-
-        session.messages.push(aiMessage);
-        session.updatedAt = new Date().toISOString();
-
-        // Update session title if it's meaningful
-        if (session.messages.length === 3) { // First user message + welcome + AI response
-          session.title = generateSessionTitle(message);
-        }
-
-        // Save updated session to localStorage
-        localStorageService.update<ChatSession>('chatSessions', sessionId, session);
-
-        return {
-          success: true,
-          data: aiResponse
-        };
-      }
-
-      // Real backend API call
-      const response = await axios.post(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}/messages`, {
-        message: message
-      });
+      const response = await axiosInstance.post(`/chat/sessions/${sessionId}/messages`, { message });
       return response.data;
     } catch (error) {
-      console.error('Error sending message:', error);
-      return {
-        success: false,
-        error: 'Failed to send message',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      };
+      console.error('Failed to send message:', error);
+      return { success: false, error: 'Failed to send message' };
     }
   },
 
-  // Update session status
-  updateSessionStatus: async (sessionId: string, status: 'active' | 'completed' | 'archived'): Promise<ApiResponse<ChatSession>> => {
+  // Create new chat session
+  createSession: async (): Promise<ApiResponse<ChatSession>> => {
     try {
-      if (API_CONFIG.baseURL === 'mock') {
-        await delay(300);
-        
-        const updatedSession = localStorageService.update<ChatSession>('chatSessions', sessionId, { status });
-        
-        if (!updatedSession) {
-          return {
-            success: false,
-            error: 'Session not found'
-          };
-        }
-
-        return {
-          success: true,
-          data: updatedSession,
-          message: 'Session status updated successfully'
-        };
-      }
-
-      // Real backend API call
-      const response = await axios.put(`${API_CONFIG.baseURL}/api/chat/sessions/${sessionId}/status`, { status });
+      const response = await axiosInstance.post('/chat/sessions');
       return response.data;
     } catch (error) {
-      console.error('Error updating session status:', error);
-      return {
-        success: false,
-        error: 'Failed to update session status',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      };
+      console.error('Failed to create chat session:', error);
+      return { success: false, error: 'Failed to create chat session' };
     }
   }
 };
 
-// Helper function to generate mock AI responses
-function generateMockAIResponse(userMessage: string, session: ChatSession): ChatResponse {
-  const lowerMessage = userMessage.toLowerCase();
-  
-  // Check if we're in a conversation flow
-  if (session.context.collectingData) {
-    return handleConversationFlow(userMessage, session);
-  }
+// Unified API export
+export const api = {
+  email: emailAPI,
+  template: templateAPI,
+  category: categoryAPI,
+  service: serviceAPI,
+  client: clientAPI,
+  quotation: quotationAPI,
+  appointment: appointmentAPI,
+  automation: automationAPI,
+  chat: chatAPI
+};
 
-  // Detect intent
-  for (const [intent, patterns] of Object.entries(mockChatData.patterns)) {
-    for (const pattern of patterns as RegExp[]) {
-      if (pattern.test(lowerMessage)) {
-        return handleIntent(intent, userMessage, session);
-      }
-    }
-  }
-
-  // Default response
-  return {
-    message: mockChatData.responses.error[Math.floor(Math.random() * mockChatData.responses.error.length)],
-    sessionId: session.id,
-    metadata: { action: 'general_inquiry' }
-  };
-}
-
-// Handle specific intents
-function handleIntent(intent: string, userMessage: string, session: ChatSession): ChatResponse {
-  const responses = mockChatData.responses[intent as keyof typeof mockChatData.responses] || mockChatData.responses.general_inquiry;
-  const responseMessage = responses[Math.floor(Math.random() * responses.length)];
-
-  switch (intent) {
-    case 'create_quotation':
-      session.context.currentAction = 'create_quotation';
-      session.context.collectingData = {
-        type: 'quotation',
-        step: 0,
-        data: {}
-      };
-      return {
-        message: `${responseMessage}\n\nTo get started, what's the client's name?`,
-        sessionId: session.id,
-        metadata: { action: 'create_quotation', nextStep: 'clientName' }
-      };
-
-    case 'register_service':
-      session.context.currentAction = 'register_service';
-      session.context.collectingData = {
-        type: 'service',
-        step: 0,
-        data: {}
-      };
-      return {
-        message: `${responseMessage}\n\nWhat's the name of the service you'd like to add?`,
-        sessionId: session.id,
-        metadata: { action: 'register_service', nextStep: 'name' }
-      };
-
-    case 'register_client':
-      session.context.currentAction = 'register_client';
-      session.context.collectingData = {
-        type: 'client',
-        step: 0,
-        data: {}
-      };
-      return {
-        message: `${responseMessage}\n\nWhat's the client's full name?`,
-        sessionId: session.id,
-        metadata: { action: 'register_client', nextStep: 'name' }
-      };
-
-    default:
-      return {
-        message: responseMessage,
-        sessionId: session.id,
-        metadata: { action: intent as any }
-      };
-  }
-}
-
-// Handle conversation flow progression
-function handleConversationFlow(userMessage: string, session: ChatSession): ChatResponse {
-  const collectingData = session.context.collectingData;
-  
-  if (!collectingData) {
-    return {
-      message: "I'm sorry, something went wrong. Let's start over.",
-      sessionId: session.id
-    };
-  }
-
-  const flow = mockChatData.flows[collectingData.type];
-  const currentStep = flow.steps[collectingData.step];
-  
-  // Store the data
-  collectingData.data[currentStep.field] = userMessage;
-  collectingData.step++;
-
-  // Check if we've completed all steps
-  if (collectingData.step >= flow.steps.length) {
-    const resourceId = createMockResource(collectingData.type, collectingData.data);
-    
-    // Clear the collecting data
-    session.context.collectingData = undefined;
-    session.context.currentAction = undefined;
-
-    const successMessages = {
-      quotation: `Perfect! I've created the quotation successfully.\n\n**Quotation ID:** ${resourceId}\n**Client:** ${collectingData.data.clientName}\n**Email:** ${collectingData.data.clientEmail || 'Not provided'}\n\nThe quotation has been saved and is ready to be sent. Is there anything else I can help you with?`,
-      service: `Excellent! I've registered the new service successfully.\n\n**Service ID:** ${resourceId}\n**Name:** ${collectingData.data.name}\n**Category:** ${collectingData.data.category || 'General'}\n\nThe service is now available in your catalog. What else can I help you with?`,
-      client: `Great! I've registered the new client successfully.\n\n**Client ID:** ${resourceId}\n**Name:** ${collectingData.data.name}\n**Email:** ${collectingData.data.email || 'Not provided'}\n\nThe client is now in your system. How else can I assist you?`
-    };
-
-    return {
-      message: successMessages[collectingData.type],
-      sessionId: session.id,
-      metadata: {
-        action: `${collectingData.type}_completed` as any,
-        data: { id: resourceId, ...collectingData.data }
-      }
-    };
-  }
-
-  // Move to next step
-  const nextStep = flow.steps[collectingData.step];
-  return {
-    message: nextStep.question,
-    sessionId: session.id,
-    metadata: {
-      action: collectingData.type as any,
-      nextStep: nextStep.field
-    }
-  };
-}
-
-// Create mock resource and save to localStorage
-function createMockResource(type: string, data: any): string {
-  const timestamp = Date.now();
-  const randomId = Math.random().toString(36).substr(2, 9);
-  const resourceId = `${type}_${timestamp}_${randomId}`;
-
-  switch (type) {
-    case 'quotation':
-      const newQuotation = {
-        id: resourceId,
-        clientName: data.clientName,
-        clientEmail: data.clientEmail,
-        clientPhone: data.clientPhone || '',
-        clientAddress: data.clientAddress || '',
-        items: [],
-        subtotal: 0,
-        total: 0,
-        status: 'draft',
-        notes: data.notes || '',
-        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      localStorageService.create('quotations', newQuotation);
-      break;
-
-    case 'service':
-      const newService = {
-        id: resourceId,
-        name: data.name,
-        description: data.description || '',
-        category: data.category || 'General',
-        defaultPrice: parseFloat(data.price) || 0,
-        unit: 'hour',
-        estimatedDuration: data.duration || 60,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      localStorageService.create('services', newService);
-      break;
-
-    case 'client':
-      const newClient = {
-        id: resourceId,
-        name: data.name,
-        email: data.email,
-        phone: data.phone || '',
-        address: data.address || '',
-        notes: data.notes || '',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      localStorageService.create('clients', newClient);
-      break;
-  }
-
-  return resourceId;
-}
-
-// Generate session title based on first user message
-function generateSessionTitle(message: string): string {
-  const lowerMessage = message.toLowerCase();
-  
-  if (lowerMessage.includes('quote') || lowerMessage.includes('quotation')) {
-    return 'Quotation Request';
-  } else if (lowerMessage.includes('service')) {
-    return 'Service Registration';
-  } else if (lowerMessage.includes('client')) {
-    return 'Client Registration';
-  } else if (lowerMessage.includes('help')) {
-    return 'General Inquiry';
-  }
-  
-  return 'Chat Session';
-}
-
-// Export default for backward compatibility
-export default emailAPI;
+export default api;

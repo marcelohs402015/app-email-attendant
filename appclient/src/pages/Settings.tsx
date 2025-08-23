@@ -11,7 +11,15 @@ import {
 } from '@heroicons/react/24/outline';
 import { emailAPI } from '../services/api';
 import { EmailTemplate } from '../types/api';
-import { categoryLabels } from '../data/mockData';
+// Category labels for templates
+const categoryLabels: Record<string, string> = {
+  'complaint': 'Reclamação',
+  'quote': 'Orçamento',
+  'product_info': 'Informações do Produto',
+  'support': 'Suporte',
+  'sales': 'Vendas',
+  'general': 'Geral'
+};
 
 interface TemplateFormData {
   name: string;

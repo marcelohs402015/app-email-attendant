@@ -3,18 +3,20 @@
 > **Intelligent system for email categorization, automatic quotes, AI chat integration, and business management, developed especially for handyman professionals**
 
 ## 🎉 **FASE 1 FINALIZADA** - Sistema Completo com IA Integrada
+## ✅ **FASE 2 FINALIZADA** - Experiência consolidada com dados mockados e alternância de modo
+## 🚀 **FASE 3 FINALIZADA** - Implementação Completa com PostgreSQL
 
 ## 🎯 Overview
 
 **Handyman Manager** is a modern and complete web application that automates email, quote, client and appointment management for home service providers. With an intuitive interface, robust functionalities, and **integrated AI chat system**, the application uses mock data to demonstrate a complete business management system with artificial intelligence capabilities.
 
-### 🚀 **Novidades da Fase 1:**
-- ✅ **Chat com IA Integrado** - Assistente virtual 24/7
-- ✅ **Automação Inteligente** - Geração automática de cotações
-- ✅ **Interface Dark/Light** - Temas adaptativos
-- ✅ **Deploy Otimizado** - Configuração completa para Render
-- ✅ **Código Limpo** - Zero warnings de ESLint
-- ✅ **Documentação Completa** - Guias detalhados de uso
+### 🚀 **Novidades da Fase 3:**
+- ✅ **PostgreSQL Integrado** - Persistência real de dados
+- ✅ **API Completa** - CRUD para todas as entidades
+- ✅ **Mocks Removidos** - 100% funcional com banco
+- ✅ **Docker & Render** - Deploy produção otimizado
+- ✅ **Migrations Automáticas** - Schema auto-criado
+- ✅ **N8N Ready** - Endpoints para automação
 
 ### 🏗️ Target Audience
 **"Handyman"** professionals - contractors who perform:
@@ -85,6 +87,15 @@
 - **Mock data** for complete demonstration
 - **Complete CRUD** for all entities
 - **Delay simulation** for API realism
+
+### 🔁 Data Mode (Mock vs Real)
+- Backend: set `DATA_MODE=mock | real` (Phase 2 = mock; real will be implemented in Phase 3)
+- Frontend: set `REACT_APP_API_URL=mock` to use local mock services; any URL value (e.g., `http://localhost:3001`) will call the backend
+
+Runtime aids:
+- Response header `x-data-mode` exposes current mode
+- Health endpoint includes `{ dataMode }`
+- Endpoint `GET /mode` returns `{ dataMode }`
 
 ## 🎨 Interface and Experience
 
@@ -484,9 +495,10 @@ git push origin main
 PORT=3001
 NODE_ENV=development
 CLIENT_URL=http://localhost:3000
+DATA_MODE=mock
 
 # Client (.env)  
-REACT_APP_API_URL=http://localhost:3001
+REACT_APP_API_URL=mock
 REACT_APP_NAME=Email Attendant
 ```
 
@@ -848,12 +860,26 @@ This project is under the MSTECH system development license. See the `LICENSE` f
 
 ---
 
+## 📚 **DOCUMENTAÇÃO COMPLETA**
+
+### **FASE 3 - Implementação Completa:**
+- 📋 **[FASE 3 - Implementação Completa](docs/FASE-3-IMPLEMENTACAO-COMPLETA.md)** - Documentação técnica completa
+- 🔗 **[API Endpoints Reference](docs/API-ENDPOINTS-REFERENCE.md)** - Guia completo de endpoints
+- 🏗️ **[Schema do Banco](docs/FASE-3-IMPLEMENTACAO-COMPLETA.md#%EF%B8%8F-schema-do-banco-de-dados)** - Estrutura PostgreSQL
+- 🧪 **[Testes e Exemplos](docs/API-ENDPOINTS-REFERENCE.md#-exemplos-de-teste)** - Como testar a API
+
+### **Fases Anteriores:**
+- 📖 **[Documentação Fase 1](docs/)** - IA Chat e funcionalidades básicas
+- 📊 **[Análise do Projeto](docs/ANALISE-ATUAL-PROJETO.md)** - Visão geral do sistema
+
+---
+
 <div align="center">
 
 **🚀 Email Attendant - Transforming home service management with modern technology**
 
 *Developed with ❤️ for professionals who make a difference in people's daily lives*
 
-**✨ Now with complete Render.com deployment support and production-ready architecture ✨**
+**✨ Now with PostgreSQL persistence and N8N automation ready ✨**
 
 </div>

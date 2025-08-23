@@ -4,7 +4,7 @@ export interface DatabaseConfig {
   database: string;
   user: string;
   password: string;
-  ssl?: boolean;
+  ssl?: boolean | Record<string, any>;
 }
 
 export interface QueryResult<T = any> {

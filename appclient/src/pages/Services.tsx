@@ -48,7 +48,7 @@ const Services: React.FC = () => {
   // Queries
   const { data: servicesResponse, isLoading: servicesLoading } = useQuery({
     queryKey: ['services', selectedCategory],
-    queryFn: () => emailAPI.getServices(selectedCategory || undefined),
+    queryFn: () => emailAPI.getServices(),
   });
 
   const { data: categoriesResponse } = useQuery({
@@ -81,8 +81,11 @@ const Services: React.FC = () => {
     },
   });
 
-  const services = servicesResponse?.data || [];
-  const categories = categoriesResponse?.data || [];
+  const servicesAll = servicesResponse?.data || [];
+  const services = selectedCategory 
+    ? servicesAll.filter((s: Service) => s.category === selectedCategory)
+    : servicesAll;
+  const categories: ServiceCategory[] = categoriesResponse?.data || [];
 
   const resetForm = () => {
     setFormData({
@@ -224,7 +227,7 @@ const Services: React.FC = () => {
             }}
           >
             <option value="">{t('services.allCategories')}</option>
-            {categories.map((category: any) => (
+            {categories.map((category: ServiceCategory) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -498,7 +501,7 @@ const Services: React.FC = () => {
                         }}
                       >
                         <option value="">{t('services.selectCategory')}</option>
-                        {categories.map((category) => (
+                        {categories.map((category: ServiceCategory) => (
                           <option key={category.id} value={category.id}>
                             {category.name}
                           </option>

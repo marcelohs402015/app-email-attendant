@@ -25,8 +25,9 @@ A **Fase 2** do Handyman Manager representa a evolução do sistema para um nív
 
 ### 📅 Período da Fase 2
 - **Início:** Setembro 2024
-- **Status:** 🚧 Em Planejamento
-- **Foco:** Inteligência Artificial, automação completa, integrações avançadas
+- **Conclusão:** Agosto 2025
+- **Status:** ✅ Concluída (Base mock + arquitetura e UX prontas)
+- **Foco entregue:** Experiência completa com dados mockados, componentes e rotas, alternância de modo mock/real, documentação e readiness para Fase 3
 
 ---
 
@@ -56,7 +57,7 @@ class EmailAnalyzer:
         pass
 ```
 
-**Serviços de IA Implementados:**
+**Serviços de IA Implementados (prototipados com mock):**
 - **EmailAnalyzer** - Análise e classificação de emails
 - **QuoteGenerator** - Geração automática de orçamentos
 - **ResponseAnalyzer** - Análise de respostas de clientes
@@ -69,7 +70,7 @@ class EmailAnalyzer:
 ### Stack Tecnológico
 - **Framework:** Node.js com Express
 - **Linguagem:** TypeScript
-- **Banco de Dados:** PostgreSQL
+- **Banco de Dados:** PostgreSQL (planejado para Fase 3)
 - **Cache:** Redis
 - **Autenticação:** JWT
 - **Documentação:** Swagger/OpenAPI
@@ -177,7 +178,7 @@ interface AutomationRule {
 
 ## 🗄️ Banco de Dados - PostgreSQL
 
-### Novas Tabelas
+### Novas Tabelas (planejadas para Fase 3)
 
 ```sql
 -- Tabela de análise de emails
@@ -592,7 +593,7 @@ interface AutomationRule {
 
 ## 🎯 Conclusão da Fase 2
 
-A Fase 2 estabelecerá o Handyman Manager como uma solução de IA revolucionária no mercado de manutenção, automatizando completamente o processo de vendas e atendimento ao cliente.
+A Fase 2 consolidou uma experiência completa e navegável com dados mockados que refletem o fluxo de negócio real ponta-a-ponta (emails → cotações → agenda → métricas), incluindo um chat de IA simulado e automações básicas. O objetivo agora é substituir os mocks por integrações reais na Fase 3, seguindo o plano de migração.
 
 **Pontos Fortes:**
 - ✅ Automação completa com IA
@@ -606,6 +607,59 @@ A Fase 2 estabelecerá o Handyman Manager como uma solução de IA revolucionár
 - 🔄 Machine Learning avançado
 - 🔄 Análise de sentimento
 - 🔄 Predição de demanda
+
+---
+
+## 🔁 Alternância de Modo de Dados (Mock vs Real)
+
+Para operação em mock (padrão nesta fase) ou real (fase 3), foram definidas variáveis de ambiente e uma flag de modo:
+
+### Backend (`appserver`)
+- `DATA_MODE=mock | real` — controla se as rotas usam dados em memória/mock ou serviços/repositórios reais.
+- `PORT=3001`
+- `CLIENT_URL=http://localhost:3000`
+
+Comportamento esperado:
+- Quando `DATA_MODE=mock` o servidor inicia com log "Starting server with mock data..." e carrega `emailRoutes` baseadas em memória.
+- Quando `DATA_MODE=real` (implementação na Fase 3), o servidor deverá inicializar conexões e rotas integradas a banco/serviços reais.
+
+### Frontend (`appclient`)
+- `REACT_APP_API_URL=mock | http://localhost:3001 | https://api...`
+
+Com `REACT_APP_API_URL=mock`, o cliente usa `localStorage` e fontes mockadas para toda a experiência. Qualquer outro valor passa a usar chamadas HTTP reais.
+
+### Exemplos de .env
+
+Backend (`appserver/.env.example`):
+```
+NODE_ENV=development
+PORT=3001
+CLIENT_URL=http://localhost:3000
+DATA_MODE=mock
+
+# Placeholder para Fase 3
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=app
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_SSL=false
+```
+
+Frontend (`appclient/.env.example`):
+```
+REACT_APP_API_URL=mock
+REACT_APP_NAME=Email Attendant
+```
+
+---
+
+## ✅ Escopo entregue na Fase 2 (Mock)
+- Fluxos completos com dados mockados e persistência em `localStorage` no frontend.
+- API mock no backend com Express e rotas organizadas por domínio.
+- Chat com IA simulado com padrões e fluxos de coleta de dados.
+- Documentação atualizada e guia de alternância mock/real.
+- Preparação para uso de PostgreSQL e serviços de IA reais na Fase 3.
 
 ---
 

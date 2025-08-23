@@ -11,7 +11,8 @@ import {
   EyeIcon,
   EyeSlashIcon
 } from '@heroicons/react/24/outline';
-import { emailAPI } from '../services/api';
+import { categoryAPI } from '../services/api';
+import EmptyState from '../components/EmptyState';
 import { Category } from '../types/api';
 
 interface CategoryFormData {
@@ -47,12 +48,12 @@ const Categories: React.FC = () => {
   // Queries
   const { data: categoriesResponse, isLoading: categoriesLoading } = useQuery({
     queryKey: ['categories'],
-    queryFn: () => emailAPI.getCategories(),
+    queryFn: () => categoryAPI.getCategories(),
   });
 
   // Mutations
   const createMutation = useMutation({
-    mutationFn: emailAPI.createCategory,
+    mutationFn: categoryAPI.createCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       resetForm();
@@ -60,8 +61,8 @@ const Categories: React.FC = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, ...data }: { id: string } & Partial<Category>) =>
-      emailAPI.updateCategory(id, data),
+    mutationFn: ({ id, ...data }: { id: number } & Partial<Category>) =>
+      categoryAPI.updateCategory(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       resetForm();
@@ -69,7 +70,7 @@ const Categories: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: emailAPI.deleteCategory,
+    mutationFn: categoryAPI.deleteCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
@@ -104,7 +105,7 @@ const Categories: React.FC = () => {
         patterns: category.patterns,
         domains: category.domains,
         color: category.color,
-        isActive: category.isActive
+        isActive: category.active
       });
       setKeywordsInput(category.keywords.join(', '));
       setPatternsInput(category.patterns.join(', '));
@@ -135,16 +136,16 @@ const Categories: React.FC = () => {
     }
   };
 
-  const handleDelete = (categoryId: string) => {
+  const handleDelete = (categoryId: number) => {
     if (window.confirm(t('categories.confirmDelete') || 'Are you sure you want to delete this category?')) {
-      deleteMutation.mutate(categoryId as any);
+      deleteMutation.mutate(categoryId);
     }
   };
 
-  const handleToggleStatus = (categoryId: string, currentStatus: boolean) => {
+  const handleToggleStatus = (categoryId: number, currentStatus: boolean) => {
     updateMutation.mutate({
       id: categoryId,
-      isActive: !currentStatus
+      active: !currentStatus
     });
   };
 
@@ -224,11 +225,11 @@ const Categories: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => handleToggleStatus(category.id, category.isActive)}
+                  onClick={() => handleToggleStatus(category.id, category.active)}
                   className="p-1 rounded transition-colors duration-200"
                   style={{ color: currentTheme.colors.text.muted }}
                 >
-                  {category.isActive ? (
+                  {category.active ? (
                     <EyeIcon className="h-4 w-4" />
                   ) : (
                     <EyeSlashIcon className="h-4 w-4" />
@@ -322,14 +323,14 @@ const Categories: React.FC = () => {
                   className="text-xs transition-colors duration-300"
                   style={{ color: currentTheme.colors.text.muted }}
                 >
-                  Created: {new Date(category.createdAt).toLocaleDateString()}
+                  Created: {new Date(category.created_at).toLocaleDateString()}
                 </span>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
-                    category.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    category.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  {category.isActive ? 'Active' : 'Inactive'}
+                  {category.active ? 'Active' : 'Inactive'}
                 </span>
               </div>
             </div>
@@ -339,40 +340,20 @@ const Categories: React.FC = () => {
 
       {/* Empty State */}
       {categories.length === 0 && (
-        <div 
-          className="text-center py-12 rounded-lg transition-all duration-300"
-          style={{ backgroundColor: currentTheme.colors.background.card }}
-        >
-          <TagIcon 
-            className="mx-auto h-12 w-12 transition-colors duration-300"
-            style={{ color: currentTheme.colors.text.muted }}
-          />
-          <h3 
-            className="mt-2 text-sm font-medium transition-colors duration-300"
-            style={{ color: currentTheme.colors.text.primary }}
-          >
-            {t('categories.noCategories') || 'No categories found'}
-          </h3>
-          <p 
-            className="mt-1 text-sm transition-colors duration-300"
-            style={{ color: currentTheme.colors.text.muted }}
-          >
-            {t('categories.noCategoriesDescription') || 'Get started by creating your first category.'}
-          </p>
-          <div className="mt-6">
-            <button
-              onClick={() => handleOpenModal()}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md transition-all duration-200"
-              style={{
-                backgroundColor: currentTheme.colors.primary[600],
-                color: 'white'
-              }}
-            >
-              <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-              {t('categories.newCategory') || 'New Category'}
-            </button>
-          </div>
-        </div>
+        <EmptyState
+          title="Nenhuma Categoria Cadastrada"
+          description="Não há categorias cadastradas para classificação automática de emails. Comece criando sua primeira categoria."
+          actionLabel="Nova Categoria"
+          onAction={() => handleOpenModal()}
+          icon="settings"
+          steps={[
+            'Clique em "Nova Categoria"',
+            'Defina nome e descrição da categoria',
+            'Adicione palavras-chave para identificação',
+            'Configure padrões regex se necessário',
+            'Salve para começar a usar'
+          ]}
+        />
       )}
 
       {/* Modal */}
